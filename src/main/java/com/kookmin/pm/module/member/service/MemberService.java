@@ -1,10 +1,12 @@
 package com.kookmin.pm.module.member.service;
 
+import com.kookmin.pm.module.member.domain.MemberImage;
 import com.kookmin.pm.module.member.domain.MemberStats;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.dto.MemberEditInfo;
+import com.kookmin.pm.module.member.repository.MemberImageRepository;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.repository.MemberStatsRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +25,13 @@ import javax.persistence.EntityNotFoundException;
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final MemberStatsRepository memberStatsRepository;
+    private final MemberImageRepository memberImageRepository;
     private final PasswordEncoder passwordEncoder;
 
     public Long joinMember(@NonNull MemberCreateInfo memberCreateInfo) {
         //TODO::RuntimeException 정의 해야함, 회원 이메일이 중복되었을 경우
         if(isDuplicated(memberCreateInfo.getEmail())) throw new RuntimeException();
 
-        //TODO::회원 가입시, 회원 능력치를 같이 추가해줘야함
         Member member = buildMemberEntity(memberCreateInfo);
         member.encodePassword(passwordEncoder);
         member = memberRepository.save(member);
@@ -56,11 +58,13 @@ public class MemberService implements UserDetailsService {
 
     public MemberDetails lookUpMemberDetails(@NonNull String email) {
         Member member = getMemberEntityByEmail(email);
-
         //TODO::회원 정보, 회원 이미지 정보, 회원 능력치 정보를 조회해야 함
+        MemberImage memberImage = getMemberImageEntity(member);
 
-        return null;
+        return new MemberDetails(member, memberImage);
     }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -93,5 +97,9 @@ public class MemberService implements UserDetailsService {
 
     private Member getMemberEntityByEmail(String email) {
         return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private MemberImage getMemberImageEntity(Member member) {
+        return memberImageRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
     }
 }

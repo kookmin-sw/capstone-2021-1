@@ -3,6 +3,7 @@ package com.kookmin.pm.module.member.dto;
 import com.kookmin.pm.module.member.domain.MemberStats;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberImage;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
