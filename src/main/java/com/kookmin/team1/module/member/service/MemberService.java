@@ -2,6 +2,7 @@ package com.kookmin.team1.module.member.service;
 
 import com.kookmin.team1.module.member.domain.Member;
 import com.kookmin.team1.module.member.dto.MemberCreateInfo;
+import com.kookmin.team1.module.member.dto.MemberEditInfo;
 import com.kookmin.team1.module.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -12,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
@@ -19,6 +22,9 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     public Long joinMember(@NonNull MemberCreateInfo memberCreateInfo) {
+        //TODO::RuntimeException 정의 해야함, 회원 이메일이 중복되었을 경우
+        if(isDuplicated(memberCreateInfo.getEmail())) throw new RuntimeException();
+
         Member member = Member.builder()
                 .email(memberCreateInfo.getEmail())
                 .name(memberCreateInfo.getName())
@@ -35,9 +41,21 @@ public class MemberService implements UserDetailsService {
         return member.getId();
     }
 
+    public void editMemberInfo(@NonNull String email, @NonNull MemberEditInfo memberEditInfo) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+
+        member.editNickname(memberEditInfo.getNickname());
+        member.editPhoneNumber(memberEditInfo.getPhoneNumber());
+        member.editAddress(memberEditInfo.getAddress());
+
+        member.changeName(memberEditInfo.getName());
+        member.changePassword(memberEditInfo.getPassword());
+        member.encodePassword(passwordEncoder);
+    }
+
     private boolean isDuplicated(String email) {
         Member member = memberRepository.findByEmail(email).orElse(null);
-        return member==null;
+        return member!=null;
     }
 
     @Override

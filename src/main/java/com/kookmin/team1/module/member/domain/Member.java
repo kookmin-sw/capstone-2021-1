@@ -72,4 +72,8 @@ public class Member {
     public void editPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public void editAddress(String address) {
+        this.address = address;
+    }
 }
