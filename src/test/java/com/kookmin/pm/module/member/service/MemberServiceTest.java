@@ -2,6 +2,7 @@ package com.kookmin.pm.module.member.service;
 
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberStats;
+import com.kookmin.pm.module.member.domain.MemberStatus;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.dto.MemberEditInfo;
@@ -148,5 +149,15 @@ public class MemberServiceTest {
 
         System.out.println(memberDetails);
         System.out.println(memberDetails.getMemberStats().getManner());
+    }
+
+    @Test
+    @DisplayName("secessionMember 메소드 성공 테스트")
+    public void secessionMember_success_test() {
+        boolean result = memberService.secessionMember("dlwlsrn9412@kookmin.ac.kr", "1234");
+        assertThat(result).isTrue();
+        Member member = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
+        assertThat(member)
+                .hasFieldOrPropertyWithValue("status", MemberStatus.EXPIRED);
     }
 }

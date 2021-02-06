@@ -57,8 +57,12 @@ public class MemberService implements UserDetailsService {
         member.encodePassword(passwordEncoder);
     }
 
+
     public MemberDetails lookUpMemberDetails(@NonNull String email, @NonNull LookupType type) {
         Member member = getMemberEntityByEmail(email);
+        //TODO::휴면 계정일 경우 조회 불가능, RuntimeException 정의해야
+        if(member.getStatus().equals(MemberStatus.EXPIRED)) throw new RuntimeException();
+
         //TODO::더 나은 구조 구상해보기
         if(type==LookupType.DEFAULT) {
             return new MemberDetails(member);
