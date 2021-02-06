@@ -42,14 +42,14 @@ public class Member {
 
     @Builder
     public Member(String email, String password, String nickname, String name,
-                  String phoneNumber, String status, String role) {
+                  String phoneNumber) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.status = MemberStatus.valueOf(status);
-        this.role = MemberRole.valueOf(role);
+        this.status = MemberStatus.ACTIVE;
+        this.role = MemberRole.USER;
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
