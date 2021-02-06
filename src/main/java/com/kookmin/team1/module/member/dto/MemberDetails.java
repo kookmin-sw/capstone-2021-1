@@ -1,5 +1,7 @@
 package com.kookmin.team1.module.member.dto;
-치
+
+import com.kookmin.team1.module.member.domain.MemberImage;
+import com.kookmin.team1.module.member.domain.MemberStats;
 import lombok.Data;
 
 @Data
