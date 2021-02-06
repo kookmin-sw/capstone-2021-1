@@ -38,6 +38,13 @@ public class MemberStats {
 
     @Builder
     public MemberStats(Member member) {
+        this.manner = 0L;
+        this.affinity = 0L;
+        this.physical = 0L;
+        this.physical = 0L;
+        this.intellect = 0L;
+        this.comprehension = 0L;
+        this.evaluateCount = 0L;
         this.member = member;
     }
 

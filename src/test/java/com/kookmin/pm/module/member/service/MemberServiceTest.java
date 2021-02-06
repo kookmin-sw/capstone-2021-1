@@ -1,10 +1,11 @@
-package com.kookmin.team1.member;
+package com.kookmin.pm.module.member.service;
 
 import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.domain.MemberStats;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.dto.MemberEditInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
-import com.kookmin.pm.module.member.service.MemberService;
+import com.kookmin.pm.module.member.repository.MemberStatsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 //TODO::프로파일 적용으로 분리 필요
-public class MemberTest {
+public class MemberServiceTest {
     @Autowired
     MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    MemberStatsRepository memberStatsRepository;
     @Autowired
     EntityManager entityManager;
     @Autowired
@@ -88,6 +91,22 @@ public class MemberTest {
                 , member.getPassword());
 
         assertThat(isPasswordMatches).isTrue();
+
+        int count = memberStatsRepository.findAll().size();
+        assertThat(count).isEqualTo(4);
+
+        MemberStats stats = memberStatsRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
+        /*    private double affinity;
+    private double physical;
+    private double intellect;
+    private double comprehension;*/
+        assertThat(stats)
+                .hasFieldOrPropertyWithValue("manner", 0L)
+                .hasFieldOrPropertyWithValue("affinity", 0L)
+                .hasFieldOrPropertyWithValue("physical", 0L)
+                .hasFieldOrPropertyWithValue("intellect", 0L)
+                .hasFieldOrPropertyWithValue("comprehension", 0L)
+                .hasFieldOrPropertyWithValue("evaluateCount", 0L);
     }
 
     @Test
