@@ -3,6 +3,7 @@ package com.kookmin.pm.module.member.service;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberStats;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
+import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.dto.MemberEditInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.repository.MemberStatsRepository;
@@ -66,7 +67,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("MemberService 회원가입 성공 테스트")
+    @DisplayName("joinMember메소 회원가입 성공 테스트")
     public void joinMember_success_test() {
         MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
         memberCreateInfo.setEmail("dlwlsrn9411@kookmin.ac.kr");
@@ -96,10 +97,7 @@ public class MemberServiceTest {
         assertThat(count).isEqualTo(4);
 
         MemberStats stats = memberStatsRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
-        /*    private double affinity;
-    private double physical;
-    private double intellect;
-    private double comprehension;*/
+
         assertThat(stats)
                 .hasFieldOrPropertyWithValue("manner", 0L)
                 .hasFieldOrPropertyWithValue("affinity", 0L)
@@ -110,7 +108,7 @@ public class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("MemberService 회원정보 수정 성공 테스트")
+    @DisplayName("editMemberInfo 메소드 회원정보 수정 성공 테스트")
     public void editMemberInfo_success_test() {
         MemberEditInfo memberEditInfo = new MemberEditInfo();
         memberEditInfo.setAddress("수정 주소");
@@ -130,5 +128,25 @@ public class MemberServiceTest {
 
         boolean isPasswordMatches = passwordEncoder.matches(memberEditInfo.getPassword(), member.getPassword());
         assertThat(isPasswordMatches).isTrue();
+    }
+
+    @Test
+    @DisplayName("lookupMemberDetails 메소드 성공 테스트")
+    public void lookupMemberDetails_success_test() {
+        MemberDetails memberDetails = memberService
+                .lookUpMemberDetails("dlwlsrn9412@kookmin.ac.kr", LookupType.DEFAULT);
+
+        System.out.println(memberDetails);
+
+        memberDetails = memberService
+                .lookUpMemberDetails("dlwlsrn9412@kookmin.ac.kr", LookupType.WITHIMAGE);
+
+        System.out.println(memberDetails);
+
+        memberDetails = memberService
+                .lookUpMemberDetails("dlwlsrn9412@kookmin.ac.kr", LookupType.WITHALLINFOS);
+
+        System.out.println(memberDetails);
+        System.out.println(memberDetails.getMemberStats().getManner());
     }
 }

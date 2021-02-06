@@ -30,7 +30,11 @@ public class MemberDetails {
 
     public MemberDetails(Member member, MemberImage memberImage) {
         this(member);
-        this.imagePath = memberImage.getImagePath();
+        if(memberImage == null) {
+            this.imagePath = null;
+        } else {
+            this.imagePath = memberImage.getImagePath();
+        }
     }
 
     public MemberDetails(Member member, MemberImage memberImage, MemberStats memberStats) {

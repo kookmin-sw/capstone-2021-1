@@ -56,15 +56,20 @@ public class MemberService implements UserDetailsService {
         member.encodePassword(passwordEncoder);
     }
 
-    public MemberDetails lookUpMemberDetails(@NonNull String email) {
+    public MemberDetails lookUpMemberDetails(@NonNull String email, LookupType type) {
         Member member = getMemberEntityByEmail(email);
         //TODO::회원 정보, 회원 이미지 정보, 회원 능력치 정보를 조회해야 함
-        MemberImage memberImage = getMemberImageEntity(member);
-
-        return new MemberDetails(member, memberImage);
+        if(type==LookupType.DEFAULT) {
+            return new MemberDetails(member);
+        } else if(type==LookupType.WITHIMAGE) {
+            return new MemberDetails(member,
+                    getMemberImageEntity(member));
+        } else {
+            return new MemberDetails(member,
+                    getMemberImageEntity(member),
+                    getMemberStatsEntity(member));
+        }
     }
-
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -100,6 +105,10 @@ public class MemberService implements UserDetailsService {
     }
 
     private MemberImage getMemberImageEntity(Member member) {
-        return memberImageRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
+        return memberImageRepository.findByMember(member).orElse(null);
+    }
+
+    private MemberStats getMemberStatsEntity(Member member) {
+        return memberStatsRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
     }
 }
