@@ -14,6 +14,14 @@ import org.springframework.stereotype.Service;
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
+
+
+    private boolean isDuplicated(String email) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+
+        return member==null;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //TODO:: 그냥 UsernameNotFoundException 던져주는 걸로 끝나도 되는지 확인해야함
