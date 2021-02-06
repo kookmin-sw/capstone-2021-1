@@ -25,6 +25,7 @@ public class MemberService implements UserDetailsService {
                 .password(memberCreateInfo.getPassword())
                 .nickname(memberCreateInfo.getNickname())
                 .phoneNumber(memberCreateInfo.getPhoneNumber())
+                .address(memberCreateInfo.getAddress())
                 .build();
 
         member.encodePassword(passwordEncoder);

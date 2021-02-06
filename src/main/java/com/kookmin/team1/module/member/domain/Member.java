@@ -42,12 +42,13 @@ public class Member {
 
     @Builder
     public Member(String email, String password, String nickname, String name,
-                  String phoneNumber) {
+                  String phoneNumber, String address) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.address = address;
         this.status = MemberStatus.ACTIVE;
         this.role = MemberRole.USER;
     }
