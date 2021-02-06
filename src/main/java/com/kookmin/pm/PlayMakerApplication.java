@@ -10,9 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class PlayMakerApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(PlayMakerApplication.class, args);
-    }
+    public static void main(String[] args) { SpringApplication.run(PlayMakerApplication.class, args); }
 
     @Bean
     public RestTemplate restTemplate() {
