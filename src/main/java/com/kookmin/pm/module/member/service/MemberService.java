@@ -2,6 +2,7 @@ package com.kookmin.pm.module.member.service;
 
 import com.kookmin.pm.module.member.domain.MemberImage;
 import com.kookmin.pm.module.member.domain.MemberStats;
+import com.kookmin.pm.module.member.domain.MemberStatus;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
@@ -56,9 +57,9 @@ public class MemberService implements UserDetailsService {
         member.encodePassword(passwordEncoder);
     }
 
-    public MemberDetails lookUpMemberDetails(@NonNull String email, LookupType type) {
+    public MemberDetails lookUpMemberDetails(@NonNull String email, @NonNull LookupType type) {
         Member member = getMemberEntityByEmail(email);
-        //TODO::회원 정보, 회원 이미지 정보, 회원 능력치 정보를 조회해야 함
+        //TODO::더 나은 구조 구상해보기
         if(type==LookupType.DEFAULT) {
             return new MemberDetails(member);
         } else if(type==LookupType.WITHIMAGE) {
@@ -69,6 +70,16 @@ public class MemberService implements UserDetailsService {
                     getMemberImageEntity(member),
                     getMemberStatsEntity(member));
         }
+    }
+
+    public boolean secessionMember(@NonNull String email, @NonNull String password) {
+        Member member = getMemberEntityByEmail(email);
+
+        if(!passwordEncoder.matches(password, member.getPassword())) return false;
+
+        member.changeStatus(MemberStatus.EXPIRED);
+
+        return true;
     }
 
     @Override

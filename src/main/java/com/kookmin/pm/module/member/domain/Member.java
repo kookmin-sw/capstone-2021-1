@@ -77,4 +77,8 @@ public class Member {
     public void editAddress(String address) {
         this.address = address;
     }
+
+    public void changeStatus(MemberStatus status) {
+        this.status = status;
+    }
 }
