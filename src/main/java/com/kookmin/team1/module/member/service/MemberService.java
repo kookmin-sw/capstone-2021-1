@@ -2,6 +2,7 @@ package com.kookmin.team1.module.member.service;
 
 import com.kookmin.team1.module.member.domain.Member;
 import com.kookmin.team1.module.member.dto.MemberCreateInfo;
+import com.kookmin.team1.module.member.dto.MemberDetails;
 import com.kookmin.team1.module.member.dto.MemberEditInfo;
 import com.kookmin.team1.module.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class MemberService implements UserDetailsService {
     }
 
     public void editMemberInfo(@NonNull String email, @NonNull MemberEditInfo memberEditInfo) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+        Member member = getMemberEntityByEmail(email);
 
         member.editNickname(memberEditInfo.getNickname());
         member.editPhoneNumber(memberEditInfo.getPhoneNumber());
@@ -53,9 +54,21 @@ public class MemberService implements UserDetailsService {
         member.encodePassword(passwordEncoder);
     }
 
+    public MemberDetails lookUpMemberDetails(@NonNull String email) {
+        Member member = getMemberEntityByEmail(email);
+
+        //TODO::회원 정보, 회원 이미지 정보, 회원 능력치 정보를 조회해야 함
+
+        return null;
+    }
+
     private boolean isDuplicated(String email) {
         Member member = memberRepository.findByEmail(email).orElse(null);
         return member!=null;
+    }
+
+    private Member getMemberEntityByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
@@ -70,4 +83,6 @@ public class MemberService implements UserDetailsService {
                 .roles(member.getRole().toString())
                 .build();
     }
+
+
 }
