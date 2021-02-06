@@ -1,9 +1,11 @@
-package com.kookmin.team1.module.member.dto;
+package com.kookmin.pm.module.member.dto;
 
 import lombok.Data;
 
 @Data
-public class MemberEditInfo {
+//TODO::Validate 설정해야함
+public class MemberCreateInfo {
+    private String email;
     private String password;
     private String nickname;
     private String name;

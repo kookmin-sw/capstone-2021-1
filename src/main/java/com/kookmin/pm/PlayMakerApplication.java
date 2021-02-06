@@ -1,4 +1,4 @@
-package com.kookmin.team1;
+package com.kookmin.pm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +8,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-public class Team1Application {
+public class PlayMakerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Team1Application.class, args);
+        SpringApplication.run(PlayMakerApplication.class, args);
     }
 
     @Bean

@@ -1,10 +1,10 @@
 package com.kookmin.team1.member;
 
-import com.kookmin.team1.module.member.domain.Member;
-import com.kookmin.team1.module.member.dto.MemberCreateInfo;
-import com.kookmin.team1.module.member.dto.MemberEditInfo;
-import com.kookmin.team1.module.member.repository.MemberRepository;
-import com.kookmin.team1.module.member.service.MemberService;
+import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.dto.MemberCreateInfo;
+import com.kookmin.pm.module.member.dto.MemberEditInfo;
+import com.kookmin.pm.module.member.repository.MemberRepository;
+import com.kookmin.pm.module.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.kookmin.team1.support.config;
+package com.kookmin.pm.support.config;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;

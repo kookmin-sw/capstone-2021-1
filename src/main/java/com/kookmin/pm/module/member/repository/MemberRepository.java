@@ -1,6 +1,6 @@
-package com.kookmin.team1.module.member.repository;
+package com.kookmin.pm.module.member.repository;
 
-import com.kookmin.team1.module.member.domain.Member;
+import com.kookmin.pm.module.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

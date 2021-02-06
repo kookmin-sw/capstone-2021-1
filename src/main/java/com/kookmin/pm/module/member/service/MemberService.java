@@ -1,10 +1,10 @@
-package com.kookmin.team1.module.member.service;
+package com.kookmin.pm.module.member.service;
 
-import com.kookmin.team1.module.member.domain.Member;
-import com.kookmin.team1.module.member.dto.MemberCreateInfo;
-import com.kookmin.team1.module.member.dto.MemberDetails;
-import com.kookmin.team1.module.member.dto.MemberEditInfo;
-import com.kookmin.team1.module.member.repository.MemberRepository;
+import com.kookmin.pm.module.member.dto.MemberCreateInfo;
+import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.dto.MemberDetails;
+import com.kookmin.pm.module.member.dto.MemberEditInfo;
+import com.kookmin.pm.module.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.User;
@@ -26,14 +26,8 @@ public class MemberService implements UserDetailsService {
         //TODO::RuntimeException 정의 해야함, 회원 이메일이 중복되었을 경우
         if(isDuplicated(memberCreateInfo.getEmail())) throw new RuntimeException();
 
-        Member member = Member.builder()
-                .email(memberCreateInfo.getEmail())
-                .name(memberCreateInfo.getName())
-                .password(memberCreateInfo.getPassword())
-                .nickname(memberCreateInfo.getNickname())
-                .phoneNumber(memberCreateInfo.getPhoneNumber())
-                .address(memberCreateInfo.getAddress())
-                .build();
+        //TODO::회원 가입시, 이미지, 회원 능력치를 같이 추가해줘야함
+        Member member = buildMemberEntity(memberCreateInfo);
 
         member.encodePassword(passwordEncoder);
 
@@ -62,15 +56,6 @@ public class MemberService implements UserDetailsService {
         return null;
     }
 
-    private boolean isDuplicated(String email) {
-        Member member = memberRepository.findByEmail(email).orElse(null);
-        return member!=null;
-    }
-
-    private Member getMemberEntityByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
-    }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //TODO:: 그냥 UsernameNotFoundException 던져주는 걸로 끝나도 되는지 확인해야함
@@ -84,5 +69,23 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
+    private Member buildMemberEntity(MemberCreateInfo memberCreateInfo) {
+        return Member.builder()
+                .email(memberCreateInfo.getEmail())
+                .name(memberCreateInfo.getName())
+                .password(memberCreateInfo.getPassword())
+                .nickname(memberCreateInfo.getNickname())
+                .phoneNumber(memberCreateInfo.getPhoneNumber())
+                .address(memberCreateInfo.getAddress())
+                .build();
+    }
 
+    private boolean isDuplicated(String email) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        return member!=null;
+    }
+
+    private Member getMemberEntityByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+    }
 }
