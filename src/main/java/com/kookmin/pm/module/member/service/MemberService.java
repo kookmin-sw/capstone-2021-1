@@ -29,7 +29,7 @@ public class MemberService implements UserDetailsService {
         //TODO::RuntimeException 정의 해야함, 회원 이메일이 중복되었을 경우
         if(isDuplicated(memberCreateInfo.getEmail())) throw new RuntimeException();
 
-        //TODO::회원 가입시, 이미지, 회원 능력치를 같이 추가해줘야함
+        //TODO::회원 가입시, 회원 능력치를 같이 추가해줘야함
         Member member = buildMemberEntity(memberCreateInfo);
         member.encodePassword(passwordEncoder);
         member = memberRepository.save(member);
