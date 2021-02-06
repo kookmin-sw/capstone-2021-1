@@ -1,10 +1,12 @@
 package com.kookmin.pm.module.member.service;
 
+import com.kookmin.pm.module.member.domain.MemberStats;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.dto.MemberEditInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
+import com.kookmin.pm.module.member.repository.MemberStatsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.User;
@@ -20,6 +22,7 @@ import javax.persistence.EntityNotFoundException;
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
+    private final MemberStatsRepository memberStatsRepository;
     private final PasswordEncoder passwordEncoder;
 
     public Long joinMember(@NonNull MemberCreateInfo memberCreateInfo) {
@@ -28,10 +31,13 @@ public class MemberService implements UserDetailsService {
 
         //TODO::회원 가입시, 이미지, 회원 능력치를 같이 추가해줘야함
         Member member = buildMemberEntity(memberCreateInfo);
-
         member.encodePassword(passwordEncoder);
-
         member = memberRepository.save(member);
+
+        MemberStats memberStats = MemberStats.builder()
+                .member(member)
+                .build();
+        memberStatsRepository.save(memberStats);
 
         return member.getId();
     }
