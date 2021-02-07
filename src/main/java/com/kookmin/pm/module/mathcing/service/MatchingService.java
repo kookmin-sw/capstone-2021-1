@@ -3,10 +3,14 @@ package com.kookmin.pm.module.mathcing.service;
 import com.kookmin.pm.module.mathcing.domain.Matching;
 import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
 import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
+import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
 import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
 import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
+import com.kookmin.pm.module.member.service.LookupType;
+import com.kookmin.pm.module.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -21,6 +26,7 @@ import java.time.LocalDateTime;
 public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final MatchingParticipantRepository matchingParticipantRepository;
+    private final MemberService memberService;
     private final MemberRepository memberRepository;
 
     //TODO::회원 엔티티와 매핑되어야함
@@ -62,6 +68,40 @@ public class MatchingService {
         matchingParticipant = matchingParticipantRepository.save(matchingParticipant);
 
         return matchingParticipant.getId();
+    }
+
+    public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {
+        Matching matching = getMatchingEntity(matchingId);
+
+        MatchingDetails matchingDetails = null;
+
+        if(lookUpType.equals(MatchingLookUpType.DEFAULT)) {
+            matchingDetails = new MatchingDetails(matching);
+
+        } else if(lookUpType.equals(MatchingLookUpType.WITH_HOST)){
+            matchingDetails = new MatchingDetails(matching);
+
+            MemberDetails memberDetails = memberService
+                    .lookUpMemberDetails(matching.getMember().getEmail(), LookupType.WITHALLINFOS);
+
+            matchingDetails.setHost(memberDetails);
+
+        } else if(lookUpType.equals(MatchingLookUpType.WITH_PARTICIPANTS)) {
+            matchingDetails = new MatchingDetails(matching);
+
+            MemberDetails memberDetails = memberService
+                    .lookUpMemberDetails(matching.getMember().getEmail(), LookupType.WITHALLINFOS);
+
+            matchingDetails.setHost(memberDetails);
+
+            //TODO::구현 방향 정하기
+            //1.matchingParticipants 테이블에서 각각의 회원 정보를 읽어와 다시 회원 엔티티를 읽어서 매핑
+            //2.queryDsl을 이용해서 조인후 사용
+
+            List<Member> participants = null;
+        }
+
+        return matchingDetails;
     }
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member) {
