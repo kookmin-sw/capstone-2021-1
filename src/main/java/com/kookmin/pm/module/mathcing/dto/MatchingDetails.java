@@ -20,6 +20,7 @@ public class MatchingDetails {
     private Double longitude;
     private String status;
     private Integer maxCount;
+    private Integer participantsCount;
     private MemberDetails host;
     private MatchingParticipant matchingParticipant;
 
