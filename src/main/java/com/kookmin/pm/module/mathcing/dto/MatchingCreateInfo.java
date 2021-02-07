@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class MatchingCreateInfo {
     private String title;
     private String description;
-    private LocalDateTime startTime;
     private Double latitude;
     private Double longitude;
     private Integer maxCount;

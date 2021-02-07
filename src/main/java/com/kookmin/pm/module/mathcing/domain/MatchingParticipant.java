@@ -1,6 +1,7 @@
 package com.kookmin.pm.module.mathcing.domain;
 
 import com.kookmin.pm.module.member.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,11 @@ public class MatchingParticipant {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="MATCHING_ID")
     private Matching matching;
+
+    @Builder
+    public MatchingParticipant(Member member, Matching matching) {
+        this.status = ParticipantStatus.PENDING_ACCEPTANCE;
+        this.member = member;
+        this.matching = matching;
+    }
 }
