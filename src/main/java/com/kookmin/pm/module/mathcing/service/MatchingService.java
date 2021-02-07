@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,11 +95,17 @@ public class MatchingService {
 
             matchingDetails.setHost(memberDetails);
 
-            //TODO::구현 방향 정하기
-            //1.matchingParticipants 테이블에서 각각의 회원 정보를 읽어와 다시 회원 엔티티를 읽어서 매핑
-            //2.queryDsl을 이용해서 조인후 사용
+            //TODO::Querydsl을 이용한 조인으로 방향을 정함, Member관련 querydsl 레포지토리 구현 필요
+            List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
+            List<MemberDetails> participantDetails = new ArrayList<>();
 
-            List<Member> participants = null;
+            //TODO::엔티티를 가져와서 다시 dto로 변환하는데... 회원관련 다른 테이블도 전부 조인해야함, 조금 비효율적이다. 개선 필요
+            for(Member member : participants)
+                participantDetails.add(memberService.lookUpMemberDetails(member.getEmail(),
+                        LookupType.WITHALLINFOS));
+
+            matchingDetails.setParticipants(participantDetails);
+            matchingDetails.setParticipantsCount(participantDetails.size());
         }
 
         return matchingDetails;

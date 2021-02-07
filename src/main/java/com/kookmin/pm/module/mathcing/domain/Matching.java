@@ -9,9 +9,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Entity(name="MATCHING")
+@Entity
 @Getter
 @NoArgsConstructor
+@Table(name="MATCHING")
 public class Matching {
     @Id @GeneratedValue
     @Column(name = "MATCHING_ID")

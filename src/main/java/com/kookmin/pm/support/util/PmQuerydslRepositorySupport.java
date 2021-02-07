@@ -23,7 +23,7 @@ import java.util.function.Function;
 import static org.springframework.util.Assert.notNull;
 
 @Repository
-public class PmQuerydslRepositorySupport {
+public abstract class PmQuerydslRepositorySupport {
     private final Class domainClass;
     private Querydsl querydsl;
     private EntityManager entityManager;

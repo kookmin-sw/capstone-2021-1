@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "MEMBER_STATS")
+@Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "MEMBER_STATS")
 public class MemberStats {
     @Id @GeneratedValue
     @Column(name="MEMBER_STATS_ID")

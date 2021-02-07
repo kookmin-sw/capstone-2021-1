@@ -7,9 +7,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
-@Entity(name = "MEMBER")
+@Entity
 @NoArgsConstructor
 @Getter
+@Table(name = "MEMBER")
 public class Member {
     @Id @GeneratedValue
     @Column(name="MEMBER_ID")

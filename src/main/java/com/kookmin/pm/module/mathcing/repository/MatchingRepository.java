@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface MatchingRepository extends JpaRepository<Matching,Long> {
+public interface MatchingRepository extends JpaRepository<Matching,Long>, MatchingSearchRepository {
     List<Matching> findByMember(Member member);
     List<Matching> findByMemberAndStatus(Member member, MatchingStatus status);
 

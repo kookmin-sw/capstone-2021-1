@@ -1,13 +1,11 @@
 package com.kookmin.pm.module.mathcing.dto;
 
 import com.kookmin.pm.module.mathcing.domain.Matching;
-import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
-import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class MatchingDetails {
@@ -22,7 +20,7 @@ public class MatchingDetails {
     private Integer maxCount;
     private Integer participantsCount;
     private MemberDetails host;
-    private MatchingParticipant matchingParticipant;
+    private List<MemberDetails> participants;
 
 
     public MatchingDetails(Matching matching) {

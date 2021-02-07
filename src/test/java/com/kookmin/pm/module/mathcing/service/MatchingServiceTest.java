@@ -4,8 +4,10 @@ import com.kookmin.pm.module.mathcing.domain.Matching;
 import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
 import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
 import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
+import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
 import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
+import com.kookmin.pm.module.mathcing.repository.MatchingSearchRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
@@ -57,10 +59,30 @@ class MatchingServiceTest {
         memberCreateInfo2.setPassword("1234");
         memberCreateInfo2.setNickname("jingu2");
         memberCreateInfo2.setAddress("서울시~~~");
-        memberCreateInfo2.setName("이진구");
+        memberCreateInfo2.setName("이진팔");
         memberCreateInfo2.setPhoneNumber("010-8784-3827");
 
         memberService.joinMember(memberCreateInfo2);
+
+        MemberCreateInfo memberCreateInfo3 = new MemberCreateInfo();
+        memberCreateInfo3.setEmail("dlwlsrn7@kookmin.ac.kr");
+        memberCreateInfo3.setPassword("1234");
+        memberCreateInfo3.setNickname("jingu3");
+        memberCreateInfo3.setAddress("서울시~~~");
+        memberCreateInfo3.setName("이진칠");
+        memberCreateInfo3.setPhoneNumber("010-8784-3827");
+
+        memberService.joinMember(memberCreateInfo3);
+
+        MemberCreateInfo memberCreateInfo4 = new MemberCreateInfo();
+        memberCreateInfo4.setEmail("dlwlsrn6@kookmin.ac.kr");
+        memberCreateInfo4.setPassword("1234");
+        memberCreateInfo4.setNickname("jingu4");
+        memberCreateInfo4.setAddress("서울시~~~");
+        memberCreateInfo4.setName("이진육");
+        memberCreateInfo4.setPhoneNumber("010-8784-3827");
+
+        memberService.joinMember(memberCreateInfo4);
 
         MatchingCreateInfo matchingCreateInfo = new MatchingCreateInfo();
         matchingCreateInfo.setTitle("title");
@@ -139,5 +161,71 @@ class MatchingServiceTest {
         assertThatThrownBy(() -> {
             Long id = matchingService.participateMatching(creater.getEmail(), matching.getId());
         }).isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    @DisplayName("matching관련 조인 테스트")
+    public void matching_participants_join_test() {
+        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant2 = memberRepository.findByEmail("dlwlsrn7@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant3 = memberRepository.findByEmail("dlwlsrn6@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(creater).get(0);
+
+        matchingService.participateMatching(participant.getEmail(), matching.getId());
+        matchingService.participateMatching(participant2.getEmail(), matching.getId());
+        matchingService.participateMatching(participant3.getEmail(), matching.getId());
+
+        List<Member> members = matchingRepository.searchMemberInMatchingParticipant(matching.getId());
+        System.out.println(members.size());
+
+
+        for(Member member : members)
+            System.out.println(member);
+    }
+
+    @Test
+    @DisplayName("lookupMatching 성공 테스트")
+    public void lookupMatching_success_test() {
+        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant2 = memberRepository.findByEmail("dlwlsrn7@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant3 = memberRepository.findByEmail("dlwlsrn6@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(creater).get(0);
+
+        matchingService.participateMatching(participant.getEmail(), matching.getId());
+        matchingService.participateMatching(participant2.getEmail(), matching.getId());
+        matchingService.participateMatching(participant3.getEmail(), matching.getId());
+
+        MatchingDetails matchingDetails = matchingService.lookupMatching(matching.getId(),
+                MatchingLookUpType.DEFAULT);
+
+        System.out.println("DEFAULT: " + matchingDetails);
+
+        MatchingDetails matchingDetails2 = matchingService.lookupMatching(matching.getId(),
+                MatchingLookUpType.WITH_HOST);
+
+        System.out.println("WITH HOST: " + matchingDetails2);
+
+        MatchingDetails matchingDetails3 = matchingService.lookupMatching(matching.getId(),
+                MatchingLookUpType.WITH_PARTICIPANTS);
+
+        System.out.println("WITH PARTICIPANTS: " + matchingDetails3);
     }
 }

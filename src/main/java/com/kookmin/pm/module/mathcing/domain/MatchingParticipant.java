@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "MATCHING_PARTICIPANT")
+@Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "MATCHING_PARTICIPANT")
 public class MatchingParticipant {
     @Id @GeneratedValue
     @Column(name = "MATCHING_PARTICIPANT_ID")
