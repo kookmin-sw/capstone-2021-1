@@ -30,7 +30,7 @@ public class MatchingService {
 
         matchingRepository.save(matching);
 
-        return null;
+        return matching.getId();
     }
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member) {
