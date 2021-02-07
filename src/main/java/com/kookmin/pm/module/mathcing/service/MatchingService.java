@@ -2,6 +2,7 @@ package com.kookmin.pm.module.mathcing.service;
 
 import com.kookmin.pm.module.mathcing.domain.Matching;
 import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
+import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
 import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
 import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
 import com.kookmin.pm.module.mathcing.dto.MatchingEditInfo;
@@ -33,6 +34,7 @@ public class MatchingService {
 
     //TODO::회원 엔티티와 매핑되어야함
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
+    //TODO::현재보다 과거시간대를 startTime으로 정할경우 Exception
     public Long startMatching(@NonNull String email, @NonNull MatchingCreateInfo matchingCreateInfo) {
         Member member = getMemberEntityByEmail(email);
 
@@ -76,12 +78,17 @@ public class MatchingService {
         Member member = getMemberEntityByEmail(email);
         Matching matching = getMatchingEntity(matchingEditInfo.getId());
 
+        //TODO::아직 시작되지 않은 상태의 매칭만 수정가능
+        if(!matching.getStatus().equals(MatchingStatus.SCHEDULED))
+            throw new RuntimeException();
+
         //TODO::수정을 요청한 회원과 매칭을 생성한 회원이 일치하지 않는 경우 익셉션 정의 필요
         if(!matching.getMember().getEmail().equals(member.getEmail()))
             throw new RuntimeException();
 
-        //TODO::이미 시작된 매칭의 경우 정보 수정이 불가능하다. 익셉션 정의 필요
-        if(matching.getStartTime().isAfter(LocalDateTime.now()))
+        //TODO::이미 시작된 매칭의 경우, 현재보다 이전 시간을 매칭 시작시간으로 설정할 경우 정보 수정이 불가능하다. 익셉션 정의 필요
+        if(matching.getStartTime().isBefore(LocalDateTime.now())
+            || matchingEditInfo.getStartTime().isBefore(LocalDateTime.now()))
             throw new RuntimeException();
 
         //TODO::변경하려는 최대 인원수 보다 현재 참가 인원수가 더 많은 경우 익셉션 정의 필요
@@ -95,6 +102,7 @@ public class MatchingService {
         matching.editDescription(matchingEditInfo.getDescription());
         matching.editLocation(matchingEditInfo.getLatitude(), matchingEditInfo.getLongitude());
         matching.editMaxCount(matchingEditInfo.getMaxCount());
+        matching.editStartTime(matchingEditInfo.getStartTime());
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {
@@ -141,7 +149,7 @@ public class MatchingService {
         return Matching.builder()
                 .title(matchingCreateInfo.getTitle())
                 .description(matchingCreateInfo.getDescription())
-                .startTime(LocalDateTime.now())
+                .startTime(matchingCreateInfo.getStartTime())
                 .latitude(matchingCreateInfo.getLatitude())
                 .longitude(matchingCreateInfo.getLongitude())
                 .maxCount(matchingCreateInfo.getMaxCount())
