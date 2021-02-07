@@ -4,6 +4,7 @@ import com.kookmin.pm.module.mathcing.domain.Matching;
 import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
 import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
 import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
+import com.kookmin.pm.module.mathcing.dto.MatchingEditInfo;
 import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -69,6 +70,31 @@ public class MatchingService {
         matchingParticipant = matchingParticipantRepository.save(matchingParticipant);
 
         return matchingParticipant.getId();
+    }
+
+    public void editMatching(@NonNull String email, @NonNull MatchingEditInfo matchingEditInfo) {
+        Member member = getMemberEntityByEmail(email);
+        Matching matching = getMatchingEntity(matchingEditInfo.getId());
+
+        //TODO::수정을 요청한 회원과 매칭을 생성한 회원이 일치하지 않는 경우 익셉션 정의 필요
+        if(!matching.getMember().getEmail().equals(member.getEmail()))
+            throw new RuntimeException();
+
+        //TODO::이미 시작된 매칭의 경우 정보 수정이 불가능하다. 익셉션 정의 필요
+        if(matching.getStartTime().isAfter(LocalDateTime.now()))
+            throw new RuntimeException();
+
+        //TODO::변경하려는 최대 인원수 보다 현재 참가 인원수가 더 많은 경우 익셉션 정의 필요
+        if(!matching.getMaxCount().equals(matchingEditInfo.getMaxCount())) {
+           List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingEditInfo.getId());
+           if(participants.size() > matchingEditInfo.getMaxCount())
+               throw new RuntimeException();
+        }
+
+        matching.editTitle(matchingEditInfo.getTitle());
+        matching.editDescription(matchingEditInfo.getDescription());
+        matching.editLocation(matchingEditInfo.getLatitude(), matchingEditInfo.getLongitude());
+        matching.editMaxCount(matchingEditInfo.getMaxCount());
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {

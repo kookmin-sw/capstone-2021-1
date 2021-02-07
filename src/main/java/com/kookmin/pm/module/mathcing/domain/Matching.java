@@ -66,5 +66,27 @@ public class Matching {
 
     public void endMatching() {
         this.status = MatchingStatus.END;
+        this.endTime = LocalDateTime.now();
+    }
+
+    public void editLocation(Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public void editTitle(String title) {
+        this.title = title;
+    }
+
+    public void editDescription(String description) {
+        this.description = description;
+    }
+
+    public void editStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void editMaxCount(Integer maxCount) {
+        this.maxCount = maxCount;
     }
 }
