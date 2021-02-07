@@ -1,6 +1,7 @@
 package com.kookmin.pm.web;
 
 import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.MemberService;
 import com.kookmin.pm.support.util.JwtTokenProvider;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,5 +49,18 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userInfos);
+    }
+
+    @PostConstruct
+    public void setUp() {
+        MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
+        memberCreateInfo.setAddress("서울시~~");
+        memberCreateInfo.setEmail("dlwlsrn9411@kookmin.ac.kr");
+        memberCreateInfo.setName("이진구");
+        memberCreateInfo.setPassword("1234");
+        memberCreateInfo.setNickname("LJG");
+        memberCreateInfo.setPhoneNumber("010-8784-3827");
+
+        memberService.joinMember(memberCreateInfo);
     }
 }

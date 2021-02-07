@@ -25,4 +25,8 @@ public class MemberImage {
     public MemberImage(Member member) {
         this.member = member;
     }
+
+    public void editImagePath(String imagePath) {
+        this.imagePath=imagePath;
+    }
 }

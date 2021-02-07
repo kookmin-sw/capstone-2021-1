@@ -42,6 +42,12 @@ public class MemberService implements UserDetailsService {
                 .build();
         memberStatsRepository.save(memberStats);
 
+        MemberImage memberImage = MemberImage.builder()
+                .member(member)
+                .build();
+
+        memberImageRepository.save(memberImage);
+
         return member.getId();
     }
 
@@ -68,11 +74,11 @@ public class MemberService implements UserDetailsService {
             return new MemberDetails(member);
         } else if(type==LookupType.WITHIMAGE) {
             return new MemberDetails(member,
-                    getMemberImageEntity(member));
+                    getMemberImageEntityByEmail(email));
         } else {
             return new MemberDetails(member,
-                    getMemberImageEntity(member),
-                    getMemberStatsEntity(member));
+                    getMemberImageEntityByEmail(email),
+                    getMemberStatsEntityByEmail(email));
         }
     }
 
@@ -84,6 +90,16 @@ public class MemberService implements UserDetailsService {
         member.changeStatus(MemberStatus.EXPIRED);
 
         return true;
+    }
+
+    public void changeMemberImage(@NonNull String email, @NonNull String imagePath) {
+        MemberImage memberImage = getMemberImageEntityByEmail(email);
+        memberImage.editImagePath(imagePath);
+    }
+
+    public void removeMemberImage(@NonNull String email) {
+        MemberImage memberImage = getMemberImageEntityByEmail(email);
+        memberImageRepository.delete(memberImage);
     }
 
     @Override
@@ -119,11 +135,13 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
     }
 
-    private MemberImage getMemberImageEntity(Member member) {
+    private MemberImage getMemberImageEntityByEmail(String email) {
+        Member member = getMemberEntityByEmail(email);
         return memberImageRepository.findByMember(member).orElse(null);
     }
 
-    private MemberStats getMemberStatsEntity(Member member) {
+    private MemberStats getMemberStatsEntityByEmail(String email) {
+        Member member = getMemberEntityByEmail(email);
         return memberStatsRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
     }
 }
