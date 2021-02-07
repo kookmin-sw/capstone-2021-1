@@ -48,16 +48,22 @@ public class Matching {
 
     @Builder
     public Matching(String title, String description, LocalDateTime startTime, Double latitude, Double longitude,
-                    MatchingStatus status, Integer maxCount, Member member) {
+                    Integer maxCount, Member member) {
         this.title = title;
         this.description = description;
         this.startTime = startTime;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.status = status;
+        this.status = MatchingStatus.SCHEDULED;
         this.maxCount = maxCount;
         this.member = member;
     }
 
+    public void startMatching() {
+        this.status = MatchingStatus.PROCEEDING;
+    }
 
+    public void endMatching() {
+        this.status = MatchingStatus.END;
+    }
 }
