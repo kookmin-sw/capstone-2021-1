@@ -1,5 +1,7 @@
 package com.kookmin.pm.module.matching.service;
 
+import com.kookmin.pm.module.category.domain.Category;
+import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
@@ -32,18 +34,20 @@ import java.util.List;
 public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final MatchingParticipantRepository matchingParticipantRepository;
+    private final CategoryRepository categoryRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
     public Long startMatching(@NonNull String email, @NonNull MatchingCreateInfo matchingCreateInfo) {
         Member member = getMemberEntityByEmail(email);
+        Category category = getCategoryEntityByName(matchingCreateInfo.getCategory());
 
         //TODO::현재보다 과거시간대를 startTime으로 정할경우 Exception
         if(matchingCreateInfo.getStartTime().isBefore(LocalDateTime.now()))
             throw new RuntimeException();
 
-        Matching matching = buildMatchingEntity(matchingCreateInfo, member);
+        Matching matching = buildMatchingEntity(matchingCreateInfo, member, category);
 
         matchingRepository.save(matching);
 
@@ -100,6 +104,11 @@ public class MatchingService {
            List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingEditInfo.getId());
            if(participants.size() > matchingEditInfo.getMaxCount())
                throw new RuntimeException();
+        }
+
+        if(!matching.getCategory().getName().equals(matchingEditInfo.getCategory())) {
+            Category category = getCategoryEntityByName(matchingEditInfo.getCategory());
+            matching.changeCategory(category);
         }
 
         matching.editTitle(matchingEditInfo.getTitle());
@@ -176,7 +185,7 @@ public class MatchingService {
         return matchingDetails;
     }
 
-    private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member) {
+    private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
         return Matching.builder()
                 .title(matchingCreateInfo.getTitle())
                 .description(matchingCreateInfo.getDescription())
@@ -185,11 +194,17 @@ public class MatchingService {
                 .longitude(matchingCreateInfo.getLongitude())
                 .maxCount(matchingCreateInfo.getMaxCount())
                 .member(member)
+                .category(category)
                 .build();
     }
 
     private Member getMemberEntityByEmail(String email) {
         return memberRepository.findByEmail(email)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private Category getCategoryEntityByName(String categoryName) {
+        return categoryRepository.findByName(categoryName)
                 .orElseThrow(EntityNotFoundException::new);
     }
 

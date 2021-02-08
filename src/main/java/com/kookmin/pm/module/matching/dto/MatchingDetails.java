@@ -26,6 +26,7 @@ public class MatchingDetails {
     private Double longitude;
     private Double distance;
     private String status;
+    private String category;
     private Integer maxCount;
     private Integer participantsCount;
     private MemberDetails host;
@@ -41,10 +42,12 @@ public class MatchingDetails {
         this.longitude = matching.getLongitude();
         this.status = matching.getStatus().toString();
         this.maxCount = matching.getMaxCount();
+        this.category = matching.getCategory().getName();
     }
 
     public MatchingDetails (Long id, String title, String description, Timestamp startTime, Timestamp endTime,
-                            Double latitude, Double longitude, String status, Integer maxCount, Double distance) {
+                            Double latitude, Double longitude, String status, Integer maxCount, Double distance,
+                            String category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -55,11 +58,12 @@ public class MatchingDetails {
         this.distance = distance;
         this.status = status;
         this.maxCount = maxCount;
+        this.category = category;
     }
 
     @QueryProjection
     public MatchingDetails(Long id, String title, String description, LocalDateTime startTime, LocalDateTime endTime,
-                           Double latitude, Double longitude, String status, Integer maxCount) {
+                           Double latitude, Double longitude, String status, Integer maxCount, String category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -69,6 +73,7 @@ public class MatchingDetails {
         this.longitude = longitude;
         this.status = status;
         this.maxCount = maxCount;
+        this.category = category;
     }
 
     private LocalDateTime convertTimeStamp(Timestamp time) {

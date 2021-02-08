@@ -1,5 +1,7 @@
 package com.kookmin.pm.module.matching.service;
 
+import com.kookmin.pm.module.category.domain.Category;
+import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
@@ -51,6 +53,8 @@ class MatchingServiceTest {
     private MatchingMapper matchingMapper;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     public void setup() {
@@ -94,6 +98,12 @@ class MatchingServiceTest {
 
         memberService.joinMember(memberCreateInfo4);
 
+        Category category = new Category("BOARD_GAME");
+        categoryRepository.save(category);
+
+        Category category2 = new Category("ROOM_ESCAPE");
+        categoryRepository.save(category2);
+
         MatchingCreateInfo matchingCreateInfo = new MatchingCreateInfo();
         matchingCreateInfo.setTitle("title");
         matchingCreateInfo.setDescription("desc");
@@ -101,6 +111,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setLongitude(120.05);
         matchingCreateInfo.setStartTime(LocalDateTime.of(2021, 12, 12, 12,0,0));
         matchingCreateInfo.setMaxCount(5);
+        matchingCreateInfo.setCategory("BOARD_GAME");
 
         matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
 
@@ -111,6 +122,7 @@ class MatchingServiceTest {
         matchingCreateInfo2.setLongitude(120.05);
         matchingCreateInfo2.setStartTime(LocalDateTime.of(2021, 11, 12, 12,0,0));
         matchingCreateInfo2.setMaxCount(5);
+        matchingCreateInfo2.setCategory("BOARD_GAME");
 
         matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
     }
@@ -128,10 +140,11 @@ class MatchingServiceTest {
         matchingCreateInfo.setLatitude(38.05);
         matchingCreateInfo.setLongitude(120.05);
         matchingCreateInfo.setMaxCount(5);
+        matchingCreateInfo.setCategory("BOARD_GAME");
 
         Long id = matchingService.startMatching(member.getEmail(), matchingCreateInfo);
-
         Matching matching = matchingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Category category = categoryRepository.findByName("BOARD_GAME").orElseThrow(EntityNotFoundException::new);
 
         assertThat(matching)
                 .hasFieldOrPropertyWithValue("title", matchingCreateInfo.getTitle())
@@ -139,7 +152,8 @@ class MatchingServiceTest {
                 .hasFieldOrPropertyWithValue("latitude", matchingCreateInfo.getLatitude())
                 .hasFieldOrPropertyWithValue("longitude", matchingCreateInfo.getLongitude())
                 .hasFieldOrPropertyWithValue("maxCount", matchingCreateInfo.getMaxCount())
-                .hasFieldOrPropertyWithValue("status", MatchingStatus.SCHEDULED);
+                .hasFieldOrPropertyWithValue("status", MatchingStatus.SCHEDULED)
+                .hasFieldOrPropertyWithValue("category", category);
     }
 
     @Test
@@ -254,6 +268,7 @@ class MatchingServiceTest {
         matchingEditInfo.setId(matching.getId());
         matchingEditInfo.setTitle("수정 제목");
         matchingEditInfo.setDescription("수정 설명");
+        matchingEditInfo.setCategory("ROOM_ESCAPE");
         matchingEditInfo.setLatitude(50.0);
         matchingEditInfo.setLongitude(50.0);
         matchingEditInfo.setMaxCount(5);
@@ -262,9 +277,13 @@ class MatchingServiceTest {
        matchingService.editMatching(creater.getEmail(), matchingEditInfo);
 
        matching = matchingRepository.findByMember(creater).get(0);
+        Category category = categoryRepository.findByName("ROOM_ESCAPE").orElseThrow(EntityNotFoundException::new);
 
        assertThat(matching)
                .hasFieldOrPropertyWithValue("title", matchingEditInfo.getTitle());
+
+       assertThat(matching.getCategory())
+               .hasFieldOrPropertyWithValue("name", "ROOM_ESCAPE");
     }
 
     @Test
@@ -314,7 +333,7 @@ class MatchingServiceTest {
     public void searchMatching_success_test() {
         MatchingSearchCondition searchCondition = new MatchingSearchCondition();
         searchCondition.setHostEmail("dlwlsrn9412@kookmin.ac.kr");
-
+        searchCondition.setCategory("BOARD_GAME");
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<MatchingDetails> matchingDetails = matchingService.searchMatching(pageable, searchCondition);
@@ -344,8 +363,6 @@ class MatchingServiceTest {
         map.put("distance", searchCondition.getDistance());
 
         List<MatchingDetails> matchingDetailsList = matchingMapper.searchMatchingWithLocationInfo(map);
-
-        System.out.println("!!!!!!!!!!!!!!!!!!" + matchingDetailsList.size());
 
         for(MatchingDetails details : matchingDetailsList)
             System.out.println(details);

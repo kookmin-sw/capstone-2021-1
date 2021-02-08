@@ -1,5 +1,6 @@
 package com.kookmin.pm.module.matching.domain;
 
+import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,9 +47,13 @@ public class Matching {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
+
     @Builder
     public Matching(String title, String description, LocalDateTime startTime, Double latitude, Double longitude,
-                    Integer maxCount, Member member) {
+                    Integer maxCount, Member member, Category category) {
         this.title = title;
         this.description = description;
         this.startTime = startTime;
@@ -57,6 +62,7 @@ public class Matching {
         this.status = MatchingStatus.SCHEDULED;
         this.maxCount = maxCount;
         this.member = member;
+        this.category = category;
     }
 
     public void startMatching() {
@@ -87,5 +93,9 @@ public class Matching {
 
     public void editMaxCount(Integer maxCount) {
         this.maxCount = maxCount;
+    }
+
+    public void changeCategory(Category category) {
+        this.category = category;
     }
 }
