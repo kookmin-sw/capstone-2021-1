@@ -1,5 +1,6 @@
 package com.kookmin.pm.module.matching.repository;
 
+import com.kookmin.pm.module.category.domain.QCategory;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.dto.MatchingDetails;
 import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.kookmin.pm.module.category.domain.QCategory.*;
 import static com.kookmin.pm.module.matching.domain.QMatching.*;
 import static com.kookmin.pm.module.matching.domain.QMatchingParticipant.*;
 import static com.kookmin.pm.module.member.domain.QMember.*;
@@ -36,18 +38,24 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
         return applyPagination(pageable, contentQuery -> contentQuery
         .select(new QMatchingDetails(matching.id, matching.title, matching.description, matching.startTime,
                 matching.endTime, matching.latitude, matching.longitude, matching.status.stringValue(),
-                matching.maxCount))
+                matching.maxCount, category.name))
         .from(matching)
         .leftJoin(matching.member, member)
+        .leftJoin(matching.category, category)
         .where(titleLike(condition.getTitle()),
                 statusEq(condition.getStatus()),
                 maxCountLt(condition.getMaxCount()),
-                hostEmailEq(condition.getHostEmail()))
+                hostEmailEq(condition.getHostEmail()),
+                categoryEq(condition.getCategory()))
         .orderBy(matching.startTime.desc()));
     }
 
     private BooleanExpression titleLike(String title) {
         return title==null? null : matching.title.contains(title);
+    }
+
+    private BooleanExpression categoryEq(String categoryName) {
+        return category==null? null : category.name.eq(categoryName);
     }
 
     private BooleanExpression statusEq(String status) {

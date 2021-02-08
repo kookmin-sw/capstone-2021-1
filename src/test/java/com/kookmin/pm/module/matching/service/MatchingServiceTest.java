@@ -333,7 +333,7 @@ class MatchingServiceTest {
     public void searchMatching_success_test() {
         MatchingSearchCondition searchCondition = new MatchingSearchCondition();
         searchCondition.setHostEmail("dlwlsrn9412@kookmin.ac.kr");
-
+        searchCondition.setCategory("BOARD_GAME");
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<MatchingDetails> matchingDetails = matchingService.searchMatching(pageable, searchCondition);
@@ -363,8 +363,6 @@ class MatchingServiceTest {
         map.put("distance", searchCondition.getDistance());
 
         List<MatchingDetails> matchingDetailsList = matchingMapper.searchMatchingWithLocationInfo(map);
-
-        System.out.println("!!!!!!!!!!!!!!!!!!" + matchingDetailsList.size());
 
         for(MatchingDetails details : matchingDetailsList)
             System.out.println(details);

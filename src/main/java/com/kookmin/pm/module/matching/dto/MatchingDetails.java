@@ -61,7 +61,7 @@ public class MatchingDetails {
 
     @QueryProjection
     public MatchingDetails(Long id, String title, String description, LocalDateTime startTime, LocalDateTime endTime,
-                           Double latitude, Double longitude, String status, Integer maxCount) {
+                           Double latitude, Double longitude, String status, Integer maxCount, String category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -71,6 +71,7 @@ public class MatchingDetails {
         this.longitude = longitude;
         this.status = status;
         this.maxCount = maxCount;
+        this.category = category;
     }
 
     private LocalDateTime convertTimeStamp(Timestamp time) {

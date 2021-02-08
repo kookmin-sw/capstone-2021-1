@@ -15,4 +15,5 @@ public class MatchingSearchCondition {
     private String hostEmail;
     private Double latitude;
     private Double longitude;
+    private String category;
 }
