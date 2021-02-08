@@ -50,17 +50,4 @@ public class MemberController {
                 .status(HttpStatus.OK)
                 .body(userInfos);
     }
-
-    @PostConstruct
-    public void setUp() {
-        MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
-        memberCreateInfo.setAddress("서울시~~");
-        memberCreateInfo.setEmail("dlwlsrn9411@kookmin.ac.kr");
-        memberCreateInfo.setName("이진구");
-        memberCreateInfo.setPassword("1234");
-        memberCreateInfo.setNickname("LJG");
-        memberCreateInfo.setPhoneNumber("010-8784-3827");
-
-        memberService.joinMember(memberCreateInfo);
-    }
 }

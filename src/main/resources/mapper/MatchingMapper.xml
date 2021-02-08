@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kookmin.pm.module.matching.repository.MatchingMapper">
+    <resultMap id="matchingDetails" type="com.kookmin.pm.module.matching.dto.MatchingDetails">
+        <result column="MATCHING_ID" property="id"/>
+        <result column="TITLE" property="title"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="START_TIME" property="startTime"/>
+        <result column="END_TIME" property="endTime"/>
+        <result column="LATITUDE" property="latitude"/>
+        <result column="LONGITUDE" property="longitude"/>
+        <result column="STATUS" property="status"/>
+        <result column="MAX_COUNT" property="maxCount"/>
+        <result column="DISTANCE" property="distance"/>
+    </resultMap>
+
+    <!--DISTANCE &lt;= #{distance}-->
+    <select id="searchMatchingWithLocationInfo" parameterType="hashMap" resultMap="matchingDetails">
+        SELECT MATCHING_ID, TITLE, DESCRIPTION, START_TIME, END_TIME, LATITUDE, LONGITUDE, STATUS, MAX_COUNT,
+        	(6371*ACOS(COS(RADIANS(#{latitude}))*cos(RADIANS(LATITUDE))*COS(RADIANS(LONGITUDE)
+        	-RADIANS(#{longitude}))+SIN(RADIANS(#{latitude}))*SIN(RADIANS(LATITUDE)))) AS DISTANCE
+        FROM MATCHING
+        GROUP BY MATCHING_ID
+        HAVING DISTANCE &lt;= #{distance}
+        <if test="title != null and !title.equals('')">
+            AND TITLE CONCAT('%',#{title},'%')
+        </if>
+        <if test="status != null and !status.equals('')">
+            AND STATUS = #{status}
+        </if>
+        <if test="maxCount != null">
+            AND MAX_COUNT &lt;= #{maxCount}
+        </if>
+    </select>
+</mapper>

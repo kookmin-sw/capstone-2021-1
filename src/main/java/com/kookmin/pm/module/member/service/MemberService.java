@@ -31,7 +31,8 @@ public class MemberService implements UserDetailsService {
 
     public Long joinMember(@NonNull MemberCreateInfo memberCreateInfo) {
         //TODO::RuntimeException 정의 해야함, 회원 이메일이 중복되었을 경우
-        if(isDuplicated(memberCreateInfo.getEmail())) throw new RuntimeException();
+       if(isDuplicated(memberCreateInfo.getEmail()))
+            throw new RuntimeException();
 
         Member member = buildMemberEntity(memberCreateInfo);
         member.encodePassword(passwordEncoder);
