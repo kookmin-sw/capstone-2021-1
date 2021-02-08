@@ -256,4 +256,25 @@ class MatchingServiceTest {
        assertThat(matching)
                .hasFieldOrPropertyWithValue("title", matchingEditInfo.getTitle());
     }
+
+    @Test
+    @DisplayName("quitMatching 성공 테스트")
+    public void quitMatching_success_test() {
+        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(creater).get(0);
+
+        Long id = matchingService.participateMatching(participant.getEmail(), matching.getId());
+
+        matchingService.quitMatching(creater.getEmail(), matching.getId());
+
+        List<MatchingParticipant> result = matchingParticipantRepository.findByMatching(matching);
+
+        assertThat(result.size())
+                .isEqualTo(0);
+    }
 }

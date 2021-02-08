@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface MatchingParticipantRepository extends JpaRepository<MatchingParticipant, Long> {
     Optional<MatchingParticipant> findByMemberAndMatching(Member member, Matching matching);
     List<MatchingParticipant> findByMatching(Matching matching);
+    void deleteAllByMatching(Matching matching);
 }

@@ -77,7 +77,6 @@ public class MatchingService {
     }
 
     public void editMatching(@NonNull String email, @NonNull MatchingEditInfo matchingEditInfo) {
-        Member member = getMemberEntityByEmail(email);
         Matching matching = getMatchingEntity(matchingEditInfo.getId());
 
         //TODO::아직 시작되지 않은 상태의 매칭만 수정가능
@@ -85,7 +84,7 @@ public class MatchingService {
             throw new RuntimeException();
 
         //TODO::수정을 요청한 회원과 매칭을 생성한 회원이 일치하지 않는 경우 익셉션 정의 필요
-        if(!matching.getMember().getEmail().equals(member.getEmail()))
+        if(!matching.getMember().getEmail().equals(email))
             throw new RuntimeException();
 
         //TODO::이미 시작된 매칭의 경우, 현재보다 이전 시간을 매칭 시작시간으로 설정할 경우 정보 수정이 불가능하다. 익셉션 정의 필요
@@ -105,6 +104,22 @@ public class MatchingService {
         matching.editLocation(matchingEditInfo.getLatitude(), matchingEditInfo.getLongitude());
         matching.editMaxCount(matchingEditInfo.getMaxCount());
         matching.editStartTime(matchingEditInfo.getStartTime());
+    }
+
+    public void quitMatching(@NonNull String email, @NonNull Long matchingId) {
+        Matching matching = getMatchingEntity(matchingId);
+
+        //TODO::매칭 생성자와 요청한 회원의 이메일이 일치하지 않을때 익셉션 정의 필요
+        if(!matching.getMember().getEmail().equals(email))
+            throw new RuntimeException();
+
+        //TODO::매칭에 참가한 다른 인원들에게 알림으로 알려주는 기능 필요
+        List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
+
+        //TODO::조인문 발생하지 않나 검증 필
+        matchingParticipantRepository.deleteAllByMatching(matching);
+
+        matchingRepository.delete(matching);
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {
