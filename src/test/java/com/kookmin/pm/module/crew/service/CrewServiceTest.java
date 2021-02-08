@@ -4,6 +4,7 @@ import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
+import com.kookmin.pm.module.crew.dto.CrewEditInfo;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
@@ -18,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,7 +86,17 @@ class CrewServiceTest {
 
         Category category2 = new Category("ROOM_ESCAPE");
         categoryRepository.save(category2);
+
+        CrewCreateInfo crewCreateInfo = new CrewCreateInfo();
+        crewCreateInfo.setName("초기 크루");
+        crewCreateInfo.setDescription("크루 설명1");
+        crewCreateInfo.setActivityArea("서울");
+        crewCreateInfo.setCategory("BOARD_GAME");
+        crewCreateInfo.setMaxCount(5);
+
+        crewService.establishCrew("dlwlsrn9412@kookmin.ac.kr",crewCreateInfo);
     }
+
     @Test
     @DisplayName("establishGuild 성공 테스트")
     public void establishGuild_success_test() {
@@ -99,7 +112,6 @@ class CrewServiceTest {
         Member member = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-
         assertThat(crew)
                 .hasFieldOrPropertyWithValue("name", crewCreateInfo.getName())
                 .hasFieldOrPropertyWithValue("description", crewCreateInfo.getDescription())
@@ -113,5 +125,23 @@ class CrewServiceTest {
                 .isEqualTo(member);
     }
 
+    @Test
+    @DisplayName("editCrewInfo 성공 테스트")
+    public void editCrewInfo_success_test() {
+        Crew crew = crewRepository.findAll().get(0);
 
+
+        CrewEditInfo crewEditInfo = new CrewEditInfo();
+        crewEditInfo.setName("수정 크루");
+        crewEditInfo.setDescription("수정 크루 설명");
+        crewEditInfo.setId(crew.getId());
+
+        crewService.editCrewInfo("dlwlsrn9412@kookmin.ac.kr", crewEditInfo);
+
+        crew = crewRepository.findById(crew.getId()).orElseThrow(EntityNotFoundException::new);
+
+        assertThat(crew)
+                .hasFieldOrPropertyWithValue("name", crewEditInfo.getName())
+                .hasFieldOrPropertyWithValue("description", crewEditInfo.getDescription());
+    }
 }

@@ -53,4 +53,12 @@ public class Crew {
         this.member = member;
         this.category = category;
     }
+
+    public void editName(String name) {
+        this.name = name;
+    }
+
+    public void editDescription(String description) {
+        this.description = description;
+    }
 }

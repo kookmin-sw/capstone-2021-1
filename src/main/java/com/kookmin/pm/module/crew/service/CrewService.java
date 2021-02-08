@@ -4,6 +4,7 @@ import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
+import com.kookmin.pm.module.crew.dto.CrewEditInfo;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -24,6 +25,7 @@ public class CrewService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
 
+    //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String email, @NonNull CrewCreateInfo crewCreateInfo) {
         Member member = getMemberEntityByEmail(email);
         Category category = getCategoryEntityByName(crewCreateInfo.getCategory());
@@ -33,6 +35,24 @@ public class CrewService {
         crew = crewRepository.save(crew);
 
         return crew.getId();
+    }
+
+    //TODO::활동지역은 여러개 인가
+    public void editCrewInfo(@NonNull String email, @NonNull CrewEditInfo crewEditInfo) {
+        Member member = getMemberEntityByEmail(email);
+        Crew crew = getCrewEntityByEmail(crewEditInfo.getId());
+
+        //TODO::이메일이 서로 다른 경우
+        if(!crew.getMember().getEmail().equals(email))
+            throw new RuntimeException();
+
+        crew.editName(crewEditInfo.getName());
+        crew.editDescription(crewEditInfo.getDescription());
+    }
+
+    private Crew getCrewEntityByEmail(Long id) {
+        return crewRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     private Member getMemberEntityByEmail(String email) {
