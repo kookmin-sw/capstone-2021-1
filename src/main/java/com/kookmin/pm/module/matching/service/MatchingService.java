@@ -174,9 +174,10 @@ public class MatchingService {
             List<MemberDetails> participantDetails = new ArrayList<>();
 
             //TODO::엔티티를 가져와서 다시 dto로 변환하는데... 회원관련 다른 테이블도 전부 조인해야함, 조금 비효율적이다. 개선 필요
-            for(Member member : participants)
+            for(Member member : participants) {
                 participantDetails.add(memberService.lookUpMemberDetails(member.getEmail(),
                         LookupType.WITHALLINFOS));
+            }
 
             matchingDetails.setParticipants(participantDetails);
             matchingDetails.setParticipantsCount(participantDetails.size());
