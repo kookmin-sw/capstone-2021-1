@@ -6,6 +6,7 @@ import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
 import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
 import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
 import com.kookmin.pm.module.mathcing.dto.MatchingEditInfo;
+import com.kookmin.pm.module.mathcing.dto.MatchingSearchCondition;
 import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -14,6 +15,10 @@ import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,7 +128,16 @@ public class MatchingService {
     }
 
     public void cancelParticipation(@NonNull String email, @NonNull Long matchingId) {
+        //TODO::참가 취소 신청회원이 해당 매칭에 없을 경우
+
         matchingParticipantRepository.deleteByMemberEmailAndMatchingId(email, matchingId);
+    }
+
+    public Page<MatchingDetails> searchMatching(@NonNull Pageable pageable,
+                                                @NonNull MatchingSearchCondition searchCondition) {
+
+
+        return null;
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {

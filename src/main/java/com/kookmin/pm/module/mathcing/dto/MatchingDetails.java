@@ -2,6 +2,7 @@ package com.kookmin.pm.module.mathcing.dto;
 
 import com.kookmin.pm.module.mathcing.domain.Matching;
 import com.kookmin.pm.module.member.dto.MemberDetails;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,6 @@ public class MatchingDetails {
     private MemberDetails host;
     private List<MemberDetails> participants;
 
-
     public MatchingDetails(Matching matching) {
         this.id = matching.getId();
         this.title = matching.getTitle();
@@ -33,5 +33,19 @@ public class MatchingDetails {
         this.longitude = matching.getLongitude();
         this.status = matching.getStatus().toString();
         this.maxCount = matching.getMaxCount();
+    }
+
+    @QueryProjection
+    public MatchingDetails(Long id, String title, String description, LocalDateTime startTime, LocalDateTime endTime,
+                           Double latitude, Double longitude, String status, Integer maxCount) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.status = status;
+        this.maxCount = maxCount;
     }
 }
