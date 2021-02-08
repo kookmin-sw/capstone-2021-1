@@ -106,6 +106,11 @@ public class MatchingService {
                throw new RuntimeException();
         }
 
+        if(!matching.getCategory().getName().equals(matchingEditInfo.getCategory())) {
+            Category category = getCategoryEntityByName(matchingEditInfo.getCategory());
+            matching.changeCategory(category);
+        }
+
         matching.editTitle(matchingEditInfo.getTitle());
         matching.editDescription(matchingEditInfo.getDescription());
         matching.editLocation(matchingEditInfo.getLatitude(), matchingEditInfo.getLongitude());

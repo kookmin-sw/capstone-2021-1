@@ -48,7 +48,7 @@ public class Matching {
     private Member member;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "MATCHING_ID")
+    @JoinColumn(name = "CATEGORY_ID")
     private Category category;
 
     @Builder

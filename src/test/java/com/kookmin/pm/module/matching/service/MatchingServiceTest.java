@@ -99,7 +99,10 @@ class MatchingServiceTest {
         memberService.joinMember(memberCreateInfo4);
 
         Category category = new Category("BOARD_GAME");
-        category = categoryRepository.save(category);
+        categoryRepository.save(category);
+
+        Category category2 = new Category("ROOM_ESCAPE");
+        categoryRepository.save(category2);
 
         MatchingCreateInfo matchingCreateInfo = new MatchingCreateInfo();
         matchingCreateInfo.setTitle("title");
@@ -151,7 +154,6 @@ class MatchingServiceTest {
                 .hasFieldOrPropertyWithValue("maxCount", matchingCreateInfo.getMaxCount())
                 .hasFieldOrPropertyWithValue("status", MatchingStatus.SCHEDULED)
                 .hasFieldOrPropertyWithValue("category", category);
-
     }
 
     @Test
@@ -266,6 +268,7 @@ class MatchingServiceTest {
         matchingEditInfo.setId(matching.getId());
         matchingEditInfo.setTitle("수정 제목");
         matchingEditInfo.setDescription("수정 설명");
+        matchingEditInfo.setCategory("ROOM_ESCAPE");
         matchingEditInfo.setLatitude(50.0);
         matchingEditInfo.setLongitude(50.0);
         matchingEditInfo.setMaxCount(5);
@@ -274,9 +277,13 @@ class MatchingServiceTest {
        matchingService.editMatching(creater.getEmail(), matchingEditInfo);
 
        matching = matchingRepository.findByMember(creater).get(0);
+        Category category = categoryRepository.findByName("ROOM_ESCAPE").orElseThrow(EntityNotFoundException::new);
 
        assertThat(matching)
                .hasFieldOrPropertyWithValue("title", matchingEditInfo.getTitle());
+
+       assertThat(matching.getCategory())
+               .hasFieldOrPropertyWithValue("name", "ROOM_ESCAPE");
     }
 
     @Test
