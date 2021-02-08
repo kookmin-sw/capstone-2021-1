@@ -189,6 +189,12 @@ public class MatchingService {
 
     //TODO:: 참가요청에 대한 참가를 승인하는 메소드 필요, 참가요청 상태를 참여중으로 변경하고 등등 처리해야
 
+    //TODO:: 참가요청에 대한 참가를 거절하는 메소드 필요
+
+    //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
+
+    //TODO:: 참가요청에 대한 상세 조회 메소드 필
+
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
         return Matching.builder()
                 .title(matchingCreateInfo.getTitle())
