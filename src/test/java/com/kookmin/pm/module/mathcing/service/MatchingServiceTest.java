@@ -1,11 +1,14 @@
 package com.kookmin.pm.module.mathcing.service;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jayway.jsonpath.spi.json.GsonJsonProvider;
 import com.kookmin.pm.module.mathcing.domain.Matching;
 import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
 import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
 import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
 import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
 import com.kookmin.pm.module.mathcing.dto.MatchingEditInfo;
+import com.kookmin.pm.module.mathcing.dto.MatchingSearchCondition;
 import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingSearchRepository;
@@ -19,6 +22,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
@@ -100,7 +106,7 @@ class MatchingServiceTest {
         matchingCreateInfo2.setDescription("desc");
         matchingCreateInfo2.setLatitude(38.05);
         matchingCreateInfo2.setLongitude(120.05);
-        matchingCreateInfo2.setStartTime(LocalDateTime.of(2021, 12, 12, 12,0,0));
+        matchingCreateInfo2.setStartTime(LocalDateTime.of(2021, 11, 12, 12,0,0));
         matchingCreateInfo2.setMaxCount(5);
 
         matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
@@ -115,6 +121,7 @@ class MatchingServiceTest {
         MatchingCreateInfo matchingCreateInfo = new MatchingCreateInfo();
         matchingCreateInfo.setTitle("test_title");
         matchingCreateInfo.setDescription("test_desc");
+        matchingCreateInfo.setStartTime(LocalDateTime.of(2021, 12, 12, 12,0,0));
         matchingCreateInfo.setLatitude(38.05);
         matchingCreateInfo.setLongitude(120.05);
         matchingCreateInfo.setMaxCount(5);
@@ -297,5 +304,22 @@ class MatchingServiceTest {
 
         assertThat(participants.size())
                 .isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("searchMatching 성공 테스트")
+    public void searchMatching_success_test() {
+        MatchingSearchCondition searchCondition = new MatchingSearchCondition();
+        searchCondition.setHostEmail("dlwlsrn9412@kookmin.ac.kr");
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<MatchingDetails> matchingDetails = matchingService.searchMatching(pageable, searchCondition);
+
+        assertThat(matchingDetails.getContent().size())
+                .isEqualTo(2);
+
+        for(MatchingDetails matching : matchingDetails.getContent())
+            System.out.println(matching);
     }
 }

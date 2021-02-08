@@ -14,4 +14,6 @@ public class MatchingSearchCondition {
     private String status;
     private Integer maxCount;
     private String hostEmail;
+    private Double latitude;
+    private Double longitude;
 }

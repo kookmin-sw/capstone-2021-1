@@ -16,8 +16,6 @@ import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -135,9 +133,7 @@ public class MatchingService {
 
     public Page<MatchingDetails> searchMatching(@NonNull Pageable pageable,
                                                 @NonNull MatchingSearchCondition searchCondition) {
-
-
-        return null;
+        return matchingRepository.searchMatching(pageable, searchCondition);
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {

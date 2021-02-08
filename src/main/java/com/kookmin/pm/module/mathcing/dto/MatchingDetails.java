@@ -1,5 +1,6 @@
 package com.kookmin.pm.module.mathcing.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kookmin.pm.module.mathcing.domain.Matching;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.querydsl.core.annotations.QueryProjection;
@@ -13,8 +14,13 @@ public class MatchingDetails {
     private Long id;
     private String title;
     private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime startTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime endTime;
+
     private Double latitude;
     private Double longitude;
     private String status;

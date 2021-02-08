@@ -5,9 +5,18 @@ import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
 import com.kookmin.pm.module.mathcing.domain.QMatching;
 import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
 import com.kookmin.pm.module.mathcing.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.mathcing.dto.QMatchingDetails;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.support.util.PmQuerydslRepositorySupport;
+import com.querydsl.core.types.Constant;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.MathExpressions;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -36,13 +45,29 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
 
     public Page<MatchingDetails> searchMatching(Pageable pageable, MatchingSearchCondition condition) {
         return applyPagination(pageable, contentQuery -> contentQuery
-        .select()
+        .select(new QMatchingDetails(matching.id, matching.title, matching.description, matching.startTime,
+                matching.endTime, matching.latitude, matching.longitude, matching.status.stringValue(),
+                matching.maxCount))
         .from(matching)
         .leftJoin(matching.member, member)
         .where(titleLike(condition.getTitle()),
                 statusEq(condition.getStatus()),
                 maxCountLt(condition.getMaxCount()),
-                hostEmailEq(condition.getHostEmail())));
+                hostEmailEq(condition.getHostEmail()))
+        .orderBy(matching.startTime.desc()));
+    }
+
+    public List<MatchingDetails> searchMatchingWithLocationInformation(MatchingSearchCondition condition) {
+        Expression<Double> latitude =
+        return getQueryFactory()
+                .select(new QMatchingDetails(matching.id, matching.title, matching.description, matching.startTime,
+                        matching.endTime, matching.latitude, matching.longitude, matching.status.stringValue(),
+                        matching.maxCount,
+                        Expressions.as(MathExpressions.radians(), "distance")))
+    }
+
+    private NumberExpression<Double> latitude(Double latitude) {
+        return latitude==null? null : MathExpressions.acos(matching.longitude-latitude);
     }
 
     private BooleanExpression titleLike(String title) {
