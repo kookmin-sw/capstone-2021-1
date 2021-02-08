@@ -103,6 +103,8 @@ public class MemberService implements UserDetailsService {
         memberImageRepository.delete(memberImage);
     }
 
+    //TODO:: 회원 능력치 평가 메소드 필요
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         //TODO:: 그냥 UsernameNotFoundException 던져주는 걸로 끝나도 되는지 확인해야함
