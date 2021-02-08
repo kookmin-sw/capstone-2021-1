@@ -5,6 +5,7 @@ import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
 import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
 import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
 import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
+import com.kookmin.pm.module.mathcing.dto.MatchingEditInfo;
 import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
 import com.kookmin.pm.module.mathcing.repository.MatchingSearchRepository;
@@ -89,6 +90,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setDescription("desc");
         matchingCreateInfo.setLatitude(38.05);
         matchingCreateInfo.setLongitude(120.05);
+        matchingCreateInfo.setStartTime(LocalDateTime.of(2021, 12, 12, 12,0,0));
         matchingCreateInfo.setMaxCount(5);
 
         matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
@@ -98,6 +100,7 @@ class MatchingServiceTest {
         matchingCreateInfo2.setDescription("desc");
         matchingCreateInfo2.setLatitude(38.05);
         matchingCreateInfo2.setLongitude(120.05);
+        matchingCreateInfo2.setStartTime(LocalDateTime.of(2021, 12, 12, 12,0,0));
         matchingCreateInfo2.setMaxCount(5);
 
         matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
@@ -227,5 +230,30 @@ class MatchingServiceTest {
                 MatchingLookUpType.WITH_PARTICIPANTS);
 
         System.out.println("WITH PARTICIPANTS: " + matchingDetails3);
+    }
+
+    @Test
+    @DisplayName("editMatching 메소드 성공 테스트")
+    public void editMatching_success_test() {
+        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(creater).get(0);
+
+        MatchingEditInfo matchingEditInfo = new MatchingEditInfo();
+        matchingEditInfo.setId(matching.getId());
+        matchingEditInfo.setTitle("수정 제목");
+        matchingEditInfo.setDescription("수정 설명");
+        matchingEditInfo.setLatitude(50.0);
+        matchingEditInfo.setLongitude(50.0);
+        matchingEditInfo.setMaxCount(5);
+        matchingEditInfo.setStartTime(LocalDateTime.of(2021, 3, 12, 12,0,0));
+
+       matchingService.editMatching(creater.getEmail(), matchingEditInfo);
+
+       matching = matchingRepository.findByMember(creater).get(0);
+
+       assertThat(matching)
+               .hasFieldOrPropertyWithValue("title", matchingEditInfo.getTitle());
     }
 }

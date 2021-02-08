@@ -32,11 +32,13 @@ public class MatchingService {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
-    //TODO::회원 엔티티와 매핑되어야함
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
-    //TODO::현재보다 과거시간대를 startTime으로 정할경우 Exception
     public Long startMatching(@NonNull String email, @NonNull MatchingCreateInfo matchingCreateInfo) {
         Member member = getMemberEntityByEmail(email);
+
+        //TODO::현재보다 과거시간대를 startTime으로 정할경우 Exception
+        if(matchingCreateInfo.getStartTime().isBefore(LocalDateTime.now()))
+            throw new RuntimeException();
 
         Matching matching = buildMatchingEntity(matchingCreateInfo, member);
 
