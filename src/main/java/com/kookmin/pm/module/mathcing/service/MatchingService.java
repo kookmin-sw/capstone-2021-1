@@ -122,6 +122,10 @@ public class MatchingService {
         matchingRepository.delete(matching);
     }
 
+    public void cancelParticipation(@NonNull String email, @NonNull Long matchingId) {
+        matchingParticipantRepository.deleteByMemberEmailAndMatchingId(email, matchingId);
+    }
+
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {
         Matching matching = getMatchingEntity(matchingId);
 

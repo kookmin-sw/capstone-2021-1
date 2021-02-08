@@ -12,4 +12,5 @@ public interface MatchingParticipantRepository extends JpaRepository<MatchingPar
     Optional<MatchingParticipant> findByMemberAndMatching(Member member, Matching matching);
     List<MatchingParticipant> findByMatching(Matching matching);
     void deleteAllByMatching(Matching matching);
+    void deleteByMemberEmailAndMatchingId(String email, Long matchingId);
 }

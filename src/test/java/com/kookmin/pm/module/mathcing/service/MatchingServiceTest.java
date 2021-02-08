@@ -277,4 +277,25 @@ class MatchingServiceTest {
         assertThat(result.size())
                 .isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("cancelParticipation 성공 테스트")
+    public void cancelParticipation_success_test() {
+        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(creater).get(0);
+
+        Long id = matchingService.participateMatching(participant.getEmail(), matching.getId());
+
+        matchingService.cancelParticipation(participant.getEmail(), matching.getId());
+
+        List<MatchingParticipant> participants = matchingParticipantRepository.findByMatching(matching);
+
+        assertThat(participants.size())
+                .isEqualTo(0);
+    }
 }
