@@ -14,14 +14,18 @@
         <result column="STATUS" property="status"/>
         <result column="MAX_COUNT" property="maxCount"/>
         <result column="DISTANCE" property="distance"/>
+        <result column="NAME" property="category"/>
     </resultMap>
 
     <!--DISTANCE &lt;= #{distance}-->
     <select id="searchMatchingWithLocationInfo" parameterType="hashMap" resultMap="matchingDetails">
-        SELECT MATCHING_ID, TITLE, DESCRIPTION, START_TIME, END_TIME, LATITUDE, LONGITUDE, STATUS, MAX_COUNT,
-        	(6371*ACOS(COS(RADIANS(#{latitude}))*cos(RADIANS(LATITUDE))*COS(RADIANS(LONGITUDE)
-        	-RADIANS(#{longitude}))+SIN(RADIANS(#{latitude}))*SIN(RADIANS(LATITUDE)))) AS DISTANCE
-        FROM MATCHING
+        SELECT M.MATCHING_ID, M.TITLE, M.DESCRIPTION, M.START_TIME, M.END_TIME, M.LATITUDE, M.LONGITUDE, M.STATUS, M.MAX_COUNT,
+        	(6371*ACOS(COS(RADIANS(#{latitude}))*cos(RADIANS(M.LATITUDE))*COS(RADIANS(M.LONGITUDE)
+        	-RADIANS(#{longitude}))+SIN(RADIANS(#{latitude}))*SIN(RADIANS(M.LATITUDE)))) AS DISTANCE,
+        	C.NAME
+        FROM MATCHING AS M
+        LEFT JOIN CATEGORY AS C
+        ON M.CATEGORY_ID = C.CATEGORY_ID
         GROUP BY MATCHING_ID
         HAVING DISTANCE &lt;= #{distance}
         <if test="title != null and !title.equals('')">

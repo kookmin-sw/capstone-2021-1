@@ -46,7 +46,8 @@ public class MatchingDetails {
     }
 
     public MatchingDetails (Long id, String title, String description, Timestamp startTime, Timestamp endTime,
-                            Double latitude, Double longitude, String status, Integer maxCount, Double distance) {
+                            Double latitude, Double longitude, String status, Integer maxCount, Double distance,
+                            String category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -57,6 +58,7 @@ public class MatchingDetails {
         this.distance = distance;
         this.status = status;
         this.maxCount = maxCount;
+        this.category = category;
     }
 
     @QueryProjection
