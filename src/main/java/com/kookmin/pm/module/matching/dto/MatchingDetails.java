@@ -26,6 +26,7 @@ public class MatchingDetails {
     private Double longitude;
     private Double distance;
     private String status;
+    private String category;
     private Integer maxCount;
     private Integer participantsCount;
     private MemberDetails host;
@@ -41,6 +42,7 @@ public class MatchingDetails {
         this.longitude = matching.getLongitude();
         this.status = matching.getStatus().toString();
         this.maxCount = matching.getMaxCount();
+        this.category = matching.getCategory().getName();
     }
 
     public MatchingDetails (Long id, String title, String description, Timestamp startTime, Timestamp endTime,
