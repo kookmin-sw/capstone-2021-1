@@ -1,22 +1,19 @@
-package com.kookmin.pm.module.mathcing.service;
+package com.kookmin.pm.module.matching.service;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.jayway.jsonpath.spi.json.GsonJsonProvider;
-import com.kookmin.pm.module.mathcing.domain.Matching;
-import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
-import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
-import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
-import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
-import com.kookmin.pm.module.mathcing.dto.MatchingEditInfo;
-import com.kookmin.pm.module.mathcing.dto.MatchingSearchCondition;
-import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
-import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
-import com.kookmin.pm.module.mathcing.repository.MatchingSearchRepository;
+import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingParticipant;
+import com.kookmin.pm.module.matching.domain.MatchingStatus;
+import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
+import com.kookmin.pm.module.matching.dto.MatchingDetails;
+import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
+import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.matching.repository.MatchingMapper;
+import com.kookmin.pm.module.matching.repository.MatchingParticipantRepository;
+import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.MemberService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,13 +24,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -48,6 +47,10 @@ class MatchingServiceTest {
     private MatchingParticipantRepository matchingParticipantRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private MatchingMapper matchingMapper;
+    @Autowired
+    private EntityManager entityManager;
 
     @BeforeEach
     public void setup() {
@@ -321,5 +324,30 @@ class MatchingServiceTest {
 
         for(MatchingDetails matching : matchingDetails.getContent())
             System.out.println(matching);
+    }
+
+    @Test
+    @DisplayName("MatchingMapper 성공 테스트")
+    public void matchingMapper_test() {
+        entityManager.flush();
+        entityManager.clear();
+
+        MatchingSearchCondition searchCondition = new MatchingSearchCondition();
+
+        searchCondition.setLatitude(30.0);
+        searchCondition.setLongitude(120.0);
+        searchCondition.setDistance(1000.0);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("latitude", searchCondition.getLatitude());
+        map.put("longitude", searchCondition.getLongitude());
+        map.put("distance", searchCondition.getDistance());
+
+        List<MatchingDetails> matchingDetailsList = matchingMapper.searchMatchingWithLocationInfo(map);
+
+        System.out.println("!!!!!!!!!!!!!!!!!!" + matchingDetailsList.size());
+
+        for(MatchingDetails details : matchingDetailsList)
+            System.out.println(details);
     }
 }

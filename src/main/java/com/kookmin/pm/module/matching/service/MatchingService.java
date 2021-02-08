@@ -1,14 +1,14 @@
-package com.kookmin.pm.module.mathcing.service;
+package com.kookmin.pm.module.matching.service;
 
-import com.kookmin.pm.module.mathcing.domain.Matching;
-import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
-import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
-import com.kookmin.pm.module.mathcing.dto.MatchingCreateInfo;
-import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
-import com.kookmin.pm.module.mathcing.dto.MatchingEditInfo;
-import com.kookmin.pm.module.mathcing.dto.MatchingSearchCondition;
-import com.kookmin.pm.module.mathcing.repository.MatchingParticipantRepository;
-import com.kookmin.pm.module.mathcing.repository.MatchingRepository;
+import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingParticipant;
+import com.kookmin.pm.module.matching.domain.MatchingStatus;
+import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
+import com.kookmin.pm.module.matching.dto.MatchingDetails;
+import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
+import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.matching.repository.MatchingParticipantRepository;
+import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;

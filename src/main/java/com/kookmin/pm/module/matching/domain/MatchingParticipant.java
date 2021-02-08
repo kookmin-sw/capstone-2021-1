@@ -1,4 +1,4 @@
-package com.kookmin.pm.module.mathcing.domain;
+package com.kookmin.pm.module.matching.domain;
 
 import com.kookmin.pm.module.member.domain.Member;
 import lombok.Builder;

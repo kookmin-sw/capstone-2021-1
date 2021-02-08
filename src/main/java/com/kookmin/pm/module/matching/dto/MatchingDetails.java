@@ -1,11 +1,12 @@
-package com.kookmin.pm.module.mathcing.dto;
+package com.kookmin.pm.module.matching.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kookmin.pm.module.mathcing.domain.Matching;
+import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class MatchingDetails {
 
     private Double latitude;
     private Double longitude;
+    private Double distance;
     private String status;
     private Integer maxCount;
     private Integer participantsCount;
@@ -41,6 +43,20 @@ public class MatchingDetails {
         this.maxCount = matching.getMaxCount();
     }
 
+    public MatchingDetails (Long id, String title, String description, Timestamp startTime, Timestamp endTime,
+                            Double latitude, Double longitude, String status, Integer maxCount, Double distance) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.startTime = convertTimeStamp(startTime);
+        this.endTime = convertTimeStamp(endTime);
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.distance = distance;
+        this.status = status;
+        this.maxCount = maxCount;
+    }
+
     @QueryProjection
     public MatchingDetails(Long id, String title, String description, LocalDateTime startTime, LocalDateTime endTime,
                            Double latitude, Double longitude, String status, Integer maxCount) {
@@ -53,5 +69,10 @@ public class MatchingDetails {
         this.longitude = longitude;
         this.status = status;
         this.maxCount = maxCount;
+    }
+
+    private LocalDateTime convertTimeStamp(Timestamp time) {
+        if(time==null) return null;
+        return time.toLocalDateTime();
     }
 }

@@ -1,4 +1,4 @@
-package com.kookmin.pm.module.mathcing.domain;
+package com.kookmin.pm.module.matching.domain;
 
 public enum ParticipantStatus {
     PENDING_ACCEPTANCE,

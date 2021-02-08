@@ -1,16 +1,15 @@
-package com.kookmin.pm.module.mathcing.dto;
+package com.kookmin.pm.module.matching.dto;
 
-import com.kookmin.pm.module.member.dto.MemberDetails;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class MatchingSearchCondition {
     private String title;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private Double distance;
     private String status;
     private Integer maxCount;
     private String hostEmail;

@@ -1,8 +1,7 @@
-package com.kookmin.pm.module.mathcing.dto;
+package com.kookmin.pm.module.matching.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,7 +9,8 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class MatchingCreateInfo {
+public class MatchingEditInfo {
+    private Long id;
     private String title;
     private String description;
     private Double latitude;

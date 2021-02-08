@@ -1,12 +1,11 @@
-package com.kookmin.pm.module.mathcing.repository;
+package com.kookmin.pm.module.matching.repository;
 
-import com.kookmin.pm.module.mathcing.domain.Matching;
-import com.kookmin.pm.module.mathcing.domain.MatchingStatus;
+import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MatchingRepository extends JpaRepository<Matching,Long>, MatchingSearchRepository {
     List<Matching> findByMember(Member member);

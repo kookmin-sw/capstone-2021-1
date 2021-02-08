@@ -1,4 +1,4 @@
-package com.kookmin.pm.module.mathcing.dto;
+package com.kookmin.pm.module.matching.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-public class MatchingEditInfo {
-    private Long id;
+public class MatchingCreateInfo {
     private String title;
     private String description;
     private Double latitude;

@@ -1,4 +1,4 @@
-package com.kookmin.pm.module.mathcing.service;
+package com.kookmin.pm.module.matching.service;
 
 public enum MatchingLookUpType {
     DEFAULT,

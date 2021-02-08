@@ -1,7 +1,7 @@
-package com.kookmin.pm.module.mathcing.repository;
+package com.kookmin.pm.module.matching.repository;
 
-import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
-import com.kookmin.pm.module.mathcing.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.matching.dto.MatchingDetails;
+import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
 import com.kookmin.pm.module.member.domain.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

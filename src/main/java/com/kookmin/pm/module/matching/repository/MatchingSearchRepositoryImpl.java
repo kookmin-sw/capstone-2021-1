@@ -1,32 +1,21 @@
-package com.kookmin.pm.module.mathcing.repository;
+package com.kookmin.pm.module.matching.repository;
 
-import com.kookmin.pm.module.mathcing.domain.Matching;
-import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
-import com.kookmin.pm.module.mathcing.domain.QMatching;
-import com.kookmin.pm.module.mathcing.dto.MatchingDetails;
-import com.kookmin.pm.module.mathcing.dto.MatchingSearchCondition;
-import com.kookmin.pm.module.mathcing.dto.QMatchingDetails;
+import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.dto.MatchingDetails;
+import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.matching.dto.QMatchingDetails;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.support.util.PmQuerydslRepositorySupport;
-import com.querydsl.core.types.Constant;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Visitor;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.MathExpressions;
-import com.querydsl.core.types.dsl.NumberExpression;
-import com.querydsl.jpa.JPAExpressions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.kookmin.pm.module.mathcing.domain.QMatching.*;
-import static com.kookmin.pm.module.mathcing.domain.QMatchingParticipant.*;
+import static com.kookmin.pm.module.matching.domain.QMatching.*;
+import static com.kookmin.pm.module.matching.domain.QMatchingParticipant.*;
 import static com.kookmin.pm.module.member.domain.QMember.*;
-import static com.querydsl.core.types.dsl.MathExpressions.*;
 
 @Repository
 public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport implements MatchingSearchRepository{
@@ -55,19 +44,6 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
                 maxCountLt(condition.getMaxCount()),
                 hostEmailEq(condition.getHostEmail()))
         .orderBy(matching.startTime.desc()));
-    }
-
-    public List<MatchingDetails> searchMatchingWithLocationInformation(MatchingSearchCondition condition) {
-        Expression<Double> latitude =
-        return getQueryFactory()
-                .select(new QMatchingDetails(matching.id, matching.title, matching.description, matching.startTime,
-                        matching.endTime, matching.latitude, matching.longitude, matching.status.stringValue(),
-                        matching.maxCount,
-                        Expressions.as(MathExpressions.radians(), "distance")))
-    }
-
-    private NumberExpression<Double> latitude(Double latitude) {
-        return latitude==null? null : MathExpressions.acos(matching.longitude-latitude);
     }
 
     private BooleanExpression titleLike(String title) {

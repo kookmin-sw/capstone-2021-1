@@ -1,7 +1,7 @@
-package com.kookmin.pm.module.mathcing.repository;
+package com.kookmin.pm.module.matching.repository;
 
-import com.kookmin.pm.module.mathcing.domain.Matching;
-import com.kookmin.pm.module.mathcing.domain.MatchingParticipant;
+import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
