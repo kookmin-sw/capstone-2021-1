@@ -1,5 +1,7 @@
 package com.kookmin.pm.module.matching.service;
 
+import com.kookmin.pm.module.category.domain.Category;
+import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
@@ -51,6 +53,8 @@ class MatchingServiceTest {
     private MatchingMapper matchingMapper;
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     public void setup() {
@@ -94,6 +98,9 @@ class MatchingServiceTest {
 
         memberService.joinMember(memberCreateInfo4);
 
+        Category category = new Category("BOARD_GAME");
+        category = categoryRepository.save(category);
+
         MatchingCreateInfo matchingCreateInfo = new MatchingCreateInfo();
         matchingCreateInfo.setTitle("title");
         matchingCreateInfo.setDescription("desc");
@@ -101,6 +108,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setLongitude(120.05);
         matchingCreateInfo.setStartTime(LocalDateTime.of(2021, 12, 12, 12,0,0));
         matchingCreateInfo.setMaxCount(5);
+        matchingCreateInfo.setCategory("BOARD_GAME");
 
         matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
 
@@ -111,6 +119,7 @@ class MatchingServiceTest {
         matchingCreateInfo2.setLongitude(120.05);
         matchingCreateInfo2.setStartTime(LocalDateTime.of(2021, 11, 12, 12,0,0));
         matchingCreateInfo2.setMaxCount(5);
+        matchingCreateInfo2.setCategory("BOARD_GAME");
 
         matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
     }
@@ -128,10 +137,11 @@ class MatchingServiceTest {
         matchingCreateInfo.setLatitude(38.05);
         matchingCreateInfo.setLongitude(120.05);
         matchingCreateInfo.setMaxCount(5);
+        matchingCreateInfo.setCategory("BOARD_GAME");
 
         Long id = matchingService.startMatching(member.getEmail(), matchingCreateInfo);
-
         Matching matching = matchingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Category category = categoryRepository.findByName("BOARD_GAME").orElseThrow(EntityNotFoundException::new);
 
         assertThat(matching)
                 .hasFieldOrPropertyWithValue("title", matchingCreateInfo.getTitle())
@@ -139,7 +149,9 @@ class MatchingServiceTest {
                 .hasFieldOrPropertyWithValue("latitude", matchingCreateInfo.getLatitude())
                 .hasFieldOrPropertyWithValue("longitude", matchingCreateInfo.getLongitude())
                 .hasFieldOrPropertyWithValue("maxCount", matchingCreateInfo.getMaxCount())
-                .hasFieldOrPropertyWithValue("status", MatchingStatus.SCHEDULED);
+                .hasFieldOrPropertyWithValue("status", MatchingStatus.SCHEDULED)
+                .hasFieldOrPropertyWithValue("category", category);
+
     }
 
     @Test

@@ -15,6 +15,7 @@ public class MatchingCreateInfo {
     private Double latitude;
     private Double longitude;
     private Integer maxCount;
+    private String category;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
