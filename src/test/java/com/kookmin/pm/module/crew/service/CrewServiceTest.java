@@ -283,4 +283,41 @@ class CrewServiceTest {
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PARTICIPATING))
                 .isEqualTo(0L);
     }
+
+    @Test
+    @DisplayName("removeCrew 성공 테스트")
+    public void removeCrew_success_test() {
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant2 = memberRepository.findByEmail("dlwlsrn7@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member host = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Crew crew = crewRepository.findByMember(host)
+                .orElseThrow(EntityNotFoundException::new);
+
+        crewService.participateCrew(participant.getEmail(), crew.getId());
+        crewService.participateCrew(participant2.getEmail(), crew.getId());
+
+
+        CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
+                .orElseThrow(EntityNotFoundException::new);
+
+        CrewParticipants crewParticipants2 = crewParticipantsRepository.findByMemberAndCrew(participant2, crew)
+                .orElseThrow(EntityNotFoundException::new);
+
+        crewService.approveParticipationRequest(host.getEmail(), crewParticipants.getId());
+        crewService.approveParticipationRequest(host.getEmail(), crewParticipants2.getId());
+
+        crewService.removeCrew(host.getEmail(), crew.getId());
+
+        assertThat(crewRepository.findById(crew.getId()).orElse(null))
+                .isNull();
+
+        assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PARTICIPATING))
+                .isEqualTo(0L);
+    }
 }

@@ -34,7 +34,7 @@ public class CrewService {
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
 
-    //TODO::크루 검색, 크루 삭제, 크루 참가 요청 조회 및 검색
+    //TODO::크루 검색, 크루 참가 요청 조회 및 검색
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String email, @NonNull CrewCreateInfo crewCreateInfo) {
@@ -179,6 +179,17 @@ public class CrewService {
         //TODO::크루 참가자가 크루장에 의해 퇴출되었음을 알려주는 로직 필요
 
         crewParticipantsRepository.delete(participants);
+    }
+
+    public void removeCrew(@NonNull String email, @NonNull Long crewId) {
+        Member host = getMemberEntityByEmail(email);
+        Crew crew = getCrewEntity(crewId);
+
+        if(!crew.getMember().equals(host))
+            throw new RuntimeException();
+
+        crewParticipantsRepository.deleteAllByCrew(crew);
+        crewRepository.delete(crew);
     }
 
     private Crew getCrewEntity(Long id) {
