@@ -40,4 +40,8 @@ public class CrewParticipants {
         this.crew = crew;
         this.status = CrewParticipantStatus.PENDING;
     }
+
+    public void approveParticipation() {
+        this.status = CrewParticipantStatus.PARTICIPATING;
+    }
 }
