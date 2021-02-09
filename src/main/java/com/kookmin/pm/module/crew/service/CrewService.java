@@ -8,6 +8,7 @@ import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.crew.dto.CrewDetails;
 import com.kookmin.pm.module.crew.dto.CrewEditInfo;
+import com.kookmin.pm.module.crew.dto.CrewSearchCondition;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -17,6 +18,8 @@ import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,6 +93,10 @@ public class CrewService {
         }
 
         return crewDetails;
+    }
+
+    public Page<CrewDetails> searchCrew(@NonNull Pageable pageable, @NonNull CrewSearchCondition searchCondition) {
+        return crewRepository.searchCrew(pageable, searchCondition);
     }
 
     public void participateCrew(@NonNull String email, @NonNull Long crewId) {
@@ -187,6 +194,8 @@ public class CrewService {
 
         if(!crew.getMember().equals(host))
             throw new RuntimeException();
+
+        //TODO::기존 크루 참가자들에게 크루가 삭제되었음을 알려줘야하나?
 
         crewParticipantsRepository.deleteAllByCrew(crew);
         crewRepository.delete(crew);
