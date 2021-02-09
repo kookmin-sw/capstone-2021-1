@@ -136,7 +136,6 @@ public class MatchingService {
 
     public void cancelParticipation(@NonNull String email, @NonNull Long matchingId) {
         //TODO::참가 취소 신청회원이 해당 매칭에 없을 경우
-
         matchingParticipantRepository.deleteByMemberEmailAndMatchingId(email, matchingId);
     }
 

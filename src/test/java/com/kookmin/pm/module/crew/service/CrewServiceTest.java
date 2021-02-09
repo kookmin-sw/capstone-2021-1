@@ -237,4 +237,23 @@ class CrewServiceTest {
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(0L);
     }
+
+    @Test
+    @DisplayName("cancelParticipation 성공 테스트")
+    public void cancelParticipation_success_test() {
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member host = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Crew crew = crewRepository.findByMember(host)
+                .orElseThrow(EntityNotFoundException::new);
+
+        crewService.participateCrew(participant.getEmail(), crew.getId());
+        crewService.cancelParticipation(participant.getEmail(), crew.getId());
+
+        assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
+                .isEqualTo(0L);
+    }
 }

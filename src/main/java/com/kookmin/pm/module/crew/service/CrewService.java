@@ -34,7 +34,7 @@ public class CrewService {
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
 
-    //TODO::크루 참가 요청 거부, 크루 검색, 크루 삭제, 크루 탈퇴, 크루원 퇴출, 크루 참가 요청 조회 및 검색
+    //TODO::크루 검색, 크루 삭제, 크루 탈퇴, 크루원 퇴출, 크루 참가 요청 조회 및 검색
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String email, @NonNull CrewCreateInfo crewCreateInfo) {
@@ -117,8 +117,7 @@ public class CrewService {
         crewParticipantsRepository.save(crewParticipants);
     }
 
-    public void approveParticipationRequest(@NonNull String email,
-                                            @NonNull Long requestId) {
+    public void approveParticipationRequest(@NonNull String email, @NonNull Long requestId) {
         Member host = getMemberEntityByEmail(email);
 
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
@@ -146,6 +145,18 @@ public class CrewService {
         //TODO::참가요청을 거절하는 유저가 해당 참가 요청 크루의 호스트가 아닌 경우
         if(!participants.getCrew().getMember().equals(host))
             throw new RuntimeException();
+
+        crewParticipantsRepository.delete(participants);
+    }
+
+    public void cancelParticipation(@NonNull String email, @NonNull Long crewId) {
+        Member participant = getMemberEntityByEmail(email);
+        Crew crew = getCrewEntity(crewId);
+
+        CrewParticipants participants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
+                .orElseThrow(EntityNotFoundException::new);
+
+        //TODO::참가자가 현재 크루에 참가 상태인 경우 다른 크루원들에게 해당 회원이 탈퇴하였음을 알려주는 로직 필요
 
         crewParticipantsRepository.delete(participants);
     }
