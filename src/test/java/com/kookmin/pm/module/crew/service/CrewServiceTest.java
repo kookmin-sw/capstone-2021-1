@@ -3,6 +3,7 @@ package com.kookmin.pm.module.crew.service;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
+import com.kookmin.pm.module.crew.domain.CrewParticipantStatus;
 import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.crew.dto.CrewDetails;
@@ -181,7 +182,7 @@ class CrewServiceTest {
         CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
                 .orElseThrow(EntityNotFoundException::new);
 
-        assertThat(crewParticipantsRepository.countCrewParticipantsByCrew(crew))
+        assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(1L);
 
         assertThat(crewParticipants.getMember())

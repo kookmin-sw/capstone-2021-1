@@ -3,6 +3,7 @@ package com.kookmin.pm.module.crew.service;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
+import com.kookmin.pm.module.crew.domain.CrewParticipantStatus;
 import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.crew.dto.CrewDetails;
@@ -104,7 +105,8 @@ public class CrewService {
             throw new RuntimeException();
 
         //TODO::최대인원을 초과했을 경우
-        if(crewParticipantsRepository.countCrewParticipantsByCrew(crew)+1 > crew.getMaxCount()-1)
+        if(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew,
+                CrewParticipantStatus.PARTICIPATING)+1 > crew.getMaxCount()-1)
             throw new RuntimeException();
 
         CrewParticipants crewParticipants = CrewParticipants.builder()
