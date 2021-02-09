@@ -3,6 +3,7 @@ package com.kookmin.pm.module.crew.service;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
+import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.crew.dto.CrewDetails;
 import com.kookmin.pm.module.crew.dto.CrewEditInfo;
@@ -31,6 +32,8 @@ public class CrewService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
+
+    //TODO::크루 참가 요청 승인/거부, 크루 검색, 크루 삭제, 크루 탈퇴, 크루원 퇴출
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String email, @NonNull CrewCreateInfo crewCreateInfo) {
@@ -86,6 +89,30 @@ public class CrewService {
         }
 
         return crewDetails;
+    }
+
+    public void participateCrew(@NonNull String email, @NonNull Long crewId) {
+        Member member = getMemberEntityByEmail(email);
+        Crew crew = getCrewEntity(crewId);
+
+        //TODO::이미 참여하거나 신청한 회원인 경우 익셉션 정의 필요
+        if(crewParticipantsRepository.findByMemberAndCrew(member, crew).orElse(null) != null)
+            throw new RuntimeException();
+
+        //TODO::신청한 사람이 호스트인경우
+        if(crew.getMember().getEmail().equals(email))
+            throw new RuntimeException();
+
+        //TODO::최대인원을 초과했을 경우
+        if(crewParticipantsRepository.countCrewParticipantsByCrew(crew)+1 > crew.getMaxCount()-1)
+            throw new RuntimeException();
+
+        CrewParticipants crewParticipants = CrewParticipants.builder()
+                .member(member)
+                .crew(crew)
+                .build();
+
+        crewParticipantsRepository.save(crewParticipants);
     }
 
     private Crew getCrewEntity(Long id) {

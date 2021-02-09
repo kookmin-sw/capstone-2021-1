@@ -67,7 +67,7 @@ public class MatchingService {
         if(matching.getMember().getEmail().equals(participantEmail))
             throw new RuntimeException();
 
-        //TODO::이미 회원이 다 찬 경우 참여 불가 예외처리 정의
+        //TODO::이미 회원이 다 찬 경우 참여 불가 예외처리 정의, count쿼리로 정의해줘야
         if(matchingParticipantRepository.findByMatching(matching).size()+1 >= matching.getMaxCount())
             throw new RuntimeException();
 
@@ -169,7 +169,7 @@ public class MatchingService {
 
             matchingDetails.setHost(memberDetails);
 
-            //TODO::Querydsl을 이용한 조인으로 방향을 정함, Member관련 querydsl 레포지토리 구현 필요
+            //TODO::status로 참여중인 회원만 조회하도록 비교해줘야함
             List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
             List<MemberDetails> participantDetails = new ArrayList<>();
 

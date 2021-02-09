@@ -3,8 +3,11 @@ package com.kookmin.pm.module.crew.service;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
+import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
+import com.kookmin.pm.module.crew.dto.CrewDetails;
 import com.kookmin.pm.module.crew.dto.CrewEditInfo;
+import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
@@ -34,6 +37,8 @@ class CrewServiceTest {
     private MemberService memberService;
     @Autowired
     private CrewRepository crewRepository;
+    @Autowired
+    private CrewParticipantsRepository crewParticipantsRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -143,5 +148,46 @@ class CrewServiceTest {
         assertThat(crew)
                 .hasFieldOrPropertyWithValue("name", crewEditInfo.getName())
                 .hasFieldOrPropertyWithValue("description", crewEditInfo.getDescription());
+    }
+
+    @Test
+    @DisplayName("lookupCrew 성공 테스트")
+    public void lookupCrew_success_test() {
+        Member host = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Crew crew = crewRepository.findByMember(host)
+                .orElseThrow(EntityNotFoundException::new);
+
+        CrewDetails crewDetails = crewService.lookupCrew(crew.getId(),CrewLookupType.DEFAULT);
+
+        System.out.println(crewDetails);
+    }
+
+    @Test
+    @DisplayName("participateCrew 성공 테스트")
+    public void participateCrew_success_test() {
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member host = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Crew crew = crewRepository.findByMember(host)
+                .orElseThrow(EntityNotFoundException::new);
+
+        crewService.participateCrew(participant.getEmail(), crew.getId());
+
+        CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
+                .orElseThrow(EntityNotFoundException::new);
+
+        assertThat(crewParticipantsRepository.countCrewParticipantsByCrew(crew))
+                .isEqualTo(1L);
+
+        assertThat(crewParticipants.getMember())
+                .isEqualTo(participant);
+
+        assertThat(crewParticipants.getCrew())
+                .isEqualTo(crew);
     }
 }
