@@ -37,7 +37,7 @@ public class CrewService {
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
 
-    //TODO::크루 검색, 크루 참가 요청 조회 및 검색
+    //TODO::크루 참가 요청 조회 및 검색
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String email, @NonNull CrewCreateInfo crewCreateInfo) {

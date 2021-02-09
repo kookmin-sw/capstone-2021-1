@@ -8,6 +8,7 @@ import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.crew.dto.CrewDetails;
 import com.kookmin.pm.module.crew.dto.CrewEditInfo;
+import com.kookmin.pm.module.crew.dto.CrewSearchCondition;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -20,6 +21,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
@@ -319,5 +323,18 @@ class CrewServiceTest {
 
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PARTICIPATING))
                 .isEqualTo(0L);
+    }
+
+    @Test
+    @DisplayName("searchCrew 성공 테스트")
+    public void searchCrew_success_test() {
+        Pageable pageable = PageRequest.of(0, 10);
+        CrewSearchCondition searchCondition = new CrewSearchCondition();
+        searchCondition.setActivityArea("서울");
+
+        Page<CrewDetails> crewDetailsList = crewService.searchCrew(pageable, searchCondition);
+
+        for(CrewDetails crewDetails : crewDetailsList)
+            System.out.println(crewDetails);
     }
 }
