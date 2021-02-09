@@ -256,4 +256,31 @@ class CrewServiceTest {
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(0L);
     }
+
+    @Test
+    @DisplayName("deportParticipant 성공 테스트")
+    public void deportParticipant_success_test() {
+        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member host = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Crew crew = crewRepository.findByMember(host)
+                .orElseThrow(EntityNotFoundException::new);
+
+        crewService.participateCrew(participant.getEmail(), crew.getId());
+
+        CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
+                .orElseThrow(EntityNotFoundException::new);
+
+        crewService.approveParticipationRequest(host.getEmail(), crewParticipants.getId());
+        crewService.deportParticipant(host.getEmail(), crew.getId(), crewParticipants.getId());
+
+        assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
+                .isEqualTo(0L);
+
+        assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PARTICIPATING))
+                .isEqualTo(0L);
+    }
 }

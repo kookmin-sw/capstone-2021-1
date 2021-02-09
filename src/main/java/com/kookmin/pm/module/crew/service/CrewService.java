@@ -34,7 +34,7 @@ public class CrewService {
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
 
-    //TODO::크루 검색, 크루 삭제, 크루 탈퇴, 크루원 퇴출, 크루 참가 요청 조회 및 검색
+    //TODO::크루 검색, 크루 삭제, 크루 참가 요청 조회 및 검색
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String email, @NonNull CrewCreateInfo crewCreateInfo) {
@@ -157,6 +157,26 @@ public class CrewService {
                 .orElseThrow(EntityNotFoundException::new);
 
         //TODO::참가자가 현재 크루에 참가 상태인 경우 다른 크루원들에게 해당 회원이 탈퇴하였음을 알려주는 로직 필요
+
+        crewParticipantsRepository.delete(participants);
+    }
+
+    public void deportParticipant(@NonNull String email,
+                                  @NonNull Long crewId,
+                                  @NonNull Long participationId) {
+        Member host = getMemberEntityByEmail(email);
+        Crew crew = getCrewEntity(crewId);
+        CrewParticipants participants = getCrewParticipantsEntity(participationId);
+
+        //TODO::회원이 해당 크루의 크루장이 아닌 경우
+        if(!crew.getMember().equals(host))
+            throw new RuntimeException();
+
+        //TODO::퇴출시키려는 회원이 해당 크루의 참가자가 아닌 경우
+        if(!participants.getCrew().equals(crew) || participants.getStatus().equals(CrewParticipantStatus.PENDING))
+            throw new RuntimeException();
+
+        //TODO::크루 참가자가 크루장에 의해 퇴출되었음을 알려주는 로직 필요
 
         crewParticipantsRepository.delete(participants);
     }
