@@ -5,10 +5,7 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
 import com.kookmin.pm.module.crew.domain.CrewParticipantStatus;
 import com.kookmin.pm.module.crew.domain.CrewParticipants;
-import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
-import com.kookmin.pm.module.crew.dto.CrewDetails;
-import com.kookmin.pm.module.crew.dto.CrewEditInfo;
-import com.kookmin.pm.module.crew.dto.CrewSearchCondition;
+import com.kookmin.pm.module.crew.dto.*;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -333,6 +330,7 @@ class CrewServiceTest {
     }
 
     @Test
+    @DisplayName("findCrewParticipateRequest")
     public void findCrewParticipateRequest_success_test() {
         Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
@@ -347,5 +345,24 @@ class CrewServiceTest {
         Map<String , Object> request = crewService.findCrewParticipateRequest(host.getUid());
 
         System.out.println(request);
+    }
+
+    @Test
+    @DisplayName("findMyParticipateRequest")
+    public void findMyParticipateRequest_success_test() {
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Crew crew = crewRepository.findByMember(host).get(0);
+
+        crewService.participateCrew(participant.getUid(), crew.getId());
+
+        List<CrewParticipantsDetails> result = crewService.findMyParticiPateRequest(participant.getUid());
+
+        for(CrewParticipantsDetails detail : result)
+            System.out.println(detail);
     }
 }

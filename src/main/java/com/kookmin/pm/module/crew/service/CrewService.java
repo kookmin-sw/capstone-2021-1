@@ -128,6 +128,21 @@ public class CrewService {
         return request;
     }
 
+    public List<CrewParticipantsDetails> findMyParticiPateRequest(@NonNull String uid) {
+        Member member = getMemberEntityByUid(uid);
+
+        List<CrewParticipants> participantsList = crewParticipantsRepository
+                .findByMemberAndStatus(member, CrewParticipantStatus.PENDING);
+
+        List<CrewParticipantsDetails> participantsDetailsList = new ArrayList<>();
+
+        for(CrewParticipants participants : participantsList) {
+                participantsDetailsList.add(new CrewParticipantsDetails(participants));
+        }
+
+        return participantsDetailsList;
+    }
+
     public void participateCrew(@NonNull String uid, @NonNull Long crewId) {
         Member member = getMemberEntityByUid(uid);
         Crew crew = getCrewEntity(crewId);
