@@ -331,8 +331,10 @@ class MatchingServiceTest {
     @Test
     @DisplayName("searchMatching 성공 테스트")
     public void searchMatching_success_test() {
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
         MatchingSearchCondition searchCondition = new MatchingSearchCondition();
-        searchCondition.setHost("dlwlsrn9412@kookmin.ac.kr");
+        searchCondition.setHost(member.getId());
         searchCondition.setCategory("BOARD_GAME");
         Pageable pageable = PageRequest.of(0, 10);
 

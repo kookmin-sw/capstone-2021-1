@@ -39,8 +39,8 @@ public class CrewService {
     private final MemberService memberService;
 
     //TODO::크루명이 유일할 필요가 있는지
-    public Long establishCrew(@NonNull String uid, @NonNull CrewCreateInfo crewCreateInfo) {
-        Member member = getMemberEntityByUid(uid);
+    public Long establishCrew(@NonNull Long usn, @NonNull CrewCreateInfo crewCreateInfo) {
+        Member member = getMemberEntity(usn);
         Category category = getCategoryEntityByName(crewCreateInfo.getCategory());
 
         Crew crew = buildCrewEntity(crewCreateInfo, member, category);
@@ -51,12 +51,12 @@ public class CrewService {
     }
 
     //TODO::활동지역은 여러개 인가
-    public void editCrewInfo(@NonNull String uid, @NonNull CrewEditInfo crewEditInfo) {
-        Member member = getMemberEntityByUid(uid);
+    public void editCrewInfo(@NonNull Long usn, @NonNull CrewEditInfo crewEditInfo) {
+        Member member = getMemberEntity(usn);
         Crew crew = getCrewEntity(crewEditInfo.getId());
 
         //TODO::이메일이 서로 다른 경우
-        if(!crew.getMember().getUid().equals(uid))
+        if(!crew.getMember().getId().equals(usn))
             throw new RuntimeException();
 
         crew.editName(crewEditInfo.getName());
@@ -98,10 +98,10 @@ public class CrewService {
         return crewRepository.searchCrew(pageable, searchCondition);
     }
 
-    public Map<String, Object> findCrewParticipateRequest(@NonNull String uid) {
+    public Map<String, Object> findCrewParticipateRequest(@NonNull Long usn) {
         Map<String, Object> request = new HashMap<>();
 
-        Member member = getMemberEntityByUid(uid);
+        Member member = getMemberEntity(usn);
         List<Crew> crewList = crewRepository.findByMember(member);
         List<String> crewNameList = new ArrayList<>();
 
@@ -129,8 +129,8 @@ public class CrewService {
         return request;
     }
 
-    public List<CrewParticipantsDetails> findMyParticiPateRequest(@NonNull String uid) {
-        Member member = getMemberEntityByUid(uid);
+    public List<CrewParticipantsDetails> findMyParticiPateRequest(@NonNull Long usn) {
+        Member member = getMemberEntity(usn);
 
         List<CrewParticipants> participantsList = crewParticipantsRepository
                 .findByMemberAndStatus(member, CrewParticipantStatus.PENDING);
@@ -150,8 +150,8 @@ public class CrewService {
         return new CrewParticipantsDetails(participants);
     }
 
-    public void participateCrew(@NonNull String uid, @NonNull Long crewId) {
-        Member member = getMemberEntityByUid(uid);
+    public void participateCrew(@NonNull Long usn, @NonNull Long crewId) {
+        Member member = getMemberEntity(usn);
         Crew crew = getCrewEntity(crewId);
 
         //TODO::이미 참여하거나 신청한 회원인 경우 익셉션 정의 필요
@@ -159,7 +159,7 @@ public class CrewService {
             throw new RuntimeException();
 
         //TODO::신청한 사람이 호스트인경우
-        if(crew.getMember().getUid().equals(uid))
+        if(crew.getMember().getId().equals(usn))
             throw new RuntimeException();
 
         //TODO::최대인원을 초과했을 경우
@@ -175,7 +175,7 @@ public class CrewService {
         crewParticipantsRepository.save(crewParticipants);
     }
 
-    public void approveParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
+    public void approveParticipationRequest(@NonNull Long usn, @NonNull Long requestId) {
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
         Crew crew =participants.getCrew();
 
@@ -184,7 +184,7 @@ public class CrewService {
              throw new RuntimeException();
 
         //TODO::참가요청을 승인하는 유저가 해당 참가 요청 크루의 호스트가 아닌 경우
-        if(!crew.getMember().equals(uid))
+        if(!crew.getMember().getId().equals(usn))
             throw new RuntimeException();
 
         //TODO::최대 인원수를 초과한 경우
@@ -195,8 +195,8 @@ public class CrewService {
         participants.approveParticipation();
     }
 
-    public void rejectParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
-        Member host = getMemberEntityByUid(uid);
+    public void rejectParticipationRequest(@NonNull Long usn, @NonNull Long requestId) {
+        Member host = getMemberEntity(usn);
 
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
 
@@ -211,8 +211,8 @@ public class CrewService {
         crewParticipantsRepository.delete(participants);
     }
 
-    public void cancelParticipation(@NonNull String uid, @NonNull Long crewId) {
-        Member participant = getMemberEntityByUid(uid);
+    public void cancelParticipation(@NonNull Long usn, @NonNull Long crewId) {
+        Member participant = getMemberEntity(usn);
         Crew crew = getCrewEntity(crewId);
 
         CrewParticipants participants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
@@ -223,10 +223,10 @@ public class CrewService {
         crewParticipantsRepository.delete(participants);
     }
 
-    public void deportParticipant(@NonNull String uid,
+    public void deportParticipant(@NonNull Long usn,
                                   @NonNull Long crewId,
                                   @NonNull Long participationId) {
-        Member host = getMemberEntityByUid(uid);
+        Member host = getMemberEntity(usn);
         Crew crew = getCrewEntity(crewId);
         CrewParticipants participants = getCrewParticipantsEntity(participationId);
 
@@ -243,8 +243,8 @@ public class CrewService {
         crewParticipantsRepository.delete(participants);
     }
 
-    public void removeCrew(@NonNull String uid, @NonNull Long crewId) {
-        Member host = getMemberEntityByUid(uid);
+    public void removeCrew(@NonNull Long usn, @NonNull Long crewId) {
+        Member host = getMemberEntity(usn);
         Crew crew = getCrewEntity(crewId);
 
         if(!crew.getMember().equals(host))
@@ -266,8 +266,8 @@ public class CrewService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private Member getMemberEntityByUid(String uid) {
-        return memberRepository.findByUid(uid)
+    private Member getMemberEntity(Long usn) {
+        return memberRepository.findById(usn)
                 .orElseThrow(EntityNotFoundException::new);
     }
 

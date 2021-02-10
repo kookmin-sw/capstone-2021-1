@@ -1,10 +1,8 @@
 package com.kookmin.pm.module.crew.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kookmin.pm.module.crew.domain.CrewParticipantStatus;
 import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.member.dto.MemberDetails;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;

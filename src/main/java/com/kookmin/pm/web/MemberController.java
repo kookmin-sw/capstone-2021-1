@@ -31,10 +31,10 @@ public class MemberController {
 
     @PostMapping(value = "/signin")
     public ResponseEntity<Map<String,String>> signIn(@RequestBody Map<String, String> user) {
-        Long usn = Long.parseLong(user.get("usn"));
+        String uid = user.get("uid");
         String password = user.get("password");
 
-        Member member = memberRepository.findById(usn).orElseThrow(EntityExistsException::new);
+        Member member = memberRepository.findByUid(uid).orElseThrow(EntityExistsException::new);
         if(!passwordEncoder.matches(password,member.getPassword())) {
             //TODO:: 로그인 실패 처리
             throw new RuntimeException();
@@ -45,7 +45,7 @@ public class MemberController {
 
         Map<String,String> userInfos = new HashMap<>();
 
-        userInfos.put("access-token", jwtTokenProvider.createToken(usn.toString(), roles));
+        userInfos.put("access-token", jwtTokenProvider.createToken(member.getId().toString(), roles));
         userInfos.put("nickname", member.getNickname());
 
         return ResponseEntity
@@ -69,5 +69,17 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(details);
+    }
+
+    @PostConstruct
+    public void setUp() {
+        MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
+        memberCreateInfo.setUid("dlwlsrn94@naver.com");
+        memberCreateInfo.setName("이진구");
+        memberCreateInfo.setNickname("LJG070");
+        memberCreateInfo.setPhoneNumber("010-8784-3827");
+        memberCreateInfo.setPassword("1234");
+
+        System.out.println("usn: " + memberService.joinMember(memberCreateInfo));
     }
 }

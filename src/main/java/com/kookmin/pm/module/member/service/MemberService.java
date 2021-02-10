@@ -106,13 +106,13 @@ public class MemberService implements UserDetailsService {
     //TODO:: 회원 능력치 평가 메소드 필요
 
     @Override
-    public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String usn) throws UsernameNotFoundException {
         //TODO:: 그냥 UsernameNotFoundException 던져주는 걸로 끝나도 되는지 확인해야함
-        Member member = memberRepository.findByUid(uid)
-                .orElseThrow(() -> new UsernameNotFoundException(uid));
+        Member member = memberRepository.findById(Long.parseLong(usn))
+                .orElseThrow(() -> new UsernameNotFoundException(usn));
 
         return User.builder()
-                .username(member.getUid())
+                .username(member.getId().toString())
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();

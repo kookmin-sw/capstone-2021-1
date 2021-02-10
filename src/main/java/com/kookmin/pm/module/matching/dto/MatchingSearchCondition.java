@@ -12,7 +12,7 @@ public class MatchingSearchCondition {
     private Double distance;
     private String status;
     private Integer maxCount;
-    private String host;
+    private Long host;
     private Double latitude;
     private Double longitude;
     private String category;

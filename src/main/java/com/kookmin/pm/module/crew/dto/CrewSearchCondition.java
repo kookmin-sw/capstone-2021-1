@@ -13,5 +13,5 @@ public class CrewSearchCondition {
     private Integer maxCount;
     private String activityArea;
     private String category;
-    private String host;
+    private Long host;
 }

@@ -57,7 +57,7 @@ class CrewServiceTest {
         memberCreateInfo.setName("이진구");
         memberCreateInfo.setPhoneNumber("010-8784-3827");
 
-        memberService.joinMember(memberCreateInfo);
+        Long usn = memberService.joinMember(memberCreateInfo);
 
         MemberCreateInfo memberCreateInfo2 = new MemberCreateInfo();
         memberCreateInfo2.setUid("dlwlsrn10@kookmin.ac.kr");
@@ -102,7 +102,7 @@ class CrewServiceTest {
         crewCreateInfo.setCategory("BOARD_GAME");
         crewCreateInfo.setMaxCount(5);
 
-        crewService.establishCrew("dlwlsrn9412@kookmin.ac.kr",crewCreateInfo);
+        crewService.establishCrew(usn,crewCreateInfo);
     }
 
     @Test
@@ -115,9 +115,12 @@ class CrewServiceTest {
         crewCreateInfo.setCategory("BOARD_GAME");
         crewCreateInfo.setMaxCount(5);
 
-        Long id = crewService.establishCrew("dlwlsrn9412@kookmin.ac.kr", crewCreateInfo);
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
+        Long id = crewService.establishCrew(member.getId(), crewCreateInfo);
         Crew crew = crewRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+
+        member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         assertThat(crew)
@@ -138,13 +141,14 @@ class CrewServiceTest {
     public void editCrewInfo_success_test() {
         Crew crew = crewRepository.findAll().get(0);
 
-
         CrewEditInfo crewEditInfo = new CrewEditInfo();
         crewEditInfo.setName("수정 크루");
         crewEditInfo.setDescription("수정 크루 설명");
         crewEditInfo.setId(crew.getId());
 
-        crewService.editCrewInfo("dlwlsrn9412@kookmin.ac.kr", crewEditInfo);
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
+        crewService.editCrewInfo(member.getId(), crewEditInfo);
 
         crew = crewRepository.findById(crew.getId()).orElseThrow(EntityNotFoundException::new);
 
@@ -177,7 +181,7 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
 
         CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
                 .orElseThrow(EntityNotFoundException::new);
@@ -203,12 +207,12 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
 
         CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
                 .orElseThrow(EntityNotFoundException::new);
 
-        crewService.approveParticipationRequest(host.getUid(),crewParticipants.getId());
+        crewService.approveParticipationRequest(host.getId(),crewParticipants.getId());
 
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PARTICIPATING))
                 .isEqualTo(1L);
@@ -225,12 +229,12 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
 
         CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
                 .orElseThrow(EntityNotFoundException::new);
 
-        crewService.rejectParticipationRequest(host.getUid(),crewParticipants.getId());
+        crewService.rejectParticipationRequest(host.getId(),crewParticipants.getId());
 
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(0L);
@@ -247,8 +251,8 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
-        crewService.cancelParticipation(participant.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
+        crewService.cancelParticipation(participant.getId(), crew.getId());
 
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(0L);
@@ -265,13 +269,13 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
 
         CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
                 .orElseThrow(EntityNotFoundException::new);
 
-        crewService.approveParticipationRequest(host.getUid(), crewParticipants.getId());
-        crewService.deportParticipant(host.getUid(), crew.getId(), crewParticipants.getId());
+        crewService.approveParticipationRequest(host.getId(), crewParticipants.getId());
+        crewService.deportParticipant(host.getId(), crew.getId(), crewParticipants.getId());
 
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(0L);
@@ -294,8 +298,8 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
-        crewService.participateCrew(participant2.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
+        crewService.participateCrew(participant2.getId(), crew.getId());
 
 
         CrewParticipants crewParticipants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
@@ -304,10 +308,10 @@ class CrewServiceTest {
         CrewParticipants crewParticipants2 = crewParticipantsRepository.findByMemberAndCrew(participant2, crew)
                 .orElseThrow(EntityNotFoundException::new);
 
-        crewService.approveParticipationRequest(host.getUid(), crewParticipants.getId());
-        crewService.approveParticipationRequest(host.getUid(), crewParticipants2.getId());
+        crewService.approveParticipationRequest(host.getId(), crewParticipants.getId());
+        crewService.approveParticipationRequest(host.getId(), crewParticipants2.getId());
 
-        crewService.removeCrew(host.getUid(), crew.getId());
+        crewService.removeCrew(host.getId(), crew.getId());
 
         assertThat(crewRepository.findById(crew.getId()).orElse(null))
                 .isNull();
@@ -340,9 +344,9 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
 
-        Map<String , Object> request = crewService.findCrewParticipateRequest(host.getUid());
+        Map<String , Object> request = crewService.findCrewParticipateRequest(host.getId());
 
         System.out.println(request);
     }
@@ -358,9 +362,9 @@ class CrewServiceTest {
 
         Crew crew = crewRepository.findByMember(host).get(0);
 
-        crewService.participateCrew(participant.getUid(), crew.getId());
+        crewService.participateCrew(participant.getId(), crew.getId());
 
-        List<CrewParticipantsDetails> result = crewService.findMyParticiPateRequest(participant.getUid());
+        List<CrewParticipantsDetails> result = crewService.findMyParticiPateRequest(participant.getId());
 
         for(CrewParticipantsDetails detail : result)
             System.out.println(detail);
