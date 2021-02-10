@@ -283,6 +283,19 @@ public class MatchingService {
     }
 
     //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
+    public List<MatchingParticipantDetails> findMyParticipationRequest(@NonNull String uid) {
+        Member member = getMemberEntityByUid(uid);
+
+        List<MatchingParticipant> participants = matchingParticipantRepository
+                .findByMemberAndStatus(member, ParticipantStatus.PENDING_ACCEPTANCE);
+
+        List<MatchingParticipantDetails> request = new ArrayList<>();
+
+        for(MatchingParticipant matchingParticipant : participants)
+            request.add(new MatchingParticipantDetails(matchingParticipant));
+
+        return request;
+    }
 
     public Map<String, Object> findMatchingParticipationRequest(@NonNull String uid) {
         Map<String, Object> request = new HashMap<>();
