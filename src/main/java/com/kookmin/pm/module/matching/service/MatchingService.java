@@ -311,17 +311,21 @@ public class MatchingService {
 
         request.put("matching", matchingTitles);
 
+        int index = 0;
+
         for(Matching matching : scheduledMatchingList) {
             List<MatchingParticipant> participants = matchingParticipantRepository
                     .findByMatchingAndStatus(matching, ParticipantStatus.PENDING_ACCEPTANCE);
 
             List<MatchingParticipantDetails> details = new ArrayList<>();
 
+
             for(MatchingParticipant participant : participants) {
                 details.add(new MatchingParticipantDetails(participant));
             }
 
-            request.put(matching.getTitle(), details);
+            request.put(String.valueOf(index), details);
+            index++;
         }
 
         return request;

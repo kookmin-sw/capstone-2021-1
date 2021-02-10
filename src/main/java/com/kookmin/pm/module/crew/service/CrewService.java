@@ -110,6 +110,8 @@ public class CrewService {
 
         request.put("crew", crewNameList);
 
+        int index = 0;
+
         for(Crew crew : crewList) {
             List<CrewParticipants> participantsList = crewParticipantsRepository
                     .findByCrewAndStatus(crew, CrewParticipantStatus.PENDING);
@@ -120,7 +122,8 @@ public class CrewService {
                 participantDetailsList.add(new CrewParticipantsDetails(participants));
             }
 
-            request.put(crew.getName(), participantDetailsList);
+            request.put(String.valueOf(index), participantDetailsList);
+            index++;
         }
 
         return request;

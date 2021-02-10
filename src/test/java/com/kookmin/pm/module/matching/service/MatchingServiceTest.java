@@ -472,4 +472,42 @@ class MatchingServiceTest {
         for(MatchingParticipantDetails detail : details)
             System.out.println(detail);
     }
+
+    @Test
+    @DisplayName("findMatchingParticipationRequest 성공 테스트")
+    public void findMatchingParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant2 = memberRepository.findByUid("dlwlsrn7@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant3 = memberRepository.findByUid("dlwlsrn6@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.participateMatching(participant2.getUid(), matching.getId());
+        matchingService.participateMatching(participant3.getUid(), matching.getId());
+
+        matchingService.approveParticipationRequest(host.getUid(), id);
+
+        Map<String, Object> details =
+                matchingService.findMatchingParticipationRequest(host.getUid());
+
+        assertThat(((List<MatchingParticipantDetails>)details.get("0")).size())
+                .isEqualTo(2);
+
+        for(Map.Entry<String, Object> entry : details.entrySet()){
+            System.out.println(entry.getKey());
+        }
+
+        for(MatchingParticipantDetails detail : (List<MatchingParticipantDetails>)details.get("0")){
+            System.out.println(detail);
+        }
+    }
 }
