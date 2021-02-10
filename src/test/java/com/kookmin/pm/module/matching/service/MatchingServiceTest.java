@@ -390,4 +390,24 @@ class MatchingServiceTest {
         assertThat(matchingParticipant)
                 .hasFieldOrPropertyWithValue("status", ParticipantStatus.PARTICIPATING);
     }
+
+    @Test
+    @DisplayName("rejectParticipationRequest 성공 테스트")
+    public void rejectParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.rejectParticipationRequest(host.getUid(), id);
+
+        boolean result = matchingParticipantRepository.findByMemberAndMatching(participant, matching).isPresent();
+
+        assertThat(result)
+                .isFalse();
+    }
 }

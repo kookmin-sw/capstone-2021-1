@@ -190,7 +190,6 @@ public class MatchingService {
 
     //TODO:: 다른 회원들의 참가요청을 검색하는 메소드 필요
 
-    //TODO:: 참가요청에 대한 참가를 승인하는 메소드 필요, 참가요청 상태를 참여중으로 변경
     public void approveParticipationRequest (@NonNull String uid, @NonNull Long requestId) {
         MatchingParticipant request = getMatchingParticipantEntity(requestId);
         Matching matching = request.getMatching();
@@ -212,6 +211,23 @@ public class MatchingService {
     }
 
     //TODO:: 참가요청에 대한 참가를 거절하는 메소드 필요
+    public void rejectParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
+        MatchingParticipant request = getMatchingParticipantEntity(requestId);
+        Matching matching = request.getMatching();
+
+        //TODO::이미 매칭에 참가한 회원인 경우
+        if(request.getStatus().equals(ParticipantStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        //TODO::요청에 대한 거절을 하는 회원이 매칭의 호스트가 아닌 경우
+        if(!matching.getMember().getUid().equals(uid))
+            throw new RuntimeException();
+
+        matchingParticipantRepository.delete(request);
+    }
+
+    //TODO::내가 보낸 참가요청 취소
+
 
     //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
 
