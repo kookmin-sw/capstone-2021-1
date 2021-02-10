@@ -5,10 +5,7 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
 import com.kookmin.pm.module.crew.domain.CrewParticipantStatus;
 import com.kookmin.pm.module.crew.domain.CrewParticipants;
-import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
-import com.kookmin.pm.module.crew.dto.CrewDetails;
-import com.kookmin.pm.module.crew.dto.CrewEditInfo;
-import com.kookmin.pm.module.crew.dto.CrewSearchCondition;
+import com.kookmin.pm.module.crew.dto.*;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -16,16 +13,20 @@ import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.ManyToOne;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -36,8 +37,6 @@ public class CrewService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
-
-    //TODO::크루 참가 요청 조회 및 검색
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String uid, @NonNull CrewCreateInfo crewCreateInfo) {
@@ -97,6 +96,55 @@ public class CrewService {
 
     public Page<CrewDetails> searchCrew(@NonNull Pageable pageable, @NonNull CrewSearchCondition searchCondition) {
         return crewRepository.searchCrew(pageable, searchCondition);
+    }
+
+    public Map<String, Object> findCrewParticipateRequest(@NonNull String uid) {
+        Map<String, Object> request = new HashMap<>();
+
+        Member member = getMemberEntityByUid(uid);
+        List<Crew> crewList = crewRepository.findByMember(member);
+        List<String> crewNameList = new ArrayList<>();
+
+        for(Crew crew : crewList)
+            crewNameList.add(crew.getName());
+
+        request.put("crew", crewNameList);
+
+        for(Crew crew : crewList) {
+            List<CrewParticipants> participantsList = crewParticipantsRepository
+                    .findByCrewAndStatus(crew, CrewParticipantStatus.PENDING);
+
+            List<CrewParticipantsDetails> participantDetailsList = new ArrayList<>();
+
+            for(CrewParticipants participants : participantsList) {
+                participantDetailsList.add(new CrewParticipantsDetails(participants));
+            }
+
+            request.put(crew.getName(), participantDetailsList);
+        }
+
+        return request;
+    }
+
+    public List<CrewParticipantsDetails> findMyParticiPateRequest(@NonNull String uid) {
+        Member member = getMemberEntityByUid(uid);
+
+        List<CrewParticipants> participantsList = crewParticipantsRepository
+                .findByMemberAndStatus(member, CrewParticipantStatus.PENDING);
+
+        List<CrewParticipantsDetails> participantsDetailsList = new ArrayList<>();
+
+        for(CrewParticipants participants : participantsList) {
+                participantsDetailsList.add(new CrewParticipantsDetails(participants));
+        }
+
+        return participantsDetailsList;
+    }
+
+    public CrewParticipantsDetails lookupParticipateRequest(@NonNull Long requestId) {
+        CrewParticipants participants = getCrewParticipantsEntity(requestId);
+
+        return new CrewParticipantsDetails(participants);
     }
 
     public void participateCrew(@NonNull String uid, @NonNull Long crewId) {

@@ -2,11 +2,10 @@ package com.kookmin.pm.module.crew.repository;
 
 import com.kookmin.pm.module.category.domain.QCategory;
 import com.kookmin.pm.module.crew.domain.Crew;
+import com.kookmin.pm.module.crew.domain.CrewParticipantStatus;
 import com.kookmin.pm.module.crew.domain.QCrew;
 import com.kookmin.pm.module.crew.domain.QCrewParticipants;
-import com.kookmin.pm.module.crew.dto.CrewDetails;
-import com.kookmin.pm.module.crew.dto.CrewSearchCondition;
-import com.kookmin.pm.module.crew.dto.QCrewDetails;
+import com.kookmin.pm.module.crew.dto.*;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.support.util.PmQuerydslRepositorySupport;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -78,4 +77,5 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
     public BooleanExpression crewIdEq(Long crewId) {
         return crewId==null? null : crewParticipants.crew.id.eq(crewId);
     }
+
 }
