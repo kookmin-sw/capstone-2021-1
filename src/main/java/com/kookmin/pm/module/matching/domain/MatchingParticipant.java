@@ -4,8 +4,10 @@ import com.kookmin.pm.module.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,6 +21,10 @@ public class MatchingParticipant {
     @Enumerated(EnumType.STRING)
     @Column(name="STATUS")
     private ParticipantStatus status;
+
+    @CreationTimestamp
+    @Column(name="CREATED_AT")
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="MEMBER_ID")
