@@ -210,7 +210,6 @@ public class MatchingService {
         request.approveMatching();
     }
 
-    //TODO:: 참가요청에 대한 참가를 거절하는 메소드 필요
     public void rejectParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
         MatchingParticipant request = getMatchingParticipantEntity(requestId);
         Matching matching = request.getMatching();
@@ -227,7 +226,19 @@ public class MatchingService {
     }
 
     //TODO::내가 보낸 참가요청 취소
+    public void quitParticipation(@NonNull String uid, @NonNull Long requestId) {
+        MatchingParticipant request = getMatchingParticipantEntity(requestId);
 
+        //TODO:: 이미 참가중인 경우
+        if(request.getStatus().equals(ParticipantStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        //TODO::참가요청 취소를 보낸 회원이 주체가 아닌 경우
+        if(!request.getMember().getUid().equals(uid))
+            throw new RuntimeException();
+
+        matchingParticipantRepository.delete(request);
+    }
 
     //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
 
