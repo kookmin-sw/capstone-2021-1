@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberDetails {
     private Long id;
-    private String email;
+    private String uid;
     private String nickname;
     private String name;
     private String address;
@@ -21,7 +21,7 @@ public class MemberDetails {
 
     public MemberDetails(Member member) {
         this.id = member.getId();
-        this.email = member.getEmail();
+        this.uid = member.getUid();
         this.nickname = member.getNickname();
         this.name = member.getName();
         this.address = member.getAddress();
