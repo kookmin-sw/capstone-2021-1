@@ -6,10 +6,7 @@ import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.domain.ParticipantStatus;
-import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
-import com.kookmin.pm.module.matching.dto.MatchingDetails;
-import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
-import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.matching.dto.*;
 import com.kookmin.pm.module.matching.repository.MatchingMapper;
 import com.kookmin.pm.module.matching.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
@@ -448,5 +445,31 @@ class MatchingServiceTest {
 
         assertThat(startedMatching)
                 .hasFieldOrPropertyWithValue("status", MatchingStatus.PROCEEDING);
+    }
+
+    @Test
+    @DisplayName("findMyParticipationRequest 성공 테스트")
+    public void findMyParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+        Matching matching2 = matchingRepository.findByMember(host).get(1);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.approveParticipationRequest(host.getUid(), id);
+
+        Long id2 = matchingService.participateMatching(participant.getUid(), matching2.getId());
+
+        List<MatchingParticipantDetails> details = matchingService.findMyParticipationRequest(participant.getUid());
+
+        assertThat(details.size())
+                .isEqualTo(1);
+
+        for(MatchingParticipantDetails detail : details)
+            System.out.println(detail);
     }
 }
