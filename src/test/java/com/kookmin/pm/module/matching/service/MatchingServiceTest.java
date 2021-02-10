@@ -510,4 +510,31 @@ class MatchingServiceTest {
             System.out.println(detail);
         }
     }
+
+    @Test
+    @DisplayName("lookupMatchingParticipants 성공 테스트")
+    public void lookupMatchingParticipants_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant2 = memberRepository.findByUid("dlwlsrn7@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant3 = memberRepository.findByUid("dlwlsrn6@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        Long id2 = matchingService.participateMatching(participant2.getUid(), matching.getId());
+        Long id3 = matchingService.participateMatching(participant3.getUid(), matching.getId());
+
+        matchingService.approveParticipationRequest(host.getUid(), id);
+        System.out.println(matchingService.lookupMatchingParticipants(id));
+        System.out.println(matchingService.lookupMatchingParticipants(id2));
+        System.out.println(matchingService.lookupMatchingParticipants(id3));
+    }
 }
