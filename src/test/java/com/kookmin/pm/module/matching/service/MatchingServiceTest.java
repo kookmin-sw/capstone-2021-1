@@ -114,7 +114,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setMaxCount(5);
         matchingCreateInfo.setCategory("BOARD_GAME");
 
-        matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
+        matchingService.openMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
 
         MatchingCreateInfo matchingCreateInfo2 = new MatchingCreateInfo();
         matchingCreateInfo2.setTitle("title");
@@ -125,12 +125,12 @@ class MatchingServiceTest {
         matchingCreateInfo2.setMaxCount(5);
         matchingCreateInfo2.setCategory("BOARD_GAME");
 
-        matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
+        matchingService.openMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
     }
 
     @Test
-    @DisplayName("startMatching 성공 테스트")
-    public void startMatching_success_test() {
+    @DisplayName("openMatching 성공 테스트")
+    public void openMatching_success_test() {
         Member member = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -143,7 +143,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setMaxCount(5);
         matchingCreateInfo.setCategory("BOARD_GAME");
 
-        Long id = matchingService.startMatching(member.getUid(), matchingCreateInfo);
+        Long id = matchingService.openMatching(member.getUid(), matchingCreateInfo);
         Matching matching = matchingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Category category = categoryRepository.findByName("BOARD_GAME").orElseThrow(EntityNotFoundException::new);
 
@@ -432,5 +432,21 @@ class MatchingServiceTest {
 
         assertThat(matchingParticipant)
                 .isNull();
+    }
+
+    @Test
+    @DisplayName("startMatching 성공 테스트")
+    public void startMatching_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        matchingService.startMatching(host.getUid(), matching.getId());
+
+        Matching startedMatching = matchingRepository.findById(matching.getId()).orElse(null);
+
+        assertThat(startedMatching)
+                .hasFieldOrPropertyWithValue("status", MatchingStatus.PROCEEDING);
     }
 }

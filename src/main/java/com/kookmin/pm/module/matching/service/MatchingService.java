@@ -39,7 +39,7 @@ public class MatchingService {
     private final MemberRepository memberRepository;
 
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
-    public Long startMatching(@NonNull String uid, @NonNull MatchingCreateInfo matchingCreateInfo) {
+    public Long openMatching(@NonNull String uid, @NonNull MatchingCreateInfo matchingCreateInfo) {
         Member member = getMemberEntityByUid(uid);
         Category category = getCategoryEntityByName(matchingCreateInfo.getCategory());
 
