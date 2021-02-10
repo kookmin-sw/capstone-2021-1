@@ -23,7 +23,7 @@ import java.util.List;
 public class JwtTokenProvider {
     @Value("com.kookmin.playmaker")
     private String secretKey;
-    private long tokenValidMilisecond = 1000L * 60 * 60;
+    private long tokenValidMilisecond = 1000L * 60 * 60 * 24;
     private final UserDetailsService userDetailsService;
 
     @PostConstruct

@@ -1,6 +1,7 @@
 package com.kookmin.pm.web;
 
 import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.domain.MemberRole;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.MemberService;
@@ -40,7 +41,7 @@ public class MemberController {
         }
 
         List<String> roles = new ArrayList<>();
-        roles.add("USER");
+        roles.add(MemberRole.USER.toString());
 
         Map<String,String> userInfos = new HashMap<>();
         userInfos.put("access-token", jwtTokenProvider.createToken(uid, roles));
@@ -49,5 +50,14 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userInfos);
+    }
+
+    @PostMapping(value = "/signup")
+    public ResponseEntity<String> signUp(@RequestBody MemberCreateInfo memberCreateInfo) {
+        memberService.joinMember(memberCreateInfo);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("회원가입에 성공하셨습니다.");
     }
 }
