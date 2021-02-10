@@ -114,9 +114,9 @@ public class MemberServiceTest {
         MemberEditInfo memberEditInfo = new MemberEditInfo();
         memberEditInfo.setAddress("수정 주소");
         memberEditInfo.setName("수정 이름");
-        memberEditInfo.setPassword("123456");
         memberEditInfo.setPhoneNumber("010-8888-8888");
         memberEditInfo.setNickname("수정 닉네임");
+        memberEditInfo.setDescription("자기소개");
 
         Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
 
@@ -129,9 +129,6 @@ public class MemberServiceTest {
                 .hasFieldOrPropertyWithValue("name", memberEditInfo.getName())
                 .hasFieldOrPropertyWithValue("phoneNumber", memberEditInfo.getPhoneNumber())
                 .hasFieldOrPropertyWithValue("nickname", memberEditInfo.getNickname());
-
-        boolean isPasswordMatches = passwordEncoder.matches(memberEditInfo.getPassword(), member.getPassword());
-        assertThat(isPasswordMatches).isTrue();
     }
 
     @Test

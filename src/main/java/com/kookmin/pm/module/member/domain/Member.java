@@ -31,6 +31,9 @@ public class Member {
     @Column(name="ADDRESS")
     private String address;
 
+    @Column(name="DESCRIPTION")
+    private String description;
+
     @Column(name="PHONE_NUMBER")
     private String phoneNumber;
 
@@ -82,6 +85,8 @@ public class Member {
     public void editAddress(String address) {
         this.address = address;
     }
+
+    public void editDescription(String description) { this.description = description; }
 
     public void changeStatus(MemberStatus status) {
         this.status = status;

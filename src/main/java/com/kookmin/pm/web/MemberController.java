@@ -4,6 +4,7 @@ import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberRole;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
 import com.kookmin.pm.module.member.dto.MemberDetails;
+import com.kookmin.pm.module.member.dto.MemberEditInfo;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +71,16 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(details);
+    }
+
+    @PutMapping(value = "/member/edit")
+    public ResponseEntity<String> editMember(Principal principal, @RequestBody MemberEditInfo memberEditInfo) {
+        Long usn = Long.parseLong(principal.getName());
+        memberService.editMemberInfo(usn, memberEditInfo);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("정보 수정이 완료되었습니다.");
     }
 
     @PostConstruct
