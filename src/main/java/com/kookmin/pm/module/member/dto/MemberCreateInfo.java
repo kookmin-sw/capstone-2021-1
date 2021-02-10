@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 //TODO::Validate 설정해야함
 public class MemberCreateInfo {
-    private String email;
+    private String uid;
     private String password;
     private String nickname;
     private String name;

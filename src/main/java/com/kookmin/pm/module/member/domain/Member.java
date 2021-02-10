@@ -16,8 +16,8 @@ public class Member {
     @Column(name="MEMBER_ID")
     private Long id;
 
-    @Column(name="EMAIL")
-    private String email;
+    @Column(name="UID")
+    private String uid;
 
     @Column(name="PASSWORD")
     private String password;
@@ -34,6 +34,9 @@ public class Member {
     @Column(name="PHONE_NUMBER")
     private String phoneNumber;
 
+    @Column(name="PROVIDER")
+    private String provider;
+
     @Enumerated(EnumType.STRING)
     @Column(name="STATUS")
     private MemberStatus status;
@@ -43,14 +46,15 @@ public class Member {
     private MemberRole role;
 
     @Builder
-    public Member(String email, String password, String nickname, String name,
-                  String phoneNumber, String address) {
-        this.email = email;
+    public Member(String uid, String password, String nickname, String name,
+                  String phoneNumber, String address, String provider) {
+        this.uid = uid;
         this.password = password;
         this.nickname = nickname;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.provider = provider;
         this.status = MemberStatus.ACTIVE;
         this.role = MemberRole.USER;
     }

@@ -30,10 +30,10 @@ public class MemberController {
 
     @PostMapping(value = "/signin")
     public ResponseEntity<Map<String,String>> signIn(@RequestBody Map<String, String> user) {
-        String email = user.get("email");
+        String uid = user.get("uid");
         String password = user.get("password");
 
-        Member member = memberRepository.findByEmail(email).orElseThrow(EntityExistsException::new);
+        Member member = memberRepository.findByUid(uid).orElseThrow(EntityExistsException::new);
         if(!passwordEncoder.matches(password,member.getPassword())) {
             //TODO:: 로그인 실패 처리
             throw new RuntimeException();
@@ -43,7 +43,7 @@ public class MemberController {
         roles.add("USER");
 
         Map<String,String> userInfos = new HashMap<>();
-        userInfos.put("access-token", jwtTokenProvider.createToken(email, roles));
+        userInfos.put("access-token", jwtTokenProvider.createToken(uid, roles));
         userInfos.put("nickname", member.getNickname());
 
         return ResponseEntity

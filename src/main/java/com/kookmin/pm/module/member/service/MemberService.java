@@ -31,7 +31,7 @@ public class MemberService implements UserDetailsService {
 
     public Long joinMember(@NonNull MemberCreateInfo memberCreateInfo) {
         //TODO::RuntimeException 정의 해야함, 회원 이메일이 중복되었을 경우
-       if(isDuplicated(memberCreateInfo.getEmail()))
+       if(isDuplicated(memberCreateInfo.getUid()))
             throw new RuntimeException();
 
         Member member = buildMemberEntity(memberCreateInfo);
@@ -52,8 +52,8 @@ public class MemberService implements UserDetailsService {
         return member.getId();
     }
 
-    public void editMemberInfo(@NonNull String email, @NonNull MemberEditInfo memberEditInfo) {
-        Member member = getMemberEntityByEmail(email);
+    public void editMemberInfo(@NonNull String uid, @NonNull MemberEditInfo memberEditInfo) {
+        Member member = getMemberEntityByUid(uid);
 
         member.editNickname(memberEditInfo.getNickname());
         member.editPhoneNumber(memberEditInfo.getPhoneNumber());
@@ -65,8 +65,8 @@ public class MemberService implements UserDetailsService {
     }
 
 
-    public MemberDetails lookUpMemberDetails(@NonNull String email, @NonNull LookupType type) {
-        Member member = getMemberEntityByEmail(email);
+    public MemberDetails lookUpMemberDetails(@NonNull String uid, @NonNull LookupType type) {
+        Member member = getMemberEntityByUid(uid);
         //TODO::휴면 계정일 경우 조회 불가능, RuntimeException 정의해야
         if(member.getStatus().equals(MemberStatus.EXPIRED)) throw new RuntimeException();
 
@@ -75,16 +75,16 @@ public class MemberService implements UserDetailsService {
             return new MemberDetails(member);
         } else if(type==LookupType.WITHIMAGE) {
             return new MemberDetails(member,
-                    getMemberImageEntityByEmail(email));
+                    getMemberImageEntityByUid(uid));
         } else {
             return new MemberDetails(member,
-                    getMemberImageEntityByEmail(email),
-                    getMemberStatsEntityByEmail(email));
+                    getMemberImageEntityByUid(uid),
+                    getMemberStatsEntityByUid(uid));
         }
     }
 
-    public boolean secessionMember(@NonNull String email, @NonNull String password) {
-        Member member = getMemberEntityByEmail(email);
+    public boolean secessionMember(@NonNull String uid, @NonNull String password) {
+        Member member = getMemberEntityByUid(uid);
 
         if(!passwordEncoder.matches(password, member.getPassword())) return false;
 
@@ -93,26 +93,26 @@ public class MemberService implements UserDetailsService {
         return true;
     }
 
-    public void changeMemberImage(@NonNull String email, @NonNull String imagePath) {
-        MemberImage memberImage = getMemberImageEntityByEmail(email);
+    public void changeMemberImage(@NonNull String uid, @NonNull String imagePath) {
+        MemberImage memberImage = getMemberImageEntityByUid(uid);
         memberImage.editImagePath(imagePath);
     }
 
-    public void removeMemberImage(@NonNull String email) {
-        MemberImage memberImage = getMemberImageEntityByEmail(email);
+    public void removeMemberImage(@NonNull String uid) {
+        MemberImage memberImage = getMemberImageEntityByUid(uid);
         memberImageRepository.delete(memberImage);
     }
 
     //TODO:: 회원 능력치 평가 메소드 필요
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
         //TODO:: 그냥 UsernameNotFoundException 던져주는 걸로 끝나도 되는지 확인해야함
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
+        Member member = memberRepository.findByUid(uid)
+                .orElseThrow(() -> new UsernameNotFoundException(uid));
 
         return User.builder()
-                .username(member.getEmail())
+                .username(member.getUid())
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
@@ -120,7 +120,7 @@ public class MemberService implements UserDetailsService {
 
     private Member buildMemberEntity(MemberCreateInfo memberCreateInfo) {
         return Member.builder()
-                .email(memberCreateInfo.getEmail())
+                .uid(memberCreateInfo.getUid())
                 .name(memberCreateInfo.getName())
                 .password(memberCreateInfo.getPassword())
                 .nickname(memberCreateInfo.getNickname())
@@ -129,22 +129,22 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
-    private boolean isDuplicated(String email) {
-        Member member = memberRepository.findByEmail(email).orElse(null);
+    private boolean isDuplicated(String uid) {
+        Member member = memberRepository.findByUid(uid).orElse(null);
         return member!=null;
     }
 
-    private Member getMemberEntityByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new);
+    private Member getMemberEntityByUid(String uid) {
+        return memberRepository.findByUid(uid).orElseThrow(EntityNotFoundException::new);
     }
 
-    private MemberImage getMemberImageEntityByEmail(String email) {
-        Member member = getMemberEntityByEmail(email);
+    private MemberImage getMemberImageEntityByUid(String uid) {
+        Member member = getMemberEntityByUid(uid);
         return memberImageRepository.findByMember(member).orElse(null);
     }
 
-    private MemberStats getMemberStatsEntityByEmail(String email) {
-        Member member = getMemberEntityByEmail(email);
+    private MemberStats getMemberStatsEntityByUid(String uid) {
+        Member member = getMemberEntityByUid(uid);
         return memberStatsRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
     }
 }

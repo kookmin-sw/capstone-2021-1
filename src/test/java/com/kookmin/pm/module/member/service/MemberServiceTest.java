@@ -39,7 +39,7 @@ public class MemberServiceTest {
     @BeforeEach
     public void setUp() {
         MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
-        memberCreateInfo.setEmail("dlwlsrn9412@kookmin.ac.kr");
+        memberCreateInfo.setUid("dlwlsrn9412@kookmin.ac.kr");
         memberCreateInfo.setPassword("1234");
         memberCreateInfo.setNickname("jingu2");
         memberCreateInfo.setAddress("서울시~~~");
@@ -47,7 +47,7 @@ public class MemberServiceTest {
         memberCreateInfo.setPhoneNumber("010-8784-3827");
 
         MemberCreateInfo memberCreateInfo2 = new MemberCreateInfo();
-        memberCreateInfo2.setEmail("dlwlsrn9413@kookmin.ac.kr");
+        memberCreateInfo2.setUid("dlwlsrn9413@kookmin.ac.kr");
         memberCreateInfo2.setPassword("12345");
         memberCreateInfo2.setNickname("jingu2");
         memberCreateInfo2.setAddress("서울시~~~");
@@ -55,7 +55,7 @@ public class MemberServiceTest {
         memberCreateInfo2.setPhoneNumber("010-8784-3827");
 
         MemberCreateInfo memberCreateInfo3 = new MemberCreateInfo();
-        memberCreateInfo3.setEmail("dlwlsrn9414@kookmin.ac.kr");
+        memberCreateInfo3.setUid("dlwlsrn9414@kookmin.ac.kr");
         memberCreateInfo3.setPassword("12346");
         memberCreateInfo3.setNickname("jingu3");
         memberCreateInfo3.setAddress("서울시~~~");
@@ -71,7 +71,7 @@ public class MemberServiceTest {
     @DisplayName("joinMember메소 회원가입 성공 테스트")
     public void joinMember_success_test() {
         MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
-        memberCreateInfo.setEmail("dlwlsrn9411@kookmin.ac.kr");
+        memberCreateInfo.setUid("dlwlsrn9411@kookmin.ac.kr");
         memberCreateInfo.setPassword("1234");
         memberCreateInfo.setNickname("jingu");
         memberCreateInfo.setAddress("서울시~~~");
@@ -79,11 +79,11 @@ public class MemberServiceTest {
         memberCreateInfo.setPhoneNumber("010-8784-3827");
 
         Long id = memberService.joinMember(memberCreateInfo);
-        Member member = memberRepository.findByEmail(memberCreateInfo.getEmail()).orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByUid(memberCreateInfo.getUid()).orElseThrow(EntityNotFoundException::new);
 
         assertThat(member)
                 .hasFieldOrPropertyWithValue("id", id)
-                .hasFieldOrPropertyWithValue("email", memberCreateInfo.getEmail())
+                .hasFieldOrPropertyWithValue("uid", memberCreateInfo.getUid())
                 .hasFieldOrPropertyWithValue("nickname", memberCreateInfo.getNickname())
                 .hasFieldOrPropertyWithValue("name", memberCreateInfo.getName())
                 .hasFieldOrPropertyWithValue("phoneNumber", memberCreateInfo.getPhoneNumber())
@@ -119,7 +119,7 @@ public class MemberServiceTest {
         memberEditInfo.setNickname("수정 닉네임");
 
         memberService.editMemberInfo("dlwlsrn9412@kookmin.ac.kr", memberEditInfo);
-        Member member = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
 
         assertThat(member)
                 .hasFieldOrPropertyWithValue("address", memberEditInfo.getAddress())
@@ -156,7 +156,7 @@ public class MemberServiceTest {
     public void secessionMember_success_test() {
         boolean result = memberService.secessionMember("dlwlsrn9412@kookmin.ac.kr", "1234");
         assertThat(result).isTrue();
-        Member member = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
         assertThat(member)
                 .hasFieldOrPropertyWithValue("status", MemberStatus.EXPIRED);
     }
