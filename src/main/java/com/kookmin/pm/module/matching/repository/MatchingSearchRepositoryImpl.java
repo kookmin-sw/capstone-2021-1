@@ -42,20 +42,20 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
         .from(matching)
         .leftJoin(matching.member, member)
         .leftJoin(matching.category, category)
-        .where(titleLike(condition.getTitle()),
+        .where(titleContains(condition.getTitle()),
                 statusEq(condition.getStatus()),
                 maxCountLt(condition.getMaxCount()),
-                hostEmailEq(condition.getHostEmail()),
+                hostEq(condition.getHost()),
                 categoryEq(condition.getCategory()))
         .orderBy(matching.startTime.desc()));
     }
 
-    private BooleanExpression titleLike(String title) {
+    private BooleanExpression titleContains(String title) {
         return title==null? null : matching.title.contains(title);
     }
 
     private BooleanExpression categoryEq(String categoryName) {
-        return category==null? null : category.name.eq(categoryName);
+        return categoryName==null? null : category.name.eq(categoryName);
     }
 
     private BooleanExpression statusEq(String status) {
@@ -66,8 +66,8 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
         return maxCount==null? null : matching.maxCount.loe(maxCount);
     }
 
-    private BooleanExpression hostEmailEq(String email) {
-        return email==null? null : member.email.eq(email);
+    private BooleanExpression hostEq(String uid) {
+        return uid==null? null : member.uid.eq(uid);
     }
 
     private BooleanExpression matchingIdEq(Long matchingId) {

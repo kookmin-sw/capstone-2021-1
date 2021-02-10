@@ -40,8 +40,8 @@ public class CrewService {
     //TODO::크루 참가 요청 조회 및 검색
 
     //TODO::크루명이 유일할 필요가 있는지
-    public Long establishCrew(@NonNull String email, @NonNull CrewCreateInfo crewCreateInfo) {
-        Member member = getMemberEntityByEmail(email);
+    public Long establishCrew(@NonNull String uid, @NonNull CrewCreateInfo crewCreateInfo) {
+        Member member = getMemberEntityByUid(uid);
         Category category = getCategoryEntityByName(crewCreateInfo.getCategory());
 
         Crew crew = buildCrewEntity(crewCreateInfo, member, category);
@@ -52,12 +52,12 @@ public class CrewService {
     }
 
     //TODO::활동지역은 여러개 인가
-    public void editCrewInfo(@NonNull String email, @NonNull CrewEditInfo crewEditInfo) {
-        Member member = getMemberEntityByEmail(email);
+    public void editCrewInfo(@NonNull String uid, @NonNull CrewEditInfo crewEditInfo) {
+        Member member = getMemberEntityByUid(uid);
         Crew crew = getCrewEntity(crewEditInfo.getId());
 
         //TODO::이메일이 서로 다른 경우
-        if(!crew.getMember().getEmail().equals(email))
+        if(!crew.getMember().getUid().equals(uid))
             throw new RuntimeException();
 
         crew.editName(crewEditInfo.getName());
@@ -72,12 +72,12 @@ public class CrewService {
             crewDetails = new CrewDetails(crew);
         } else if(type.equals(CrewLookupType.WITH_HOST)) {
             crewDetails = new CrewDetails(crew);
-            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getEmail(),
+            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getUid(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
         } else if(type.equals(CrewLookupType.WITH_PARTICIPANTS)){
             crewDetails = new CrewDetails(crew);
-            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getEmail(),
+            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getUid(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
 
@@ -85,7 +85,7 @@ public class CrewService {
             List<MemberDetails> participantList = new ArrayList<>();
 
             for(Member participant : participants) {
-                participantList.add(memberService.lookUpMemberDetails(participant.getEmail(),
+                participantList.add(memberService.lookUpMemberDetails(participant.getUid(),
                         LookupType.WITHALLINFOS));
             }
 
@@ -99,8 +99,8 @@ public class CrewService {
         return crewRepository.searchCrew(pageable, searchCondition);
     }
 
-    public void participateCrew(@NonNull String email, @NonNull Long crewId) {
-        Member member = getMemberEntityByEmail(email);
+    public void participateCrew(@NonNull String uid, @NonNull Long crewId) {
+        Member member = getMemberEntityByUid(uid);
         Crew crew = getCrewEntity(crewId);
 
         //TODO::이미 참여하거나 신청한 회원인 경우 익셉션 정의 필요
@@ -108,7 +108,7 @@ public class CrewService {
             throw new RuntimeException();
 
         //TODO::신청한 사람이 호스트인경우
-        if(crew.getMember().getEmail().equals(email))
+        if(crew.getMember().getUid().equals(uid))
             throw new RuntimeException();
 
         //TODO::최대인원을 초과했을 경우
@@ -124,8 +124,8 @@ public class CrewService {
         crewParticipantsRepository.save(crewParticipants);
     }
 
-    public void approveParticipationRequest(@NonNull String email, @NonNull Long requestId) {
-        Member host = getMemberEntityByEmail(email);
+    public void approveParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
+        Member host = getMemberEntityByUid(uid);
 
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
 
@@ -140,8 +140,8 @@ public class CrewService {
         participants.approveParticipation();
     }
 
-    public void rejectParticipationRequest(@NonNull String email, @NonNull Long requestId) {
-        Member host = getMemberEntityByEmail(email);
+    public void rejectParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
+        Member host = getMemberEntityByUid(uid);
 
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
 
@@ -156,8 +156,8 @@ public class CrewService {
         crewParticipantsRepository.delete(participants);
     }
 
-    public void cancelParticipation(@NonNull String email, @NonNull Long crewId) {
-        Member participant = getMemberEntityByEmail(email);
+    public void cancelParticipation(@NonNull String uid, @NonNull Long crewId) {
+        Member participant = getMemberEntityByUid(uid);
         Crew crew = getCrewEntity(crewId);
 
         CrewParticipants participants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
@@ -168,10 +168,10 @@ public class CrewService {
         crewParticipantsRepository.delete(participants);
     }
 
-    public void deportParticipant(@NonNull String email,
+    public void deportParticipant(@NonNull String uid,
                                   @NonNull Long crewId,
                                   @NonNull Long participationId) {
-        Member host = getMemberEntityByEmail(email);
+        Member host = getMemberEntityByUid(uid);
         Crew crew = getCrewEntity(crewId);
         CrewParticipants participants = getCrewParticipantsEntity(participationId);
 
@@ -188,8 +188,8 @@ public class CrewService {
         crewParticipantsRepository.delete(participants);
     }
 
-    public void removeCrew(@NonNull String email, @NonNull Long crewId) {
-        Member host = getMemberEntityByEmail(email);
+    public void removeCrew(@NonNull String uid, @NonNull Long crewId) {
+        Member host = getMemberEntityByUid(uid);
         Crew crew = getCrewEntity(crewId);
 
         if(!crew.getMember().equals(host))
@@ -211,8 +211,8 @@ public class CrewService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    private Member getMemberEntityByEmail(String email) {
-        return memberRepository.findByEmail(email)
+    private Member getMemberEntityByUid(String uid) {
+        return memberRepository.findByUid(uid)
                 .orElseThrow(EntityNotFoundException::new);
     }
 

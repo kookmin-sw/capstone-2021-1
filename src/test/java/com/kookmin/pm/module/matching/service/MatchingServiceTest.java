@@ -59,7 +59,7 @@ class MatchingServiceTest {
     @BeforeEach
     public void setup() {
         MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
-        memberCreateInfo.setEmail("dlwlsrn9412@kookmin.ac.kr");
+        memberCreateInfo.setUid("dlwlsrn9412@kookmin.ac.kr");
         memberCreateInfo.setPassword("1234");
         memberCreateInfo.setNickname("jingu2");
         memberCreateInfo.setAddress("서울시~~~");
@@ -69,7 +69,7 @@ class MatchingServiceTest {
         memberService.joinMember(memberCreateInfo);
 
         MemberCreateInfo memberCreateInfo2 = new MemberCreateInfo();
-        memberCreateInfo2.setEmail("dlwlsrn10@kookmin.ac.kr");
+        memberCreateInfo2.setUid("dlwlsrn10@kookmin.ac.kr");
         memberCreateInfo2.setPassword("1234");
         memberCreateInfo2.setNickname("jingu2");
         memberCreateInfo2.setAddress("서울시~~~");
@@ -79,7 +79,7 @@ class MatchingServiceTest {
         memberService.joinMember(memberCreateInfo2);
 
         MemberCreateInfo memberCreateInfo3 = new MemberCreateInfo();
-        memberCreateInfo3.setEmail("dlwlsrn7@kookmin.ac.kr");
+        memberCreateInfo3.setUid("dlwlsrn7@kookmin.ac.kr");
         memberCreateInfo3.setPassword("1234");
         memberCreateInfo3.setNickname("jingu3");
         memberCreateInfo3.setAddress("서울시~~~");
@@ -89,7 +89,7 @@ class MatchingServiceTest {
         memberService.joinMember(memberCreateInfo3);
 
         MemberCreateInfo memberCreateInfo4 = new MemberCreateInfo();
-        memberCreateInfo4.setEmail("dlwlsrn6@kookmin.ac.kr");
+        memberCreateInfo4.setUid("dlwlsrn6@kookmin.ac.kr");
         memberCreateInfo4.setPassword("1234");
         memberCreateInfo4.setNickname("jingu4");
         memberCreateInfo4.setAddress("서울시~~~");
@@ -130,7 +130,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("startMatching 성공 테스트")
     public void startMatching_success_test() {
-        Member member = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+        Member member = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         MatchingCreateInfo matchingCreateInfo = new MatchingCreateInfo();
@@ -142,7 +142,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setMaxCount(5);
         matchingCreateInfo.setCategory("BOARD_GAME");
 
-        Long id = matchingService.startMatching(member.getEmail(), matchingCreateInfo);
+        Long id = matchingService.startMatching(member.getUid(), matchingCreateInfo);
         Matching matching = matchingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Category category = categoryRepository.findByName("BOARD_GAME").orElseThrow(EntityNotFoundException::new);
 
@@ -159,15 +159,15 @@ class MatchingServiceTest {
     @Test
     @DisplayName("participateMatching 성공 테스트")
     public void participateMatching_success_test() {
-        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        Long id = matchingService.participateMatching(participant.getEmail(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
 
         MatchingParticipant matchingParticipant = matchingParticipantRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
@@ -180,36 +180,36 @@ class MatchingServiceTest {
     @Test
     @DisplayName("participateMathcing 실패 테스트 - 매칭 생성자가 매칭 참가 요청시")
     public void participantMatching_fail_test() {
-        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
         assertThatThrownBy(() -> {
-            Long id = matchingService.participateMatching(creater.getEmail(), matching.getId());
+            Long id = matchingService.participateMatching(creater.getUid(), matching.getId());
         }).isInstanceOf(RuntimeException.class);
     }
 
     @Test
     @DisplayName("matching관련 조인 테스트")
     public void matching_participants_join_test() {
-        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant2 = memberRepository.findByEmail("dlwlsrn7@kookmin.ac.kr")
+        Member participant2 = memberRepository.findByUid("dlwlsrn7@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant3 = memberRepository.findByEmail("dlwlsrn6@kookmin.ac.kr")
+        Member participant3 = memberRepository.findByUid("dlwlsrn6@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        matchingService.participateMatching(participant.getEmail(), matching.getId());
-        matchingService.participateMatching(participant2.getEmail(), matching.getId());
-        matchingService.participateMatching(participant3.getEmail(), matching.getId());
+        matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.participateMatching(participant2.getUid(), matching.getId());
+        matchingService.participateMatching(participant3.getUid(), matching.getId());
 
         List<Member> members = matchingRepository.searchMemberInMatchingParticipant(matching.getId());
         System.out.println(members.size());
@@ -222,23 +222,23 @@ class MatchingServiceTest {
     @Test
     @DisplayName("lookupMatching 성공 테스트")
     public void lookupMatching_success_test() {
-        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant2 = memberRepository.findByEmail("dlwlsrn7@kookmin.ac.kr")
+        Member participant2 = memberRepository.findByUid("dlwlsrn7@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant3 = memberRepository.findByEmail("dlwlsrn6@kookmin.ac.kr")
+        Member participant3 = memberRepository.findByUid("dlwlsrn6@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        matchingService.participateMatching(participant.getEmail(), matching.getId());
-        matchingService.participateMatching(participant2.getEmail(), matching.getId());
-        matchingService.participateMatching(participant3.getEmail(), matching.getId());
+        matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.participateMatching(participant2.getUid(), matching.getId());
+        matchingService.participateMatching(participant3.getUid(), matching.getId());
 
         MatchingDetails matchingDetails = matchingService.lookupMatching(matching.getId(),
                 MatchingLookUpType.DEFAULT);
@@ -259,7 +259,7 @@ class MatchingServiceTest {
     @Test
     @DisplayName("editMatching 메소드 성공 테스트")
     public void editMatching_success_test() {
-        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
@@ -274,7 +274,7 @@ class MatchingServiceTest {
         matchingEditInfo.setMaxCount(5);
         matchingEditInfo.setStartTime(LocalDateTime.of(2021, 3, 12, 12,0,0));
 
-       matchingService.editMatching(creater.getEmail(), matchingEditInfo);
+       matchingService.editMatching(creater.getUid(), matchingEditInfo);
 
        matching = matchingRepository.findByMember(creater).get(0);
         Category category = categoryRepository.findByName("ROOM_ESCAPE").orElseThrow(EntityNotFoundException::new);
@@ -289,17 +289,17 @@ class MatchingServiceTest {
     @Test
     @DisplayName("quitMatching 성공 테스트")
     public void quitMatching_success_test() {
-        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        Long id = matchingService.participateMatching(participant.getEmail(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
 
-        matchingService.quitMatching(creater.getEmail(), matching.getId());
+        matchingService.quitMatching(creater.getUid(), matching.getId());
 
         List<MatchingParticipant> result = matchingParticipantRepository.findByMatching(matching);
 
@@ -310,17 +310,17 @@ class MatchingServiceTest {
     @Test
     @DisplayName("cancelParticipation 성공 테스트")
     public void cancelParticipation_success_test() {
-        Member creater = memberRepository.findByEmail("dlwlsrn9412@kookmin.ac.kr")
+        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Member participant = memberRepository.findByEmail("dlwlsrn10@kookmin.ac.kr")
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        Long id = matchingService.participateMatching(participant.getEmail(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
 
-        matchingService.cancelParticipation(participant.getEmail(), matching.getId());
+        matchingService.cancelParticipation(participant.getUid(), matching.getId());
 
         List<MatchingParticipant> participants = matchingParticipantRepository.findByMatching(matching);
 
@@ -332,7 +332,7 @@ class MatchingServiceTest {
     @DisplayName("searchMatching 성공 테스트")
     public void searchMatching_success_test() {
         MatchingSearchCondition searchCondition = new MatchingSearchCondition();
-        searchCondition.setHostEmail("dlwlsrn9412@kookmin.ac.kr");
+        searchCondition.setHost("dlwlsrn9412@kookmin.ac.kr");
         searchCondition.setCategory("BOARD_GAME");
         Pageable pageable = PageRequest.of(0, 10);
 

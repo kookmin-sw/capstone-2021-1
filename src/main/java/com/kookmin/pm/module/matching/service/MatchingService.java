@@ -39,8 +39,8 @@ public class MatchingService {
     private final MemberRepository memberRepository;
 
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
-    public Long startMatching(@NonNull String email, @NonNull MatchingCreateInfo matchingCreateInfo) {
-        Member member = getMemberEntityByEmail(email);
+    public Long startMatching(@NonNull String uid, @NonNull MatchingCreateInfo matchingCreateInfo) {
+        Member member = getMemberEntityByUid(uid);
         Category category = getCategoryEntityByName(matchingCreateInfo.getCategory());
 
         //TODO::현재보다 과거시간대를 startTime으로 정할경우 Exception
@@ -54,9 +54,9 @@ public class MatchingService {
         return matching.getId();
     }
 
-    public Long participateMatching(@NonNull String participantEmail,
+    public Long participateMatching(@NonNull String participantUid,
                                     @NonNull Long matchingId) {
-        Member member = getMemberEntityByEmail(participantEmail);
+        Member member = getMemberEntityByUid(participantUid);
         Matching matching = getMatchingEntity(matchingId);
 
         //TODO::이미 참여한 회원일 경우 예외처리 정의
@@ -64,7 +64,7 @@ public class MatchingService {
             throw new RuntimeException();
 
         //TODO::매칭을 생성한 사람일 경우 예외처리 정의
-        if(matching.getMember().getEmail().equals(participantEmail))
+        if(matching.getMember().getUid().equals(participantUid))
             throw new RuntimeException();
 
         //TODO::이미 회원이 다 찬 경우 참여 불가 예외처리 정의, count쿼리로 정의해줘야
@@ -83,7 +83,7 @@ public class MatchingService {
         return matchingParticipant.getId();
     }
 
-    public void editMatching(@NonNull String email, @NonNull MatchingEditInfo matchingEditInfo) {
+    public void editMatching(@NonNull String uid, @NonNull MatchingEditInfo matchingEditInfo) {
         Matching matching = getMatchingEntity(matchingEditInfo.getId());
 
         //TODO::아직 시작되지 않은 상태의 매칭만 수정가능
@@ -91,7 +91,7 @@ public class MatchingService {
             throw new RuntimeException();
 
         //TODO::수정을 요청한 회원과 매칭을 생성한 회원이 일치하지 않는 경우 익셉션 정의 필요
-        if(!matching.getMember().getEmail().equals(email))
+        if(!matching.getMember().getUid().equals(uid))
             throw new RuntimeException();
 
         //TODO::이미 시작된 매칭의 경우, 현재보다 이전 시간을 매칭 시작시간으로 설정할 경우 정보 수정이 불가능하다. 익셉션 정의 필요
@@ -118,11 +118,11 @@ public class MatchingService {
         matching.editStartTime(matchingEditInfo.getStartTime());
     }
 
-    public void quitMatching(@NonNull String email, @NonNull Long matchingId) {
+    public void quitMatching(@NonNull String uid, @NonNull Long matchingId) {
         Matching matching = getMatchingEntity(matchingId);
 
         //TODO::매칭 생성자와 요청한 회원의 이메일이 일치하지 않을때 익셉션 정의 필요
-        if(!matching.getMember().getEmail().equals(email))
+        if(!matching.getMember().getUid().equals(uid))
             throw new RuntimeException();
 
         //TODO::매칭에 참가한 다른 인원들에게 알림으로 알려주는 기능 필요
@@ -134,9 +134,9 @@ public class MatchingService {
         matchingRepository.delete(matching);
     }
 
-    public void cancelParticipation(@NonNull String email, @NonNull Long matchingId) {
+    public void cancelParticipation(@NonNull String uid, @NonNull Long matchingId) {
         //TODO::참가 취소 신청회원이 해당 매칭에 없을 경우
-        matchingParticipantRepository.deleteByMemberEmailAndMatchingId(email, matchingId);
+        matchingParticipantRepository.deleteByMemberUidAndMatchingId(uid, matchingId);
     }
 
     public Page<MatchingDetails> searchMatching(@NonNull Pageable pageable,
@@ -156,7 +156,7 @@ public class MatchingService {
             matchingDetails = new MatchingDetails(matching);
 
             MemberDetails memberDetails = memberService
-                    .lookUpMemberDetails(matching.getMember().getEmail(), LookupType.WITHALLINFOS);
+                    .lookUpMemberDetails(matching.getMember().getUid(), LookupType.WITHALLINFOS);
 
             matchingDetails.setHost(memberDetails);
 
@@ -164,7 +164,7 @@ public class MatchingService {
             matchingDetails = new MatchingDetails(matching);
 
             MemberDetails memberDetails = memberService
-                    .lookUpMemberDetails(matching.getMember().getEmail(), LookupType.WITHALLINFOS);
+                    .lookUpMemberDetails(matching.getMember().getUid(), LookupType.WITHALLINFOS);
 
             matchingDetails.setHost(memberDetails);
 
@@ -174,7 +174,7 @@ public class MatchingService {
 
             //TODO::엔티티를 가져와서 다시 dto로 변환하는데... 회원관련 다른 테이블도 전부 조인해야함, 조금 비효율적이다. 개선 필요
             for(Member member : participants) {
-                participantDetails.add(memberService.lookUpMemberDetails(member.getEmail(),
+                participantDetails.add(memberService.lookUpMemberDetails(member.getUid(),
                         LookupType.WITHALLINFOS));
             }
 
@@ -208,8 +208,8 @@ public class MatchingService {
                 .build();
     }
 
-    private Member getMemberEntityByEmail(String email) {
-        return memberRepository.findByEmail(email)
+    private Member getMemberEntityByUid(String uid) {
+        return memberRepository.findByUid(uid)
                 .orElseThrow(EntityNotFoundException::new);
     }
 

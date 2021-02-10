@@ -72,7 +72,7 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
     }
 
     public BooleanExpression hostEq(String host) {
-        return host==null? null : crew.member.email.eq(host);
+        return host==null? null : crew.member.uid.eq(host);
     }
 
     public BooleanExpression crewIdEq(Long crewId) {
