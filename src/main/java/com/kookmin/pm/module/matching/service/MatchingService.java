@@ -5,10 +5,8 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
-import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
-import com.kookmin.pm.module.matching.dto.MatchingDetails;
-import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
-import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.matching.domain.ParticipantStatus;
+import com.kookmin.pm.module.matching.dto.*;
 import com.kookmin.pm.module.matching.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -26,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -39,7 +39,7 @@ public class MatchingService {
     private final MemberRepository memberRepository;
 
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
-    public Long startMatching(@NonNull String uid, @NonNull MatchingCreateInfo matchingCreateInfo) {
+    public Long openMatching(@NonNull String uid, @NonNull MatchingCreateInfo matchingCreateInfo) {
         Member member = getMemberEntityByUid(uid);
         Category category = getCategoryEntityByName(matchingCreateInfo.getCategory());
 
@@ -67,8 +67,8 @@ public class MatchingService {
         if(matching.getMember().getUid().equals(participantUid))
             throw new RuntimeException();
 
-        //TODO::이미 회원이 다 찬 경우 참여 불가 예외처리 정의, count쿼리로 정의해줘야
-        if(matchingParticipantRepository.findByMatching(matching).size()+1 >= matching.getMaxCount())
+        if(matchingParticipantRepository
+                .countByMatchingAndStatus(matching, ParticipantStatus.PARTICIPATING)+1L >= matching.getMaxCount())
             throw new RuntimeException();
 
         //TODO::이미 시작한 매칭의 경우 + 요청 시간이 매칭의 시작시간을 초과했을 경우 로직 추가
@@ -101,7 +101,8 @@ public class MatchingService {
 
         //TODO::변경하려는 최대 인원수 보다 현재 참가 인원수가 더 많은 경우 익셉션 정의 필요
         if(!matching.getMaxCount().equals(matchingEditInfo.getMaxCount())) {
-           List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingEditInfo.getId());
+           List<Member> participants = matchingRepository
+                   .searchMemberInMatchingParticipant(matchingEditInfo.getId(), ParticipantStatus.PARTICIPATING);
            if(participants.size() > matchingEditInfo.getMaxCount())
                throw new RuntimeException();
         }
@@ -126,17 +127,12 @@ public class MatchingService {
             throw new RuntimeException();
 
         //TODO::매칭에 참가한 다른 인원들에게 알림으로 알려주는 기능 필요
-        List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
+        List<Member> participants = matchingRepository
+                .searchMemberInMatchingParticipant(matchingId, ParticipantStatus.PARTICIPATING);
 
-        //TODO::조인문 발생하지 않나 검증 필
         matchingParticipantRepository.deleteAllByMatching(matching);
 
         matchingRepository.delete(matching);
-    }
-
-    public void cancelParticipation(@NonNull String uid, @NonNull Long matchingId) {
-        //TODO::참가 취소 신청회원이 해당 매칭에 없을 경우
-        matchingParticipantRepository.deleteByMemberUidAndMatchingId(uid, matchingId);
     }
 
     public Page<MatchingDetails> searchMatching(@NonNull Pageable pageable,
@@ -168,8 +164,8 @@ public class MatchingService {
 
             matchingDetails.setHost(memberDetails);
 
-            //TODO::status로 참여중인 회원만 조회하도록 비교해줘야함
-            List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
+            List<Member> participants = matchingRepository
+                    .searchMemberInMatchingParticipant(matchingId, ParticipantStatus.PARTICIPATING);
             List<MemberDetails> participantDetails = new ArrayList<>();
 
             //TODO::엔티티를 가져와서 다시 dto로 변환하는데... 회원관련 다른 테이블도 전부 조인해야함, 조금 비효율적이다. 개선 필요
@@ -185,15 +181,159 @@ public class MatchingService {
         return matchingDetails;
     }
 
-    //TODO:: 다른 회원들의 참가요청을 검색하는 메소드 필요
+    public void approveParticipationRequest (@NonNull String uid, @NonNull Long requestId) {
+        MatchingParticipant request = getMatchingParticipantEntity(requestId);
+        Matching matching = request.getMatching();
 
-    //TODO:: 참가요청에 대한 참가를 승인하는 메소드 필요, 참가요청 상태를 참여중으로 변경하고 등등 처리해야
+        //TODO::이미 매칭이 시작된 경우
+        if(!matching.getStatus().equals(MatchingStatus.SCHEDULED))
+            throw new RuntimeException();
 
-    //TODO:: 참가요청에 대한 참가를 거절하는 메소드 필요
+        //TODO::이미 매칭에 참가중인 회원일 경우
+        if(request.getStatus().equals(ParticipantStatus.PARTICIPATING))
+            throw new RuntimeException();
 
-    //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
+        //TODO::참가요청을 승인하는 회원이 매칭의 호스트가 아닐 경우
+        if(!matching.getMember().getUid().equals(uid))
+            throw new RuntimeException();
 
-    //TODO:: 참가요청에 대한 상세 조회 메소드 필
+        //TODO::매칭의 최대인원수에 도달한 경우
+        if(matchingParticipantRepository.countByMatchingAndStatus(matching, ParticipantStatus.PARTICIPATING) + 1L
+                >= matching.getMaxCount())
+            throw new RuntimeException();
+
+        request.approveMatching();
+    }
+
+    public void rejectParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
+        MatchingParticipant request = getMatchingParticipantEntity(requestId);
+        Matching matching = request.getMatching();
+
+        //TODO::이미 매칭에 참가한 회원인 경우
+        if(request.getStatus().equals(ParticipantStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        //TODO::요청에 대한 거절을 하는 회원이 매칭의 호스트가 아닌 경우
+        if(!matching.getMember().getUid().equals(uid))
+            throw new RuntimeException();
+
+        matchingParticipantRepository.delete(request);
+    }
+
+    public void quitParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
+        MatchingParticipant request = getMatchingParticipantEntity(requestId);
+
+        //TODO:: 이미 참가중인 경우
+        if(request.getStatus().equals(ParticipantStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        //TODO::참가요청 취소를 보낸 회원이 주체가 아닌 경우
+        if(!request.getMember().getUid().equals(uid))
+            throw new RuntimeException();
+
+        matchingParticipantRepository.delete(request);
+    }
+
+    public void cancelParticipation(@NonNull String uid, @NonNull Long matchingId) {
+        Matching matching = getMatchingEntity(matchingId);
+        Member member = getMemberEntityByUid(uid);
+
+        MatchingParticipant participant = matchingParticipantRepository.findByMemberAndMatching(member, matching)
+                .orElseThrow(EntityNotFoundException::new);
+
+        //TODO::참가 취소 신청회원이 해당 매칭에 참가중이지 않은 경우
+        if(!participant.getStatus().equals(ParticipantStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        matchingParticipantRepository.delete(participant);
+    }
+
+    public void startMatching(@NonNull String uid, @NonNull Long matchingId) {
+        Matching matching = getMatchingEntity(matchingId);
+
+        //TODO::매칭 호스트가 아닌데 매칭을 시작할 경우
+        if(!matching.getMember().getUid().equals(uid))
+            throw new RuntimeException();
+
+        //TODO::이미 매칭이 진행중이거나 종료된 매칭인데 시작을 요청할 경우
+        if(!matching.getStatus().equals(MatchingStatus.SCHEDULED))
+            throw new RuntimeException();
+
+        //TODO::매칭에 참여한 다른 회원들에게 매칭이 시작되었음을 알려줘야
+
+        matchingParticipantRepository.deleteAllByMatchingAndStatus(matching, ParticipantStatus.PENDING_ACCEPTANCE);
+
+        matching.startMatching();
+    }
+
+    public void endMatching(@NonNull String uid, @NonNull Long matchingId) {
+        Matching matching = getMatchingEntity(matchingId);
+
+        //TODO::진행중인 매칭이 아닌데 종료를 할 경우
+        if(!matching.getStatus().equals(MatchingStatus.PROCEEDING))
+            throw new RuntimeException();
+
+        //TODO::매칭 호스트가 아닌 경우
+        if(!matching.getMember().getUid().equals(uid))
+            throw new RuntimeException();
+
+        matching.endMatching();
+    }
+
+    public List<MatchingParticipantDetails> findMyParticipationRequest(@NonNull String uid) {
+        Member member = getMemberEntityByUid(uid);
+
+        List<MatchingParticipant> participants = matchingParticipantRepository
+                .findByMemberAndStatus(member, ParticipantStatus.PENDING_ACCEPTANCE);
+
+        List<MatchingParticipantDetails> request = new ArrayList<>();
+
+        for(MatchingParticipant matchingParticipant : participants)
+            request.add(new MatchingParticipantDetails(matchingParticipant));
+
+        return request;
+    }
+
+    public Map<String, Object> findMatchingParticipationRequest(@NonNull String uid) {
+        Map<String, Object> request = new HashMap<>();
+
+        Member member = getMemberEntityByUid(uid);
+
+        List<Matching> scheduledMatchingList = matchingRepository.findByMemberAndStatus(member,
+                MatchingStatus.SCHEDULED);
+
+        List<String> matchingTitles = new ArrayList<>();
+
+        for(Matching matching : scheduledMatchingList)
+            matchingTitles.add(matching.getTitle());
+
+        request.put("matching", matchingTitles);
+
+        int index = 0;
+
+        for(Matching matching : scheduledMatchingList) {
+            List<MatchingParticipant> participants = matchingParticipantRepository
+                    .findByMatchingAndStatus(matching, ParticipantStatus.PENDING_ACCEPTANCE);
+
+            List<MatchingParticipantDetails> details = new ArrayList<>();
+
+
+            for(MatchingParticipant participant : participants) {
+                details.add(new MatchingParticipantDetails(participant));
+            }
+
+            request.put(String.valueOf(index), details);
+            index++;
+        }
+
+        return request;
+    }
+
+    public MatchingParticipantDetails lookupMatchingParticipants(@NonNull Long participantsId) {
+        MatchingParticipant matchingParticipant = getMatchingParticipantEntity(participantsId);
+
+        return new MatchingParticipantDetails(matchingParticipant);
+    }
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
         return Matching.builder()
@@ -208,6 +348,12 @@ public class MatchingService {
                 .build();
     }
 
+    //TODO::EntityNotFoundException extends한 익셉션 정의 필요
+    private MatchingParticipant getMatchingParticipantEntity(Long id) {
+        return matchingParticipantRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
     private Member getMemberEntityByUid(String uid) {
         return memberRepository.findByUid(uid)
                 .orElseThrow(EntityNotFoundException::new);
@@ -218,7 +364,6 @@ public class MatchingService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    //TODO::익셉션 정의 필요
     private Matching getMatchingEntity(Long id) {
         return matchingRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);

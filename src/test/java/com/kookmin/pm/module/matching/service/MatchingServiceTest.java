@@ -5,10 +5,8 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
-import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
-import com.kookmin.pm.module.matching.dto.MatchingDetails;
-import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
-import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
+import com.kookmin.pm.module.matching.domain.ParticipantStatus;
+import com.kookmin.pm.module.matching.dto.*;
 import com.kookmin.pm.module.matching.repository.MatchingMapper;
 import com.kookmin.pm.module.matching.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
@@ -113,7 +111,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setMaxCount(5);
         matchingCreateInfo.setCategory("BOARD_GAME");
 
-        matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
+        matchingService.openMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
 
         MatchingCreateInfo matchingCreateInfo2 = new MatchingCreateInfo();
         matchingCreateInfo2.setTitle("title");
@@ -124,12 +122,12 @@ class MatchingServiceTest {
         matchingCreateInfo2.setMaxCount(5);
         matchingCreateInfo2.setCategory("BOARD_GAME");
 
-        matchingService.startMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
+        matchingService.openMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
     }
 
     @Test
-    @DisplayName("startMatching 성공 테스트")
-    public void startMatching_success_test() {
+    @DisplayName("openMatching 성공 테스트")
+    public void openMatching_success_test() {
         Member member = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -142,7 +140,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setMaxCount(5);
         matchingCreateInfo.setCategory("BOARD_GAME");
 
-        Long id = matchingService.startMatching(member.getUid(), matchingCreateInfo);
+        Long id = matchingService.openMatching(member.getUid(), matchingCreateInfo);
         Matching matching = matchingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Category category = categoryRepository.findByName("BOARD_GAME").orElseThrow(EntityNotFoundException::new);
 
@@ -211,7 +209,8 @@ class MatchingServiceTest {
         matchingService.participateMatching(participant2.getUid(), matching.getId());
         matchingService.participateMatching(participant3.getUid(), matching.getId());
 
-        List<Member> members = matchingRepository.searchMemberInMatchingParticipant(matching.getId());
+        List<Member> members = matchingRepository.searchMemberInMatchingParticipant(matching.getId(),
+                ParticipantStatus.PENDING_ACCEPTANCE);
         System.out.println(members.size());
 
 
@@ -310,15 +309,16 @@ class MatchingServiceTest {
     @Test
     @DisplayName("cancelParticipation 성공 테스트")
     public void cancelParticipation_success_test() {
-        Member creater = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
         Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Matching matching = matchingRepository.findByMember(creater).get(0);
+        Matching matching = matchingRepository.findByMember(host).get(0);
 
         Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.approveParticipationRequest(host.getUid(), id);
 
         matchingService.cancelParticipation(participant.getUid(), matching.getId());
 
@@ -366,5 +366,175 @@ class MatchingServiceTest {
 
         for(MatchingDetails details : matchingDetailsList)
             System.out.println(details);
+    }
+
+    @Test
+    @DisplayName("approveParticipationRequest 성공 테스트")
+    public void approveParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.approveParticipationRequest(host.getUid(), id);
+
+        MatchingParticipant matchingParticipant = matchingParticipantRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+
+        assertThat(matchingParticipant)
+                .hasFieldOrPropertyWithValue("status", ParticipantStatus.PARTICIPATING);
+    }
+
+    @Test
+    @DisplayName("rejectParticipationRequest 성공 테스트")
+    public void rejectParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.rejectParticipationRequest(host.getUid(), id);
+
+        boolean result = matchingParticipantRepository.findByMemberAndMatching(participant, matching).isPresent();
+
+        assertThat(result)
+                .isFalse();
+    }
+
+    @Test
+    @DisplayName("quitParticipationRequest 성공 테스트")
+    public void quitParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+
+        matchingService.quitParticipationRequest(participant.getUid(), id);
+
+        MatchingParticipant matchingParticipant = matchingParticipantRepository.findById(id)
+                .orElse(null);
+
+        assertThat(matchingParticipant)
+                .isNull();
+    }
+
+    @Test
+    @DisplayName("startMatching 성공 테스트")
+    public void startMatching_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        matchingService.startMatching(host.getUid(), matching.getId());
+
+        Matching startedMatching = matchingRepository.findById(matching.getId()).orElse(null);
+
+        assertThat(startedMatching)
+                .hasFieldOrPropertyWithValue("status", MatchingStatus.PROCEEDING);
+    }
+
+    @Test
+    @DisplayName("findMyParticipationRequest 성공 테스트")
+    public void findMyParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+        Matching matching2 = matchingRepository.findByMember(host).get(1);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.approveParticipationRequest(host.getUid(), id);
+
+        Long id2 = matchingService.participateMatching(participant.getUid(), matching2.getId());
+
+        List<MatchingParticipantDetails> details = matchingService.findMyParticipationRequest(participant.getUid());
+
+        assertThat(details.size())
+                .isEqualTo(1);
+
+        for(MatchingParticipantDetails detail : details)
+            System.out.println(detail);
+    }
+
+    @Test
+    @DisplayName("findMatchingParticipationRequest 성공 테스트")
+    public void findMatchingParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant2 = memberRepository.findByUid("dlwlsrn7@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant3 = memberRepository.findByUid("dlwlsrn6@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.participateMatching(participant2.getUid(), matching.getId());
+        matchingService.participateMatching(participant3.getUid(), matching.getId());
+
+        matchingService.approveParticipationRequest(host.getUid(), id);
+
+        Map<String, Object> details =
+                matchingService.findMatchingParticipationRequest(host.getUid());
+
+        assertThat(((List<MatchingParticipantDetails>)details.get("0")).size())
+                .isEqualTo(2);
+
+        for(Map.Entry<String, Object> entry : details.entrySet()){
+            System.out.println(entry.getKey());
+        }
+
+        for(MatchingParticipantDetails detail : (List<MatchingParticipantDetails>)details.get("0")){
+            System.out.println(detail);
+        }
+    }
+
+    @Test
+    @DisplayName("lookupMatchingParticipants 성공 테스트")
+    public void lookupMatchingParticipants_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant2 = memberRepository.findByUid("dlwlsrn7@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant3 = memberRepository.findByUid("dlwlsrn6@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        Long id2 = matchingService.participateMatching(participant2.getUid(), matching.getId());
+        Long id3 = matchingService.participateMatching(participant3.getUid(), matching.getId());
+
+        matchingService.approveParticipationRequest(host.getUid(), id);
+        System.out.println(matchingService.lookupMatchingParticipants(id));
+        System.out.println(matchingService.lookupMatchingParticipants(id2));
+        System.out.println(matchingService.lookupMatchingParticipants(id3));
     }
 }

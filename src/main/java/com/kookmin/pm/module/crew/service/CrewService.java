@@ -110,6 +110,8 @@ public class CrewService {
 
         request.put("crew", crewNameList);
 
+        int index = 0;
+
         for(Crew crew : crewList) {
             List<CrewParticipants> participantsList = crewParticipantsRepository
                     .findByCrewAndStatus(crew, CrewParticipantStatus.PENDING);
@@ -120,7 +122,8 @@ public class CrewService {
                 participantDetailsList.add(new CrewParticipantsDetails(participants));
             }
 
-            request.put(crew.getName(), participantDetailsList);
+            request.put(String.valueOf(index), participantDetailsList);
+            index++;
         }
 
         return request;
@@ -173,16 +176,20 @@ public class CrewService {
     }
 
     public void approveParticipationRequest(@NonNull String uid, @NonNull Long requestId) {
-        Member host = getMemberEntityByUid(uid);
-
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
+        Crew crew =participants.getCrew();
 
         //TODO::이미 참여한 회원인 경우 익셉션 정의 필요
         if(participants.getStatus().equals(CrewParticipantStatus.PARTICIPATING))
              throw new RuntimeException();
 
         //TODO::참가요청을 승인하는 유저가 해당 참가 요청 크루의 호스트가 아닌 경우
-        if(!participants.getCrew().getMember().equals(host))
+        if(!crew.getMember().equals(uid))
+            throw new RuntimeException();
+
+        //TODO::최대 인원수를 초과한 경우
+        if(crewParticipantsRepository
+                .countCrewParticipantsByCrewAndStatus(crew,CrewParticipantStatus.PARTICIPATING) + 1L >= crew.getMaxCount())
             throw new RuntimeException();
 
         participants.approveParticipation();

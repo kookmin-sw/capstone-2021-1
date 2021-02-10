@@ -4,8 +4,10 @@ import com.kookmin.pm.module.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,6 +22,10 @@ public class MatchingParticipant {
     @Column(name="STATUS")
     private ParticipantStatus status;
 
+    @CreationTimestamp
+    @Column(name="CREATED_AT")
+    private LocalDateTime createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="MEMBER_ID")
     private Member member;
@@ -28,12 +34,14 @@ public class MatchingParticipant {
     @JoinColumn(name="MATCHING_ID")
     private Matching matching;
 
-    //TODO::요청이 생성된 시간 필요
-
     @Builder
     public MatchingParticipant(Member member, Matching matching) {
         this.status = ParticipantStatus.PENDING_ACCEPTANCE;
         this.member = member;
         this.matching = matching;
+    }
+
+    public void approveMatching() {
+        this.status = ParticipantStatus.PARTICIPATING;
     }
 }
