@@ -67,7 +67,6 @@ public class MatchingService {
         if(matching.getMember().getUid().equals(participantUid))
             throw new RuntimeException();
 
-        //TODO::이미 회원이 다 찬 경우 참여 불가 예외처리 정의, count쿼리로 정의해줘야
         if(matchingParticipantRepository
                 .countByMatchingAndStatus(matching, ParticipantStatus.PARTICIPATING)+1L >= matching.getMaxCount())
             throw new RuntimeException();
@@ -131,7 +130,6 @@ public class MatchingService {
         List<Member> participants = matchingRepository
                 .searchMemberInMatchingParticipant(matchingId, ParticipantStatus.PARTICIPATING);
 
-        //TODO::조인문 발생하지 않나 검증 필
         matchingParticipantRepository.deleteAllByMatching(matching);
 
         matchingRepository.delete(matching);

@@ -34,8 +34,6 @@ public class MatchingParticipant {
     @JoinColumn(name="MATCHING_ID")
     private Matching matching;
 
-    //TODO::요청이 생성된 시간 필요
-
     @Builder
     public MatchingParticipant(Member member, Matching matching) {
         this.status = ParticipantStatus.PENDING_ACCEPTANCE;
