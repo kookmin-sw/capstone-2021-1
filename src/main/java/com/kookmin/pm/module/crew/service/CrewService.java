@@ -38,8 +38,6 @@ public class CrewService {
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
 
-    //TODO::크루 참가 요청 조회 및 검색
-
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull String uid, @NonNull CrewCreateInfo crewCreateInfo) {
         Member member = getMemberEntityByUid(uid);
@@ -141,6 +139,12 @@ public class CrewService {
         }
 
         return participantsDetailsList;
+    }
+
+    public CrewParticipantsDetails lookupParticipateRequest(@NonNull Long requestId) {
+        CrewParticipants participants = getCrewParticipantsEntity(requestId);
+
+        return new CrewParticipantsDetails(participants);
     }
 
     public void participateCrew(@NonNull String uid, @NonNull Long crewId) {
