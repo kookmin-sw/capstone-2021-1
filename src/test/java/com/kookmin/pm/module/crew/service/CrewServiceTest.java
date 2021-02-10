@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -329,5 +330,22 @@ class CrewServiceTest {
 
         for(CrewDetails crewDetails : crewDetailsList)
             System.out.println(crewDetails);
+    }
+
+    @Test
+    public void findCrewParticipateRequest_success_test() {
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Crew crew = crewRepository.findByMember(host).get(0);
+
+        crewService.participateCrew(participant.getUid(), crew.getId());
+
+        Map<String , Object> request = crewService.findCrewParticipateRequest(host.getUid());
+
+        System.out.println(request);
     }
 }

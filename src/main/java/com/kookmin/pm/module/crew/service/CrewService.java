@@ -122,7 +122,7 @@ public class CrewService {
                 participantDetailsList.add(new CrewParticipantsDetails(participants));
             }
 
-            request.put(crew.getName(), participantsList);
+            request.put(crew.getName(), participantDetailsList);
         }
 
         return request;
