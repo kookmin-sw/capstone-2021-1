@@ -284,7 +284,6 @@ public class MatchingService {
 
     //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
 
-    //TODO:: 내가 생성한 매칭에 대한 다른 회원들의 참가요청을 검색하는 메소드 필요
     public Map<String, Object> findMatchingParticipationRequest(@NonNull String uid) {
         Map<String, Object> request = new HashMap<>();
 
@@ -316,7 +315,11 @@ public class MatchingService {
         return request;
     }
 
-    //TODO:: 참가요청에 대한 상세 조회 메소드 필요
+    public MatchingParticipantDetails lookupMatchingParticipants(@NonNull Long participantsId) {
+        MatchingParticipant matchingParticipant = getMatchingParticipantEntity(participantsId);
+
+        return new MatchingParticipantDetails(matchingParticipant);
+    }
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
         return Matching.builder()
