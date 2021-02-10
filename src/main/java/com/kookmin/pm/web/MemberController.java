@@ -61,7 +61,7 @@ public class MemberController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("회원가입에 성공하셨습니다.");
+                .body("회원가입이 완료되었습니다.");
     }
 
     @GetMapping(value = "/member/detail/{usn}")
@@ -81,6 +81,13 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("정보 수정이 완료되었습니다.");
+    }
+
+    @GetMapping(value = "/member/all")
+    public ResponseEntity<List<Member>> getAllMember() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(memberRepository.findAll());
     }
 
     @PostConstruct

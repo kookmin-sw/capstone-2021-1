@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //초기 세팅
         http.authorizeRequests()
                 .antMatchers("/**/signin", "/**/signin/**", "/**/signup", "/social/**").permitAll()
+                .antMatchers("/**/all").permitAll()
                 .anyRequest().hasRole(MemberRole.USER.toString());
 
         //TODO::초기 세팅, 허용할 origin, header, method 제한을 줘야
