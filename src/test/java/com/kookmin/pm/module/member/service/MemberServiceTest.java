@@ -118,8 +118,11 @@ public class MemberServiceTest {
         memberEditInfo.setPhoneNumber("010-8888-8888");
         memberEditInfo.setNickname("수정 닉네임");
 
-        memberService.editMemberInfo("dlwlsrn9412@kookmin.ac.kr", memberEditInfo);
-        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
+        memberService.editMemberInfo(member.getId(), memberEditInfo);
+
+        member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
 
         assertThat(member)
                 .hasFieldOrPropertyWithValue("address", memberEditInfo.getAddress())
@@ -134,18 +137,20 @@ public class MemberServiceTest {
     @Test
     @DisplayName("lookupMemberDetails 메소드 성공 테스트")
     public void lookupMemberDetails_success_test() {
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
         MemberDetails memberDetails = memberService
-                .lookUpMemberDetails("dlwlsrn9412@kookmin.ac.kr", LookupType.DEFAULT);
+                .lookUpMemberDetails(member.getId(), LookupType.DEFAULT);
 
         System.out.println(memberDetails);
 
         memberDetails = memberService
-                .lookUpMemberDetails("dlwlsrn9412@kookmin.ac.kr", LookupType.WITHIMAGE);
+                .lookUpMemberDetails(member.getId(), LookupType.WITHIMAGE);
 
         System.out.println(memberDetails);
 
         memberDetails = memberService
-                .lookUpMemberDetails("dlwlsrn9412@kookmin.ac.kr", LookupType.WITHALLINFOS);
+                .lookUpMemberDetails(member.getId(), LookupType.WITHALLINFOS);
 
         System.out.println(memberDetails);
         System.out.println(memberDetails.getMemberStats().getManner());
@@ -154,9 +159,10 @@ public class MemberServiceTest {
     @Test
     @DisplayName("secessionMember 메소드 성공 테스트")
     public void secessionMember_success_test() {
-        boolean result = memberService.secessionMember("dlwlsrn9412@kookmin.ac.kr", "1234");
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+        boolean result = memberService.secessionMember(member.getId(), "1234");
         assertThat(result).isTrue();
-        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
+        member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").orElseThrow(EntityNotFoundException::new);
         assertThat(member)
                 .hasFieldOrPropertyWithValue("status", MemberStatus.EXPIRED);
     }

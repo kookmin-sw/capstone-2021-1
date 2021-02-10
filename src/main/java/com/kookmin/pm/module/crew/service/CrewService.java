@@ -71,12 +71,12 @@ public class CrewService {
             crewDetails = new CrewDetails(crew);
         } else if(type.equals(CrewLookupType.WITH_HOST)) {
             crewDetails = new CrewDetails(crew);
-            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getUid(),
+            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getId(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
         } else if(type.equals(CrewLookupType.WITH_PARTICIPANTS)){
             crewDetails = new CrewDetails(crew);
-            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getUid(),
+            MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getId(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
 
@@ -84,7 +84,7 @@ public class CrewService {
             List<MemberDetails> participantList = new ArrayList<>();
 
             for(Member participant : participants) {
-                participantList.add(memberService.lookUpMemberDetails(participant.getUid(),
+                participantList.add(memberService.lookUpMemberDetails(participant.getId(),
                         LookupType.WITHALLINFOS));
             }
 

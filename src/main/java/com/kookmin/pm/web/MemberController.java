@@ -3,16 +3,16 @@ package com.kookmin.pm.web;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberRole;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
+import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
+import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
 import com.kookmin.pm.support.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
@@ -31,10 +31,10 @@ public class MemberController {
 
     @PostMapping(value = "/signin")
     public ResponseEntity<Map<String,String>> signIn(@RequestBody Map<String, String> user) {
-        String uid = user.get("uid");
+        Long usn = Long.parseLong(user.get("usn"));
         String password = user.get("password");
 
-        Member member = memberRepository.findByUid(uid).orElseThrow(EntityExistsException::new);
+        Member member = memberRepository.findById(usn).orElseThrow(EntityExistsException::new);
         if(!passwordEncoder.matches(password,member.getPassword())) {
             //TODO:: 로그인 실패 처리
             throw new RuntimeException();
@@ -44,7 +44,8 @@ public class MemberController {
         roles.add(MemberRole.USER.toString());
 
         Map<String,String> userInfos = new HashMap<>();
-        userInfos.put("access-token", jwtTokenProvider.createToken(uid, roles));
+
+        userInfos.put("access-token", jwtTokenProvider.createToken(usn.toString(), roles));
         userInfos.put("nickname", member.getNickname());
 
         return ResponseEntity
@@ -59,5 +60,14 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("회원가입에 성공하셨습니다.");
+    }
+
+    @GetMapping(value = "/member/detail/{usn}")
+    public ResponseEntity<MemberDetails> lookupMember(@PathVariable(name = "usn") Long usn) {
+        MemberDetails details = memberService.lookUpMemberDetails(usn, LookupType.WITHALLINFOS);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(details);
     }
 }
