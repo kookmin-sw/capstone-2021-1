@@ -67,7 +67,7 @@ public class MatchingService {
         if(matching.getMember().getEmail().equals(participantEmail))
             throw new RuntimeException();
 
-        //TODO::이미 회원이 다 찬 경우 참여 불가 예외처리 정의
+        //TODO::이미 회원이 다 찬 경우 참여 불가 예외처리 정의, count쿼리로 정의해줘야
         if(matchingParticipantRepository.findByMatching(matching).size()+1 >= matching.getMaxCount())
             throw new RuntimeException();
 
@@ -136,7 +136,6 @@ public class MatchingService {
 
     public void cancelParticipation(@NonNull String email, @NonNull Long matchingId) {
         //TODO::참가 취소 신청회원이 해당 매칭에 없을 경우
-
         matchingParticipantRepository.deleteByMemberEmailAndMatchingId(email, matchingId);
     }
 
@@ -169,14 +168,15 @@ public class MatchingService {
 
             matchingDetails.setHost(memberDetails);
 
-            //TODO::Querydsl을 이용한 조인으로 방향을 정함, Member관련 querydsl 레포지토리 구현 필요
+            //TODO::status로 참여중인 회원만 조회하도록 비교해줘야함
             List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
             List<MemberDetails> participantDetails = new ArrayList<>();
 
             //TODO::엔티티를 가져와서 다시 dto로 변환하는데... 회원관련 다른 테이블도 전부 조인해야함, 조금 비효율적이다. 개선 필요
-            for(Member member : participants)
+            for(Member member : participants) {
                 participantDetails.add(memberService.lookUpMemberDetails(member.getEmail(),
                         LookupType.WITHALLINFOS));
+            }
 
             matchingDetails.setParticipants(participantDetails);
             matchingDetails.setParticipantsCount(participantDetails.size());
@@ -184,6 +184,16 @@ public class MatchingService {
 
         return matchingDetails;
     }
+
+    //TODO:: 다른 회원들의 참가요청을 검색하는 메소드 필요
+
+    //TODO:: 참가요청에 대한 참가를 승인하는 메소드 필요, 참가요청 상태를 참여중으로 변경하고 등등 처리해야
+
+    //TODO:: 참가요청에 대한 참가를 거절하는 메소드 필요
+
+    //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
+
+    //TODO:: 참가요청에 대한 상세 조회 메소드 필
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
         return Matching.builder()
