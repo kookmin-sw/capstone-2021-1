@@ -161,8 +161,7 @@ class CrewServiceTest {
         Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Crew crew = crewRepository.findByMember(host)
-                .orElseThrow(EntityNotFoundException::new);
+        Crew crew = crewRepository.findByMember(host).get(0);
 
         CrewDetails crewDetails = crewService.lookupCrew(crew.getId(),CrewLookupType.DEFAULT);
 
@@ -178,8 +177,7 @@ class CrewServiceTest {
         Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Crew crew = crewRepository.findByMember(host)
-                .orElseThrow(EntityNotFoundException::new);
+        Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getUid(), crew.getId());
 
@@ -205,8 +203,7 @@ class CrewServiceTest {
         Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Crew crew = crewRepository.findByMember(host)
-                .orElseThrow(EntityNotFoundException::new);
+        Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getUid(), crew.getId());
 
@@ -228,8 +225,7 @@ class CrewServiceTest {
         Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Crew crew = crewRepository.findByMember(host)
-                .orElseThrow(EntityNotFoundException::new);
+        Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getUid(), crew.getId());
 
@@ -251,8 +247,7 @@ class CrewServiceTest {
         Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Crew crew = crewRepository.findByMember(host)
-                .orElseThrow(EntityNotFoundException::new);
+        Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getUid(), crew.getId());
         crewService.cancelParticipation(participant.getUid(), crew.getId());
@@ -270,8 +265,7 @@ class CrewServiceTest {
         Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Crew crew = crewRepository.findByMember(host)
-                .orElseThrow(EntityNotFoundException::new);
+        Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getUid(), crew.getId());
 
@@ -300,8 +294,7 @@ class CrewServiceTest {
         Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
                 .orElseThrow(EntityNotFoundException::new);
 
-        Crew crew = crewRepository.findByMember(host)
-                .orElseThrow(EntityNotFoundException::new);
+        Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getUid(), crew.getId());
         crewService.participateCrew(participant2.getUid(), crew.getId());

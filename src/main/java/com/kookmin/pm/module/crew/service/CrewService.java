@@ -5,10 +5,7 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.domain.Crew;
 import com.kookmin.pm.module.crew.domain.CrewParticipantStatus;
 import com.kookmin.pm.module.crew.domain.CrewParticipants;
-import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
-import com.kookmin.pm.module.crew.dto.CrewDetails;
-import com.kookmin.pm.module.crew.dto.CrewEditInfo;
-import com.kookmin.pm.module.crew.dto.CrewSearchCondition;
+import com.kookmin.pm.module.crew.dto.*;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -16,16 +13,20 @@ import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.ManyToOne;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -97,6 +98,34 @@ public class CrewService {
 
     public Page<CrewDetails> searchCrew(@NonNull Pageable pageable, @NonNull CrewSearchCondition searchCondition) {
         return crewRepository.searchCrew(pageable, searchCondition);
+    }
+
+    public Map<String, Object> findCrewParticipateRequest(@NonNull String uid) {
+        Map<String, Object> request = new HashMap<>();
+
+        Member member = getMemberEntityByUid(uid);
+        List<Crew> crewList = crewRepository.findByMember(member);
+        List<String> crewNameList = new ArrayList<>();
+
+        for(Crew crew : crewList)
+            crewNameList.add(crew.getName());
+
+        request.put("crew", crewNameList);
+
+        for(Crew crew : crewList) {
+            List<CrewParticipants> participantsList = crewParticipantsRepository
+                    .findByCrewAndStatus(crew, CrewParticipantStatus.PENDING);
+
+            List<CrewParticipantsDetails> participantDetailsList = new ArrayList<>();
+
+            for(CrewParticipants participants : participantsList) {
+                participantDetailsList.add(new CrewParticipantsDetails(participants));
+            }
+
+            request.put(crew.getName(), participantsList);
+        }
+
+        return request;
     }
 
     public void participateCrew(@NonNull String uid, @NonNull Long crewId) {
