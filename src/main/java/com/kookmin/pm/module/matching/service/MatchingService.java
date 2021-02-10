@@ -5,6 +5,7 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
+import com.kookmin.pm.module.matching.domain.ParticipantStatus;
 import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
 import com.kookmin.pm.module.matching.dto.MatchingDetails;
 import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
@@ -101,7 +102,8 @@ public class MatchingService {
 
         //TODO::변경하려는 최대 인원수 보다 현재 참가 인원수가 더 많은 경우 익셉션 정의 필요
         if(!matching.getMaxCount().equals(matchingEditInfo.getMaxCount())) {
-           List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingEditInfo.getId());
+           List<Member> participants = matchingRepository
+                   .searchMemberInMatchingParticipant(matchingEditInfo.getId(), ParticipantStatus.PARTICIPATING);
            if(participants.size() > matchingEditInfo.getMaxCount())
                throw new RuntimeException();
         }
@@ -126,7 +128,8 @@ public class MatchingService {
             throw new RuntimeException();
 
         //TODO::매칭에 참가한 다른 인원들에게 알림으로 알려주는 기능 필요
-        List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
+        List<Member> participants = matchingRepository
+                .searchMemberInMatchingParticipant(matchingId, ParticipantStatus.PARTICIPATING);
 
         //TODO::조인문 발생하지 않나 검증 필
         matchingParticipantRepository.deleteAllByMatching(matching);
@@ -168,8 +171,8 @@ public class MatchingService {
 
             matchingDetails.setHost(memberDetails);
 
-            //TODO::status로 참여중인 회원만 조회하도록 비교해줘야함
-            List<Member> participants = matchingRepository.searchMemberInMatchingParticipant(matchingId);
+            List<Member> participants = matchingRepository
+                    .searchMemberInMatchingParticipant(matchingId, ParticipantStatus.PARTICIPATING);
             List<MemberDetails> participantDetails = new ArrayList<>();
 
             //TODO::엔티티를 가져와서 다시 dto로 변환하는데... 회원관련 다른 테이블도 전부 조인해야함, 조금 비효율적이다. 개선 필요
@@ -187,13 +190,36 @@ public class MatchingService {
 
     //TODO:: 다른 회원들의 참가요청을 검색하는 메소드 필요
 
-    //TODO:: 참가요청에 대한 참가를 승인하는 메소드 필요, 참가요청 상태를 참여중으로 변경하고 등등 처리해야
+    //TODO:: 참가요청에 대한 참가를 승인하는 메소드 필요, 참가요청 상태를 참여중으로 변경
+    public void approveParticipationRequest (@NonNull String uid, @NonNull Long requestId) {
+        MatchingParticipant request = getMatchingParticipantEntity(requestId);
+        Matching matching = request.getMatching();
+
+        //TODO::이미 매칭에 참가중인 회원일 경우
+        if(request.getStatus().equals(ParticipantStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        //TODO::참가요청을 승인하는 회원이 매칭의 호스트가 아닐 경우
+        if(!matching.getMember().getUid().equals(uid))
+            throw new RuntimeException();
+
+        //TODO::매칭의 최대인원수에 도달한 경우
+        if(matchingParticipantRepository.countByMatchingAndStatus(matching, ParticipantStatus.PARTICIPATING) + 1L
+                >= matching.getMaxCount())
+            throw new RuntimeException();
+
+        request.approveMatching();
+    }
 
     //TODO:: 참가요청에 대한 참가를 거절하는 메소드 필요
 
     //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
 
-    //TODO:: 참가요청에 대한 상세 조회 메소드 필
+    //TODO:: 참가요청에 대한 상세 조회 메소드 필요
+
+    //TODO:: 매칭 시작 메소드
+
+    //TODO:: 매칭 종료 메소드
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
         return Matching.builder()
@@ -206,6 +232,11 @@ public class MatchingService {
                 .member(member)
                 .category(category)
                 .build();
+    }
+
+    private MatchingParticipant getMatchingParticipantEntity(Long id) {
+        return matchingParticipantRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     private Member getMemberEntityByUid(String uid) {

@@ -185,6 +185,8 @@ public class CrewService {
         if(!participants.getCrew().getMember().equals(host))
             throw new RuntimeException();
 
+        //TODO::최대 인원수를 초과한 경우
+
         participants.approveParticipation();
     }
 

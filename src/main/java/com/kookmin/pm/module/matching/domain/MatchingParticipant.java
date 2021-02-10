@@ -36,4 +36,8 @@ public class MatchingParticipant {
         this.member = member;
         this.matching = matching;
     }
+
+    public void approveMatching() {
+        this.status = ParticipantStatus.PARTICIPATING;
+    }
 }

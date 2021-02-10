@@ -5,6 +5,7 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
+import com.kookmin.pm.module.matching.domain.ParticipantStatus;
 import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
 import com.kookmin.pm.module.matching.dto.MatchingDetails;
 import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
@@ -211,7 +212,8 @@ class MatchingServiceTest {
         matchingService.participateMatching(participant2.getUid(), matching.getId());
         matchingService.participateMatching(participant3.getUid(), matching.getId());
 
-        List<Member> members = matchingRepository.searchMemberInMatchingParticipant(matching.getId());
+        List<Member> members = matchingRepository.searchMemberInMatchingParticipant(matching.getId(),
+                ParticipantStatus.PENDING_ACCEPTANCE);
         System.out.println(members.size());
 
 
@@ -366,5 +368,26 @@ class MatchingServiceTest {
 
         for(MatchingDetails details : matchingDetailsList)
             System.out.println(details);
+    }
+
+    @Test
+    @DisplayName("approveParticipationRequest 성공 테스트")
+    public void approveParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr")
+                .orElseThrow(EntityNotFoundException::new);
+
+        Matching matching = matchingRepository.findByMember(host).get(0);
+
+        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        matchingService.approveParticipationRequest(host.getUid(), id);
+
+        MatchingParticipant matchingParticipant = matchingParticipantRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+
+        assertThat(matchingParticipant)
+                .hasFieldOrPropertyWithValue("status", ParticipantStatus.PARTICIPATING);
     }
 }

@@ -2,6 +2,8 @@ package com.kookmin.pm.module.matching.repository;
 
 import com.kookmin.pm.module.category.domain.QCategory;
 import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingStatus;
+import com.kookmin.pm.module.matching.domain.ParticipantStatus;
 import com.kookmin.pm.module.matching.dto.MatchingDetails;
 import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
 import com.kookmin.pm.module.matching.dto.QMatchingDetails;
@@ -25,12 +27,13 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
         super(Matching.class);
     }
 
-    public List<Member> searchMemberInMatchingParticipant(Long matchingId) {
+    public List<Member> searchMemberInMatchingParticipant(Long matchingId, ParticipantStatus status) {
         return getQueryFactory()
                 .select(member)
                 .from(matchingParticipant)
                 .leftJoin(matchingParticipant.member, member)
-                .where(matchingIdEq(matchingId))
+                .where(matchingIdEq(matchingId),
+                        matchingParticipant.status.eq(status))
                 .fetch();
     }
 

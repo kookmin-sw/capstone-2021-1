@@ -2,6 +2,7 @@ package com.kookmin.pm.module.matching.repository;
 
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
+import com.kookmin.pm.module.matching.domain.ParticipantStatus;
 import com.kookmin.pm.module.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,4 +14,5 @@ public interface MatchingParticipantRepository extends JpaRepository<MatchingPar
     List<MatchingParticipant> findByMatching(Matching matching);
     void deleteAllByMatching(Matching matching);
     void deleteByMemberUidAndMatchingId(String uid, Long matchingId);
+    Long countByMatchingAndStatus(Matching matching, ParticipantStatus status);
 }
