@@ -282,7 +282,6 @@ public class MatchingService {
         matching.endMatching();
     }
 
-    //TODO:: 해당 회원이 보낸 참가요청을 검색하는 메소드 필요
     public List<MatchingParticipantDetails> findMyParticipationRequest(@NonNull String uid) {
         Member member = getMemberEntityByUid(uid);
 
@@ -347,6 +346,7 @@ public class MatchingService {
                 .build();
     }
 
+    //TODO::EntityNotFoundException extends한 익셉션 정의 필요
     private MatchingParticipant getMatchingParticipantEntity(Long id) {
         return matchingParticipantRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
@@ -362,7 +362,6 @@ public class MatchingService {
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    //TODO::익셉션 정의 필요
     private Matching getMatchingEntity(Long id) {
         return matchingRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
