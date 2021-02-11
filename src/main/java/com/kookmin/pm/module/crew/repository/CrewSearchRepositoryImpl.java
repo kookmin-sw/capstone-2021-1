@@ -28,12 +28,13 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
     }
 
     @Override
-    public List<Member> findMemberInCrewParticipants(Long crewId) {
+    public List<Member> findMemberInCrewParticipants(Long crewId, CrewParticipantStatus status) {
         return getQueryFactory()
                 .select(member)
                 .from(crewParticipants)
                 .leftJoin(crewParticipants.member, member)
-                .where(crewIdEq(crewId))
+                .where(crewIdEq(crewId),
+                        crewParticipants.status.eq(status))
                 .fetch();
     }
 

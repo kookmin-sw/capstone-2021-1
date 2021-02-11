@@ -81,7 +81,8 @@ public class CrewService {
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
 
-            List<Member> participants = crewRepository.findMemberInCrewParticipants(crew.getId());
+            List<Member> participants = crewRepository.findMemberInCrewParticipants(crew.getId(),
+                    CrewParticipantStatus.PARTICIPATING);
             List<MemberDetails> participantList = new ArrayList<>();
 
             for(Member participant : participants) {
