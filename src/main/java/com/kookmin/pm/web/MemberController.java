@@ -58,6 +58,7 @@ public class MemberController {
 
     @PostMapping(value = "/signup")
     public ResponseEntity<String> signUp(@RequestBody MemberCreateInfo memberCreateInfo) {
+        System.out.println(memberCreateInfo);
         memberService.joinMember(memberCreateInfo);
 
         return ResponseEntity
