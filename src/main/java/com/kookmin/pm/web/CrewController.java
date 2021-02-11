@@ -34,4 +34,15 @@ public class CrewController {
                 .status(HttpStatus.OK)
                 .body("크루가 생성되었습니다.");
     }
+
+    @PostMapping(value = "/crew/participate/{crewId}")
+    public ResponseEntity<String> participateCrew(Principal principal,
+                                                  @PathVariable(name="crewId") Long crewId) {
+        Long usn = Long.parseLong(principal.getName());
+        crewService.participateCrew(usn, crewId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("크루 참여를 요청했습니다.");
+    }
 }
