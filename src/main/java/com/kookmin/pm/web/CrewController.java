@@ -22,7 +22,7 @@ public class CrewController {
     private final CategoryRepository categoryRepository;
 
     @GetMapping(value = "/crew/detail/{crewId}")
-    public ResponseEntity<CrewDetails> lookupCrew(@PathVariable(name = "crewId") Long crewId) {
+    public ResponseEntity lookupCrew(@PathVariable(name = "crewId") Long crewId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(crewService.lookupCrew(crewId, CrewLookupType.WITH_PARTICIPANTS));
@@ -36,7 +36,7 @@ public class CrewController {
     }
 
     @PostMapping(value = "/crew")
-    public ResponseEntity<String> establishCrew(Principal principal,
+    public ResponseEntity establishCrew(Principal principal,
                                                 @RequestBody CrewCreateInfo crewCreateInfo) {
         Long usn = Long.parseLong(principal.getName());
         crewService.establishCrew(usn, crewCreateInfo);
@@ -47,7 +47,7 @@ public class CrewController {
     }
 
     @PostMapping(value = "/crew/participate/{crewId}")
-    public ResponseEntity<String> participateCrew(Principal principal,
+    public ResponseEntity participateCrew(Principal principal,
                                                   @PathVariable(name="crewId") Long crewId) {
         Long usn = Long.parseLong(principal.getName());
         crewService.participateCrew(usn, crewId);
@@ -58,7 +58,7 @@ public class CrewController {
     }
 
     @PutMapping(value = "/crew/participate/approve/{requestId}")
-    public ResponseEntity<String> approveParticipation(Principal principal,
+    public ResponseEntity approveParticipation(Principal principal,
                                                        @PathVariable(name = "requestId") Long requestId) {
         Long usn = Long.parseLong(principal.getName());
         crewService.approveParticipationRequest(usn, requestId);
@@ -69,7 +69,7 @@ public class CrewController {
     }
 
     @DeleteMapping(value = "/crew/participate/reject/{requestId}")
-    public ResponseEntity<String> rejectParticipation(Principal principal,
+    public ResponseEntity rejectParticipation(Principal principal,
                                                       @PathVariable(name="requestId") Long requestId) {
         Long usn = Long.parseLong(principal.getName());
         crewService.rejectParticipationRequest(usn, requestId);
@@ -80,7 +80,7 @@ public class CrewController {
     }
 
     @DeleteMapping(value="/crew/participate/cancel/{requestId}")
-    public ResponseEntity<String> quitParticipation(Principal principal,
+    public ResponseEntity quitParticipation(Principal principal,
                                                     @PathVariable(name="requestId") Long requestId) {
         Long usn = Long.parseLong(principal.getName());
         crewService.cancelParticipationRequest(usn, requestId);
@@ -103,7 +103,7 @@ public class CrewController {
     }
 
     @GetMapping(value = "/crew/search")
-    public ResponseEntity<Page<CrewDetails>> searchCrew(Pageable pageable, CrewSearchCondition searchCondition) {
+    public ResponseEntity searchCrew(Pageable pageable, CrewSearchCondition searchCondition) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(crewService.searchCrew(pageable, searchCondition));

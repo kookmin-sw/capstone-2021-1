@@ -33,7 +33,7 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping(value = "/signin")
-    public ResponseEntity<Map<String,String>> signIn(@RequestBody Map<String, String> user) {
+    public ResponseEntity signIn(@RequestBody Map<String, String> user) {
         String uid = user.get("uid");
         String password = user.get("password");
 
@@ -57,7 +57,7 @@ public class MemberController {
     }
 
     @PostMapping(value = "/signup")
-    public ResponseEntity<String> signUp(@RequestBody MemberCreateInfo memberCreateInfo) {
+    public ResponseEntity signUp(@RequestBody MemberCreateInfo memberCreateInfo) {
         System.out.println(memberCreateInfo);
         memberService.joinMember(memberCreateInfo);
 
@@ -67,7 +67,7 @@ public class MemberController {
     }
 
     @GetMapping(value = "/member/detail/{usn}")
-    public ResponseEntity<MemberDetails> lookupMember(@PathVariable(name = "usn") Long usn) {
+    public ResponseEntity lookupMember(@PathVariable(name = "usn") Long usn) {
         MemberDetails details = memberService.lookUpMemberDetails(usn, LookupType.WITHALLINFOS);
 
         return ResponseEntity
@@ -76,7 +76,7 @@ public class MemberController {
     }
 
     @PutMapping(value = "/member/edit")
-    public ResponseEntity<String> editMember(Principal principal, @RequestBody MemberEditInfo memberEditInfo) {
+    public ResponseEntity editMember(Principal principal, @RequestBody MemberEditInfo memberEditInfo) {
         Long usn = Long.parseLong(principal.getName());
         memberService.editMemberInfo(usn, memberEditInfo);
 
@@ -86,7 +86,7 @@ public class MemberController {
     }
 
     @GetMapping(value = "/member/all")
-    public ResponseEntity<List<Member>> getAllMember() {
+    public ResponseEntity getAllMember() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(memberRepository.findAll());
