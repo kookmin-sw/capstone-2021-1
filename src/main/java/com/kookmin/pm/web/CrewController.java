@@ -56,4 +56,26 @@ public class CrewController {
                 .status(HttpStatus.OK)
                 .body("크루 참가 요청을 승인했습니다.");
     }
+
+    @DeleteMapping(value = "/crew/participate/reject/{requestId}")
+    public ResponseEntity<String> rejectParticipation(Principal principal,
+                                                      @PathVariable(name="requestId") Long requestId) {
+        Long usn = Long.parseLong(principal.getName());
+        crewService.rejectParticipationRequest(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("크루 참가 요청을 거절했습니다.");
+    }
+
+    @DeleteMapping(value="/crew/participate/cancel/{requestId}")
+    public ResponseEntity<String> quitParticipation(Principal principal,
+                                                    @PathVariable(name="requestId") Long requestId) {
+        Long usn = Long.parseLong(principal.getName());
+        crewService.cancelParticipation(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("크루 참가 요청을 거절했습니다.");
+    }
 }
