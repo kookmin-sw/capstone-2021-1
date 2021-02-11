@@ -83,6 +83,18 @@ public class CrewController {
                 .body("크루 참가 요청을 거절했습니다.");
     }
 
+    @DeleteMapping(value = "/crew/deport/{crewId}")
+    public ResponseEntity deportCrewParticipant(Principal principal,
+                                                @PathVariable(name="crewId") Long crewId,
+                                                @RequestParam(name = "participantId") Long participantUsn) {
+        Long usn = Long.parseLong(principal.getName());
+        crewService.deportParticipant(usn, crewId, participantUsn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("해당 회원이 퇴출되었습니다.");
+    }
+
     @GetMapping(value = "/crew/search")
     public ResponseEntity<Page<CrewDetails>> searchCrew(Pageable pageable, CrewSearchCondition searchCondition) {
         return ResponseEntity

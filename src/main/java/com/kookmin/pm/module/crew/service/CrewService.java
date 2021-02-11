@@ -237,21 +237,24 @@ public class CrewService {
 
     public void deportParticipant(@NonNull Long usn,
                                   @NonNull Long crewId,
-                                  @NonNull Long participationId) {
+                                  @NonNull Long participationUsn) {
         Member host = getMemberEntity(usn);
+        Member participant = getMemberEntity(participationUsn);
         Crew crew = getCrewEntity(crewId);
-        CrewParticipants participants = getCrewParticipantsEntity(participationId);
+
+        CrewParticipants participants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
+                .orElseThrow(EntityNotFoundException::new);
 
         //TODO::회원이 해당 크루의 크루장이 아닌 경우
         if(!crew.getMember().equals(host))
             throw new RuntimeException();
 
         //TODO::퇴출시키려는 회원이 해당 크루의 참가자가 아닌 경우
-        if(!participants.getCrew().equals(crew) || participants.getStatus().equals(CrewParticipantStatus.PENDING))
+        if(!participants.getCrew().getId().equals(crewId)
+                || !participants.getStatus().equals(CrewParticipantStatus.PARTICIPATING))
             throw new RuntimeException();
 
         //TODO::크루 참가자가 크루장에 의해 퇴출되었음을 알려주는 로직 필요
-
         crewParticipantsRepository.delete(participants);
     }
 
