@@ -254,7 +254,7 @@ class CrewServiceTest {
         Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getId(), crew.getId());
-        crewService.cancelParticipation(participant.getId(), crew.getId());
+        crewService.leaveCrew(participant.getId(), crew.getId());
 
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(0L);

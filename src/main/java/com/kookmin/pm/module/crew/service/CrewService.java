@@ -198,8 +198,6 @@ public class CrewService {
     }
 
     public void rejectParticipationRequest(@NonNull Long usn, @NonNull Long requestId) {
-        Member host = getMemberEntity(usn);
-
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
 
         //TODO::이미 참여한 회원인 경우 익셉션 정의 필요
@@ -207,22 +205,34 @@ public class CrewService {
             throw new RuntimeException();
 
         //TODO::참가요청을 거절하는 유저가 해당 참가 요청 크루의 호스트가 아닌 경우
-        if(!participants.getCrew().getMember().equals(host))
+        if(!participants.getCrew().getMember().getId().equals(usn))
             throw new RuntimeException();
 
         crewParticipantsRepository.delete(participants);
     }
 
-    public void cancelParticipation(@NonNull Long usn, @NonNull Long crewId) {
+    public void leaveCrew(@NonNull Long usn, @NonNull Long crewId) {
         Member participant = getMemberEntity(usn);
         Crew crew = getCrewEntity(crewId);
 
         CrewParticipants participants = crewParticipantsRepository.findByMemberAndCrew(participant, crew)
                 .orElseThrow(EntityNotFoundException::new);
 
-        //TODO::참가자가 현재 크루에 참가 상태인 경우 다른 크루원들에게 해당 회원이 탈퇴하였음을 알려주는 로직 필요
+        //TODO::다른 크루원들에게 해당 회원이 탈퇴하였음을 알려주는 로직 필요
 
         crewParticipantsRepository.delete(participants);
+    }
+
+    public void cancelParticipationRequest(@NonNull Long usn, @NonNull Long requestId) {
+        CrewParticipants request = getCrewParticipantsEntity(requestId);
+
+        if(!request.getStatus().equals(CrewParticipantStatus.PENDING))
+            throw new RuntimeException();
+
+        if(!request.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
+        crewParticipantsRepository.delete(request);
     }
 
     public void deportParticipant(@NonNull Long usn,

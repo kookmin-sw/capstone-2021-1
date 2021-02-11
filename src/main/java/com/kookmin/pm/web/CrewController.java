@@ -72,7 +72,7 @@ public class CrewController {
     public ResponseEntity<String> quitParticipation(Principal principal,
                                                     @PathVariable(name="requestId") Long requestId) {
         Long usn = Long.parseLong(principal.getName());
-        crewService.cancelParticipation(usn, requestId);
+        crewService.cancelParticipationRequest(usn, requestId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
