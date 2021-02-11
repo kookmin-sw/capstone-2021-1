@@ -1,6 +1,7 @@
 package com.kookmin.pm.web;
 
 import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
+import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
 import com.kookmin.pm.module.matching.service.MatchingLookUpType;
 import com.kookmin.pm.module.matching.service.MatchingService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,22 @@ public class MatchingController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("매칭이 생성되었습니다.");
+    }
+
+    @PutMapping(value = "/matching/{matchingId}")
+    public ResponseEntity editMatching(Principal principal,
+                                       @PathVariable(name = "matchingId") Long matchingId,
+                                       @RequestBody MatchingEditInfo matchingEditInfo) {
+        Long usn = getPrincipalKey(principal);
+        matchingEditInfo.setId(matchingId);
+
+        System.out.println("TIME: " + matchingEditInfo.getStartTime());
+
+        matchingService.editMatching(usn, matchingEditInfo);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭 정보가 수정되었습니다.");
     }
 
     @PostMapping(value = "/matching/participate/{matchingId}")
@@ -80,6 +97,6 @@ public class MatchingController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("매칭 참가 요청을 승락하셨습니다.");
+                .body("매칭 참가 요청을 승낙하셨습낙니다.");
     }
 }
