@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -87,5 +88,36 @@ public class CrewController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(crewService.searchCrew(pageable, searchCondition));
+    }
+
+    @GetMapping(value = "/member/crew")
+    public ResponseEntity findMyCrew(Principal principal,
+                                     Pageable pageable,
+                                     CrewSearchCondition searchCondition) {
+        Long usn = Long.parseLong(principal.getName());
+        searchCondition.setHost(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(crewService.searchCrew(pageable, searchCondition).getContent());
+    }
+
+    @GetMapping(value = "/member/crew/participate/request")
+    public ResponseEntity findCrewParticipationRequest(Principal principal) {
+        Long usn = Long.parseLong(principal.getName());
+        Map<String, Object> request = crewService.findCrewParticipateRequest(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(request);
+    }
+
+    @GetMapping(value = "/member/crew/participate")
+    public ResponseEntity findMyParticipationRequest(Principal principal) {
+        Long usn = Long.parseLong(principal.getName());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(crewService.findMyParticiPateRequest(usn));
     }
 }
