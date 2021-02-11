@@ -5,6 +5,8 @@ import com.kookmin.pm.support.util.JwtTokenProvider;
 import com.kookmin.pm.web.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/**/signin", "/**/signin/**", "/**/signup", "/social/**").permitAll()
                 .antMatchers("/**/all").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/**/search").permitAll()
                 .anyRequest().hasRole(MemberRole.USER.toString());
 
         //TODO::초기 세팅, 허용할 origin, header, method 제한을 줘야
