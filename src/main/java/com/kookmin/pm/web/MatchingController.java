@@ -134,4 +134,26 @@ public class MatchingController {
                 .status(HttpStatus.OK)
                 .body("매칭 참가를 취소하셨습니다.");
     }
+
+    @PutMapping(value = "/matching/{matchingId}/start")
+    public ResponseEntity startMatching(Principal principal,
+                                        @PathVariable(name = "matchingId") Long matchingId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.startMatching(usn, matchingId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭을 시작합니다.");
+    }
+
+    @PutMapping(value = "/matching/{matchingId}/end")
+    public ResponseEntity endMatching(Principal principal,
+                                        @PathVariable(name = "matchingId") Long matchingId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.endMatching(usn, matchingId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭을 종료합니다.");
+    }
 }
