@@ -60,4 +60,15 @@ public class MatchingController {
                 .status(HttpStatus.OK)
                 .body("매칭 참가를 취소하였습니다.");
     }
+
+    @DeleteMapping(value = "/matching/participate/reject/{requestId}")
+    public ResponseEntity rejectParticipationRequest(Principal principal,
+                                                     @PathVariable(name="requestId") Long requestId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.rejectParticipationRequest(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭 참가 요청을 거절하습니다.");
+    }
 }
