@@ -45,4 +45,15 @@ public class CrewController {
                 .status(HttpStatus.OK)
                 .body("크루 참여를 요청했습니다.");
     }
+
+    @PutMapping(value = "/crew/participate/approve/{requestId}")
+    public ResponseEntity<String> approveParticipation(Principal principal,
+                                                       @PathVariable(name = "requestId") Long requestId) {
+        Long usn = Long.parseLong(principal.getName());
+        crewService.approveParticipationRequest(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("크루 참가 요청을 승인했습니다.");
+    }
 }
