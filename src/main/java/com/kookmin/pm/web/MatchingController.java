@@ -49,4 +49,15 @@ public class MatchingController {
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }
+
+    @DeleteMapping(value = "/matching/participate/cancel/{requestId}")
+    public ResponseEntity cancelParticipationRequest(Principal principal,
+                                                     @PathVariable(name="requestId") Long requestId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.quitParticipationRequest(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭 참가를 취소하였습니다.");
+    }
 }
