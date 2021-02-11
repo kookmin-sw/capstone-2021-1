@@ -89,7 +89,7 @@ public class CrewService {
                 participantList.add(memberService.lookUpMemberDetails(participant.getId(),
                         LookupType.WITHALLINFOS));
             }
-
+            crewDetails.setParticipantsCount(participantList.size());
             crewDetails.setParticipants(participantList);
         }
 
@@ -149,7 +149,12 @@ public class CrewService {
     public CrewParticipantsDetails lookupParticipateRequest(@NonNull Long requestId) {
         CrewParticipants participants = getCrewParticipantsEntity(requestId);
 
-        return new CrewParticipantsDetails(participants);
+        CrewParticipantsDetails crewDetails = new CrewParticipantsDetails(participants);
+        crewDetails.setCrew(new CrewDetails(participants.getCrew()));
+        crewDetails.setMember(memberService.lookUpMemberDetails(participants.getMember().getId(),
+                LookupType.WITHALLINFOS));
+
+        return crewDetails;
     }
 
     public void participateCrew(@NonNull Long usn, @NonNull Long crewId) {

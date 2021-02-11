@@ -28,6 +28,13 @@ public class CrewController {
                 .body(crewService.lookupCrew(crewId, CrewLookupType.WITH_PARTICIPANTS));
     }
 
+    @GetMapping(value = "/crew/participate/{requestId}")
+    public ResponseEntity lookupCrewParticipationRequest(@PathVariable(name = "requestId") Long requestId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(crewService.lookupParticipateRequest(requestId));
+    }
+
     @PostMapping(value = "/crew")
     public ResponseEntity<String> establishCrew(Principal principal,
                                                 @RequestBody CrewCreateInfo crewCreateInfo) {

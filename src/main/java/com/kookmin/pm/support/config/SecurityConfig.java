@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/signin", "/**/signin/**", "/**/signup", "/social/**").permitAll()
                 .antMatchers("/**/all").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/**/search").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/crew/detail/*").permitAll()
                 .anyRequest().hasRole(MemberRole.USER.toString());
 
         //TODO::초기 세팅, 허용할 origin, header, method 제한을 줘야

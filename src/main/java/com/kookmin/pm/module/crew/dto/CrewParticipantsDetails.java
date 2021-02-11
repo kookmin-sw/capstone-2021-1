@@ -22,7 +22,5 @@ public class CrewParticipantsDetails {
         this.id = crewParticipants.getId();
         this.status = crewParticipants.getStatus().toString();
         this.createdAt = crewParticipants.getCreatedAt();
-        this.member = new MemberDetails(crewParticipants.getMember());
-        this.crew = new CrewDetails(crewParticipants.getCrew());
     }
 }
