@@ -34,4 +34,19 @@ public class MatchingController {
                 .status(HttpStatus.OK)
                 .body("매칭이 생성되었습니다.");
     }
+
+    @PostMapping(value = "/matching/participate/{matchingId}")
+    public ResponseEntity participateMatching(Principal principal,
+                                              @PathVariable(name = "matchingId") Long matchingId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.participateMatching(usn, matchingId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭에 참가하였습니다.");
+    }
+
+    private Long getPrincipalKey(Principal principal) {
+        return Long.parseLong(principal.getName());
+    }
 }
