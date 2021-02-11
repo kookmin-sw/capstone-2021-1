@@ -3,6 +3,8 @@ package com.kookmin.pm.module.matching.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 public class MatchingSearchCondition {

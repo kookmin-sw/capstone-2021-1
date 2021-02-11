@@ -1,10 +1,14 @@
 package com.kookmin.pm.web;
 
 import com.kookmin.pm.module.matching.dto.MatchingCreateInfo;
+import com.kookmin.pm.module.matching.dto.MatchingDetails;
 import com.kookmin.pm.module.matching.dto.MatchingEditInfo;
+import com.kookmin.pm.module.matching.dto.MatchingSearchCondition;
 import com.kookmin.pm.module.matching.service.MatchingLookUpType;
 import com.kookmin.pm.module.matching.service.MatchingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +27,15 @@ public class MatchingController {
                 .status(HttpStatus.OK)
                 .body(matchingService.lookupMatching(matchingId,
                         MatchingLookUpType.WITH_PARTICIPANTS));
+    }
+
+    @GetMapping(value = "/matching/search")
+    public ResponseEntity searchMatching(Pageable pageable, MatchingSearchCondition searchCondition) {
+        Page<MatchingDetails> response = matchingService.searchMatching(pageable, searchCondition);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
     @PostMapping(value = "/matching")

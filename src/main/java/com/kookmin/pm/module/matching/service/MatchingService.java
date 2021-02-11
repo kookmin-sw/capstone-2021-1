@@ -1,5 +1,6 @@
 package com.kookmin.pm.module.matching.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
@@ -7,6 +8,7 @@ import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.domain.ParticipantStatus;
 import com.kookmin.pm.module.matching.dto.*;
+import com.kookmin.pm.module.matching.repository.MatchingMapper;
 import com.kookmin.pm.module.matching.repository.MatchingParticipantRepository;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -16,6 +18,8 @@ import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,7 @@ public class MatchingService {
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final MatchingMapper matchingMapper;
 
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
     public Long openMatching(@NonNull Long usn, @NonNull MatchingCreateInfo matchingCreateInfo) {
@@ -137,7 +142,15 @@ public class MatchingService {
 
     public Page<MatchingDetails> searchMatching(@NonNull Pageable pageable,
                                                 @NonNull MatchingSearchCondition searchCondition) {
-        return matchingRepository.searchMatching(pageable, searchCondition);
+        if(searchCondition.getLongitude() == null || searchCondition.getLatitude() == null
+            || searchCondition.getDistance() == null) {
+            return matchingRepository.searchMatching(pageable, searchCondition);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map map = objectMapper.convertValue(searchCondition, Map.class);
+
+        return new PageImpl(matchingMapper.searchMatchingWithLocationInfo(map));
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {
