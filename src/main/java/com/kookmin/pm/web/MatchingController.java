@@ -52,6 +52,17 @@ public class MatchingController {
                 .body("매칭 정보가 수정되었습니다.");
     }
 
+    @DeleteMapping(value = "/matching/{matchingId}")
+    public ResponseEntity quitMatching(Principal principal,
+                                       @PathVariable(name = "matchingId") Long matchingId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.quitMatching(usn, matchingId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭을 취소하셨습니다.");
+    }
+
     @PostMapping(value = "/matching/participate/{matchingId}")
     public ResponseEntity participateMatching(Principal principal,
                                               @PathVariable(name = "matchingId") Long matchingId) {
