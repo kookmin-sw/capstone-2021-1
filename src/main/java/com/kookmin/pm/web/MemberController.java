@@ -1,5 +1,6 @@
 package com.kookmin.pm.web;
 
+import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberRole;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
@@ -88,17 +89,5 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(memberRepository.findAll());
-    }
-
-    @PostConstruct
-    public void setUp() {
-        MemberCreateInfo memberCreateInfo = new MemberCreateInfo();
-        memberCreateInfo.setUid("dlwlsrn94@naver.com");
-        memberCreateInfo.setName("이진구");
-        memberCreateInfo.setNickname("LJG070");
-        memberCreateInfo.setPhoneNumber("010-8784-3827");
-        memberCreateInfo.setPassword("1234");
-
-        System.out.println("usn: " + memberService.joinMember(memberCreateInfo));
     }
 }
