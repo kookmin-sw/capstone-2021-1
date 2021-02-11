@@ -71,4 +71,15 @@ public class MatchingController {
                 .status(HttpStatus.OK)
                 .body("매칭 참가 요청을 거절하습니다.");
     }
+
+    @PutMapping(value = "/matching/participate/approve/{requestId}")
+    public ResponseEntity approveParticipationRequest(Principal principal,
+                                                      @PathVariable(name = "requestId") Long requestId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.approveParticipationRequest(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭 참가 요청을 승락하셨습니다.");
+    }
 }
