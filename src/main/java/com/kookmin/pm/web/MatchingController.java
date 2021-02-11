@@ -92,14 +92,14 @@ public class MatchingController {
     }
 
     @DeleteMapping(value = "/matching/participate/cancel/{requestId}")
-    public ResponseEntity cancelParticipationRequest(Principal principal,
+    public ResponseEntity quitParticipationRequest(Principal principal,
                                                      @PathVariable(name="requestId") Long requestId) {
         Long usn = getPrincipalKey(principal);
         matchingService.quitParticipationRequest(usn, requestId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("매칭 참가를 취소하였습니다.");
+                .body("매칭 참가 요청을 취소하였습니다.");
     }
 
     @DeleteMapping(value = "/matching/participate/reject/{requestId}")
@@ -122,5 +122,16 @@ public class MatchingController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body("매칭 참가 요청을 승낙하셨습낙니다.");
+    }
+
+    @DeleteMapping(value = "/matching/participate/{matchingId}")
+    public ResponseEntity cancelParticipation(Principal principal,
+                                            @PathVariable(name = "matchingId") Long matchingId) {
+        Long usn = getPrincipalKey(principal);
+        matchingService.cancelParticipation(usn, matchingId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭 참가를 취소하셨습니다.");
     }
 }
