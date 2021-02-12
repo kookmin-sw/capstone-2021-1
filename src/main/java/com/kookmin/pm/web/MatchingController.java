@@ -56,8 +56,6 @@ public class MatchingController {
         Long usn = getPrincipalKey(principal);
         matchingEditInfo.setId(matchingId);
 
-        System.out.println("TIME: " + matchingEditInfo.getStartTime());
-
         matchingService.editMatching(usn, matchingEditInfo);
 
         return ResponseEntity
@@ -156,4 +154,27 @@ public class MatchingController {
                 .status(HttpStatus.OK)
                 .body("매칭을 종료합니다.");
     }
+
+    //TODO::내가 만든 매칭(이건 searchMatching으로 대체가 가능하긴 함)
+
+    //TODO::내가 보낸 매칭 요청
+    @GetMapping(value = "/member/matching/participate")
+    public ResponseEntity findMyParticipationRequest(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchingService.findMyParticipationRequest(usn));
+    }
+
+    //TODO::내게 온 매칭 요청
+    @GetMapping(value = "/member/matching/participate/request")
+    public ResponseEntity findMatchingParticipationRequest(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchingService.findMatchingParticipationRequest(usn));
+    }
+
 }
