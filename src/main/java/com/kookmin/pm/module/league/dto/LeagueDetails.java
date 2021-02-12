@@ -8,9 +8,11 @@ import com.kookmin.pm.module.league.domain.LeagueType;
 import com.kookmin.pm.module.league.domain.ParticipantType;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,13 +28,12 @@ public class LeagueDetails {
     private Integer maxCount;
     private String participantType;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime startTime;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime endTime;
-
     private String status;
     private MemberDetails host;
     private String category;
@@ -50,5 +51,23 @@ public class LeagueDetails {
         this.endTime = league.getEndTime();
         this.status = league.getStatus().toString();
         this.category = league.getCategory().getName();
+    }
+
+    @QueryProjection
+    public LeagueDetails(Long id, String title, String description, String activityArea, LeagueType leagueType,
+                         Integer maxCount, ParticipantType participantType, LocalDateTime createdAt,
+                         LocalDateTime startTime, LocalDateTime endTime, LeagueStatus status, String category) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.activityArea = activityArea;
+        this.leagueType = leagueType.toString();
+        this.maxCount = maxCount;
+        this.participantType = participantType.toString();
+        this.createdAt = createdAt;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.status = status.toString();
+        this.category = category;
     }
 }

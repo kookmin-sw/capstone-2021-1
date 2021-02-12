@@ -6,6 +6,7 @@ import com.kookmin.pm.module.league.domain.*;
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
 import com.kookmin.pm.module.league.dto.LeagueDetails;
 import com.kookmin.pm.module.league.dto.LeagueEditInfo;
+import com.kookmin.pm.module.league.dto.LeagueSearchCondition;
 import com.kookmin.pm.module.league.repository.LeagueParticipantsRepository;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 
@@ -14,6 +15,8 @@ import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
 import com.kookmin.pm.module.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -169,6 +172,10 @@ public class LeagueService {
         }
 
         throw new RuntimeException();
+    }
+
+    public Page<LeagueDetails> searchLeague(@NonNull Pageable pageable, @NonNull LeagueSearchCondition searchCondition) {
+        return leagueRepository.searchLeague(pageable, searchCondition);
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
