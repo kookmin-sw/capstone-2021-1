@@ -250,4 +250,33 @@ class LeagueServiceTest {
         assertThat(request)
                 .hasFieldOrPropertyWithValue("status", LeagueParticipantsStatus.PARTICIPATING);
     }
+
+    @Test
+    @DisplayName("rejectPraticipationRequest 메소드 성공 테스트")
+    public void rejectParticipationRequest_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+        Member participant = memberRepository.findByUid("dlwlsrn10@kookmin.ac.kr").get();
+
+        LocalDateTime startTime = LocalDateTime.of(2021, 11, 20, 12, 0, 0);
+
+        LeagueCreateInfo leagueCreateInfo = new LeagueCreateInfo();
+        leagueCreateInfo.setActivityArea("서울");
+        leagueCreateInfo.setCategory("BOARD_GAME");
+        leagueCreateInfo.setDescription("리그 소개");
+        leagueCreateInfo.setLeagueType("LEAGUE");
+        leagueCreateInfo.setMaxCount(30);
+        leagueCreateInfo.setParticipantType("INDIVIDUAL");
+        leagueCreateInfo.setStartTime(startTime);
+        leagueCreateInfo.setTitle("서울 체스 리그");
+
+        Long id = leagueService.openLeague(host.getId(), leagueCreateInfo);
+
+        Long requestId = leagueService.participateLeague(participant.getId(), id);
+
+        leagueService.rejectParticipationRequest(host.getId(), requestId);
+
+        LeagueParticipants request = leagueParticipantsRepository.findById(requestId).orElse(null);
+
+        assertThat(request).isNull();
+    }
 }

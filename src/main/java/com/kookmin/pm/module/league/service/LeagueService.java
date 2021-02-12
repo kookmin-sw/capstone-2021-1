@@ -102,13 +102,33 @@ public class LeagueService {
             throw new RuntimeException();
 
         //TODO::이미 진행중이거나 끝난 리그인 경우
-        if(league.getStatus().equals(LeagueStatus.SCHEDULED))
+        if(!league.getStatus().equals(LeagueStatus.SCHEDULED))
+            throw new RuntimeException();
 
         //TODO::이미 참여중인 경우
         if(!request.getStatus().equals(LeagueParticipantsStatus.PENDING))
             throw new RuntimeException();
 
         request.approveParticipation();
+    }
+
+    public void rejectParticipationRequest(@NonNull Long usn, @NonNull Long requestId) {
+        LeagueParticipants request = getLeagueParticipantsEntity(requestId);
+        League league = request.getLeague();
+
+        //TODO::회원이 호스트가 아닌 경우
+        if(!league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
+        //TODO::이미 진행중이거나 끝난 리그인 경우
+        if(!league.getStatus().equals(LeagueStatus.SCHEDULED))
+            throw new RuntimeException();
+
+        //TODO::이미 참여중인 경우
+        if(!request.getStatus().equals(LeagueParticipantsStatus.PENDING))
+            throw new RuntimeException();
+
+        leagueParticipantsRepository.delete(request);
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
