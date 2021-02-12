@@ -9,6 +9,7 @@ import com.kookmin.pm.module.league.domain.LeagueType;
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
 import com.kookmin.pm.module.league.dto.LeagueDetails;
 import com.kookmin.pm.module.league.dto.LeagueEditInfo;
+import com.kookmin.pm.module.league.dto.LeagueSearchCondition;
 import com.kookmin.pm.module.league.repository.LeagueParticipantsRepository;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -20,6 +21,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +69,7 @@ class LeagueServiceTest {
         memberCreateInfo2.setName("이진팔");
         memberCreateInfo2.setPhoneNumber("010-8784-3827");
 
-        memberService.joinMember(memberCreateInfo2);
+        Long usn2 = memberService.joinMember(memberCreateInfo2);
 
         MemberCreateInfo memberCreateInfo3 = new MemberCreateInfo();
         memberCreateInfo3.setUid("dlwlsrn7@kookmin.ac.kr");
@@ -75,7 +79,7 @@ class LeagueServiceTest {
         memberCreateInfo3.setName("이진칠");
         memberCreateInfo3.setPhoneNumber("010-8784-3827");
 
-        memberService.joinMember(memberCreateInfo3);
+        Long usn3 = memberService.joinMember(memberCreateInfo3);
 
         MemberCreateInfo memberCreateInfo4 = new MemberCreateInfo();
         memberCreateInfo4.setUid("dlwlsrn6@kookmin.ac.kr");
@@ -85,13 +89,51 @@ class LeagueServiceTest {
         memberCreateInfo4.setName("이진육");
         memberCreateInfo4.setPhoneNumber("010-8784-3827");
 
-        memberService.joinMember(memberCreateInfo4);
+        Long usn4 = memberService.joinMember(memberCreateInfo4);
 
         Category category = new Category("BOARD_GAME");
         categoryRepository.save(category);
 
         Category category2 = new Category("ROOM_ESCAPE");
         categoryRepository.save(category2);
+
+        LocalDateTime startTime = LocalDateTime.of(2021, 11, 20, 12, 0, 0);
+
+        LeagueCreateInfo leagueCreateInfo = new LeagueCreateInfo();
+        leagueCreateInfo.setActivityArea("서울");
+        leagueCreateInfo.setCategory("BOARD_GAME");
+        leagueCreateInfo.setDescription("리그 소개 서울");
+        leagueCreateInfo.setLeagueType("LEAGUE");
+        leagueCreateInfo.setMaxCount(30);
+        leagueCreateInfo.setParticipantType("INDIVIDUAL");
+        leagueCreateInfo.setStartTime(startTime);
+        leagueCreateInfo.setTitle("서울 섯다 리그");
+
+        leagueService.openLeague(usn2, leagueCreateInfo);
+
+        LeagueCreateInfo leagueCreateInfo2 = new LeagueCreateInfo();
+        leagueCreateInfo2.setActivityArea("대구");
+        leagueCreateInfo2.setCategory("ROOM_ESCAPE");
+        leagueCreateInfo2.setDescription("리그 소개 대구");
+        leagueCreateInfo2.setLeagueType("LEAGUE");
+        leagueCreateInfo2.setMaxCount(50);
+        leagueCreateInfo2.setParticipantType("INDIVIDUAL");
+        leagueCreateInfo2.setStartTime(startTime);
+        leagueCreateInfo2.setTitle("대구 방탈출 리그");
+
+        leagueService.openLeague(usn2, leagueCreateInfo2);
+
+        LeagueCreateInfo leagueCreateInfo3 = new LeagueCreateInfo();
+        leagueCreateInfo3.setActivityArea("부산");
+        leagueCreateInfo3.setCategory("BOARD_GAME");
+        leagueCreateInfo3.setDescription("리그 소개 부산");
+        leagueCreateInfo3.setLeagueType("TOURNAMENT");
+        leagueCreateInfo3.setMaxCount(10);
+        leagueCreateInfo3.setParticipantType("CREW");
+        leagueCreateInfo3.setStartTime(startTime);
+        leagueCreateInfo3.setTitle("부산 오목 토너먼트");
+
+        leagueService.openLeague(usn3, leagueCreateInfo3);
     }
 
     @Test
@@ -335,5 +377,20 @@ class LeagueServiceTest {
 
         System.out.println(defaultInfo);
         System.out.println(details);
+    }
+
+    @Test
+    @DisplayName("searchLeague 메소드 성공 테스트")
+    public void searchLeague_success_test() {
+        Pageable pageable = PageRequest.of(0, 10);
+
+        LeagueSearchCondition searchCondition = new LeagueSearchCondition();
+        searchCondition.setActivityArea("부산");
+        searchCondition.setTitle("오목");
+
+        Page<LeagueDetails> result = leagueService.searchLeague(pageable,searchCondition);
+
+        for(LeagueDetails details : result.getContent())
+            System.out.println(details);
     }
 }

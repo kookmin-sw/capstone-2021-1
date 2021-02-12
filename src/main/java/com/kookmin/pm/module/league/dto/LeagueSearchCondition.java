@@ -5,6 +5,7 @@ import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,8 @@ public class LeagueSearchCondition {
     private Integer maxCount;
     private String participantType;
     private String status;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime startTime;
     private Long host;
     private String category;
 }
