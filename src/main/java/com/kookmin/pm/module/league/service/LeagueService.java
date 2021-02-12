@@ -3,6 +3,7 @@ package com.kookmin.pm.module.league.service;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.league.domain.League;
+import com.kookmin.pm.module.league.domain.LeagueParticipants;
 import com.kookmin.pm.module.league.domain.LeagueType;
 import com.kookmin.pm.module.league.domain.ParticipantType;
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
@@ -75,6 +76,24 @@ public class LeagueService {
         //TODO::다른 대회 참가자들에게 대회가 취소되었음을 알려주는 로직 필요
 
         leagueRepository.delete(league);
+    }
+
+    public Long participateLeague(@NonNull Long usn, @NonNull Long leagueId) {
+        Member participant = getMemberEntity(usn);
+        League league = getLeagueEntity(leagueId);
+
+        //TODO::이미 참가중이거나 신청을 했을 경우
+        if(leagueParticipantsRepository.findByMemberAndLeague(participant,league).isPresent())
+            throw new RuntimeException();
+
+        LeagueParticipants request = LeagueParticipants.builder()
+                .member(participant)
+                .league(league)
+                .build();
+
+        request = leagueParticipantsRepository.save(request);
+
+        return request.getId();
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {

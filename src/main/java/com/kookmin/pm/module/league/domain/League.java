@@ -74,6 +74,7 @@ public class League {
          this.startTime = startTime;
          this.member = member;
          this.category = category;
+         this.status = LeagueStatus.SCHEDULED;
     }
 
     public void editTitle(String title) {
@@ -98,5 +99,13 @@ public class League {
 
     public void changeCategory(Category category) {
         this.category = category;
+    }
+
+    public void startLeague() {
+        this.status = LeagueStatus.PROCEEDING;
+    }
+
+    public void endLeague() {
+        this.status = LeagueStatus.END;
     }
 }

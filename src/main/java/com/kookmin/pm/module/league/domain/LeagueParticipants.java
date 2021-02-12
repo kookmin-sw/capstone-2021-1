@@ -1,6 +1,7 @@
 package com.kookmin.pm.module.league.domain;
 
 import com.kookmin.pm.module.member.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,11 @@ public class LeagueParticipants {
     @Enumerated(EnumType.STRING)
     @Column(name="STATUS")
     private LeagueParticipantsStatus status;
+
+    @Builder
+    public LeagueParticipants(Member member, League league) {
+        this.member = member;
+        this.league = league;
+        this.status = LeagueParticipantsStatus.PENDING;
+    }
 }
