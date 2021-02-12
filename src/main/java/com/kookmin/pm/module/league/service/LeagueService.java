@@ -131,6 +131,25 @@ public class LeagueService {
         leagueParticipantsRepository.delete(request);
     }
 
+    public void quitParticipationRequest(@NonNull Long participantUsn, @NonNull Long requestId) {
+        LeagueParticipants request = getLeagueParticipantsEntity(requestId);
+        League league = request.getLeague();
+
+        //TODO::회원이 신청자가 아닌 경우
+        if(!request.getMember().getId().equals(participantUsn))
+            throw new RuntimeException();
+
+        //TODO::이미 진행중이거나 끝난 리그인 경우
+        if(!league.getStatus().equals(LeagueStatus.SCHEDULED))
+            throw new RuntimeException();
+
+        //TODO::이미 참여중인 경우
+        if(!request.getStatus().equals(LeagueParticipantsStatus.PENDING))
+            throw new RuntimeException();
+
+        leagueParticipantsRepository.delete(request);
+    }
+
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
         Category category = getCategoryEntity(leagueCreateInfo.getCategory());
 
