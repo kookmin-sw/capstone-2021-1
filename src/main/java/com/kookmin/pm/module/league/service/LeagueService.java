@@ -4,12 +4,15 @@ import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.league.domain.*;
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
+import com.kookmin.pm.module.league.dto.LeagueDetails;
 import com.kookmin.pm.module.league.dto.LeagueEditInfo;
 import com.kookmin.pm.module.league.repository.LeagueParticipantsRepository;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 
 import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
+import com.kookmin.pm.module.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ public class LeagueService {
     private final LeagueParticipantsRepository leagueParticipantsRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final MemberService memberService;
 
     public Long openLeague(@NonNull Long usn, @NonNull LeagueCreateInfo leagueCreateInfo) {
         Member host = getMemberEntity(usn);
@@ -148,6 +152,23 @@ public class LeagueService {
             throw new RuntimeException();
 
         leagueParticipantsRepository.delete(request);
+    }
+
+    public LeagueDetails lookupLeague(@NonNull Long leagueId, @NonNull LeagueLookupType lookupType) {
+        League league = getLeagueEntity(leagueId);
+
+        if(lookupType.equals(LeagueLookupType.DEFAULT)) {
+            return new LeagueDetails(league);
+        } else if(lookupType.equals(LeagueLookupType.WITH_PARTICIPANTS)) {
+            LeagueDetails leagueDetails = new LeagueDetails(league);
+            MemberDetails memberDetails = new MemberDetails(league.getMember());
+
+            leagueDetails.setHost(memberDetails);
+
+            return leagueDetails;
+        }
+
+        throw new RuntimeException();
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
