@@ -31,6 +31,9 @@ public class League {
     @Column(name="TYPE")
     private LeagueType type;
 
+    @Column(name = "MAX_COUNT")
+    private Integer maxCount;
+
     @Enumerated(EnumType.STRING)
     @Column(name="PARTICIPANT_TYPE")
     private ParticipantType participantType;
