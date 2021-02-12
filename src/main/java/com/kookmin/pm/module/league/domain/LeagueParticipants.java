@@ -34,4 +34,8 @@ public class LeagueParticipants {
         this.league = league;
         this.status = LeagueParticipantsStatus.PENDING;
     }
+
+    public void approveParticipation() {
+        this.status = LeagueParticipantsStatus.PARTICIPATING;
+    }
 }

@@ -2,10 +2,7 @@ package com.kookmin.pm.module.league.service;
 
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
-import com.kookmin.pm.module.league.domain.League;
-import com.kookmin.pm.module.league.domain.LeagueParticipants;
-import com.kookmin.pm.module.league.domain.LeagueType;
-import com.kookmin.pm.module.league.domain.ParticipantType;
+import com.kookmin.pm.module.league.domain.*;
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
 import com.kookmin.pm.module.league.dto.LeagueEditInfo;
 import com.kookmin.pm.module.league.repository.LeagueParticipantsRepository;
@@ -96,6 +93,24 @@ public class LeagueService {
         return request.getId();
     }
 
+    public void approveParticipationRequest(@NonNull Long usn, @NonNull Long requestId) {
+        LeagueParticipants request = getLeagueParticipantsEntity(requestId);
+        League league = request.getLeague();
+
+        //TODO::회원이 호스트가 아닌 경우
+        if(!league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
+        //TODO::이미 진행중이거나 끝난 리그인 경우
+        if(league.getStatus().equals(LeagueStatus.SCHEDULED))
+
+        //TODO::이미 참여중인 경우
+        if(!request.getStatus().equals(LeagueParticipantsStatus.PENDING))
+            throw new RuntimeException();
+
+        request.approveParticipation();
+    }
+
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
         Category category = getCategoryEntity(leagueCreateInfo.getCategory());
 
@@ -114,6 +129,10 @@ public class LeagueService {
 
     private League getLeagueEntity(Long id) {
         return leagueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private LeagueParticipants getLeagueParticipantsEntity(Long id) {
+        return leagueParticipantsRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     private Category getCategoryEntity(String category) {
