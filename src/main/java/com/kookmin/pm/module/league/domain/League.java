@@ -5,6 +5,7 @@ import com.kookmin.pm.module.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -73,5 +74,29 @@ public class League {
          this.startTime = startTime;
          this.member = member;
          this.category = category;
+    }
+
+    public void editTitle(String title) {
+        this.title = title;
+    }
+
+    public void editDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeActivityArea(String activityArea) {
+        this.activityArea = activityArea;
+    }
+
+    public void changeMaxCount(Integer maxCount) {
+        this.maxCount = maxCount;
+    }
+
+    public void changeStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void changeCategory(Category category) {
+        this.category = category;
     }
 }

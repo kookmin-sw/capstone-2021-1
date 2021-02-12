@@ -5,6 +5,7 @@ import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.league.domain.League;
 import com.kookmin.pm.module.league.domain.LeagueType;
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
+import com.kookmin.pm.module.league.dto.LeagueEditInfo;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
@@ -120,4 +121,42 @@ class LeagueServiceTest {
                 .hasFieldOrPropertyWithValue("startTime", startTime);
     }
 
+    @Test
+    @DisplayName("editLeague 메소드 성공 테스트")
+    public void editLeague_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
+        LocalDateTime startTime = LocalDateTime.of(2021, 11, 20, 12, 0, 0);
+
+        LeagueCreateInfo leagueCreateInfo = new LeagueCreateInfo();
+        leagueCreateInfo.setActivityArea("서울");
+        leagueCreateInfo.setCategory("BOARD_GAME");
+        leagueCreateInfo.setDescription("리그 소개");
+        leagueCreateInfo.setLeagueType("LEAGUE");
+        leagueCreateInfo.setMaxCount(30);
+        leagueCreateInfo.setParticipantType("INDIVIDUAL");
+        leagueCreateInfo.setStartTime(startTime);
+        leagueCreateInfo.setTitle("서울 체스 리그");
+
+        Long id = leagueService.openLeague(host.getId(), leagueCreateInfo);
+
+        League league = leagueRepository.findById(id).get();
+
+        LeagueEditInfo leagueEditInfo = new LeagueEditInfo();
+        leagueEditInfo.setActivityArea("경기");
+        leagueEditInfo.setCategory("ROOM_ESCAPE");
+        leagueEditInfo.setDescription("리그 소개 수정");
+        leagueEditInfo.setId(league.getId());
+        leagueEditInfo.setMaxCount(10);
+        leagueEditInfo.setStartTime(startTime);
+
+        leagueService.editLeague(host.getId(), leagueEditInfo);
+
+        league = leagueRepository.findById(id).get();
+        Category category = categoryRepository.findByName(leagueEditInfo.getCategory()).get();
+
+        assertThat(league)
+                .hasFieldOrPropertyWithValue("description", leagueEditInfo.getDescription())
+                .hasFieldOrPropertyWithValue("category", category);
+    }
 }

@@ -6,6 +6,7 @@ import com.kookmin.pm.module.league.domain.League;
 import com.kookmin.pm.module.league.domain.LeagueType;
 import com.kookmin.pm.module.league.domain.ParticipantType;
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
+import com.kookmin.pm.module.league.dto.LeagueEditInfo;
 import com.kookmin.pm.module.league.repository.LeagueParticipantsRepository;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 
@@ -42,6 +43,24 @@ public class LeagueService {
         return league.getId();
     }
 
+    public void editLeague(@NonNull Long usn, @NonNull LeagueEditInfo leagueEditInfo) {
+        League league = getLeagueEntity(leagueEditInfo.getId());
+        Category category = getCategoryEntity(leagueEditInfo.getCategory());
+
+        //TODO::주최자와 회원이 일치하지 않는 경우
+        if(!league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
+        //TODO::현재 대회 참가자보다 최대 참가인원수가 작을 경우
+
+        league.editTitle(leagueEditInfo.getTitle());
+        league.editDescription(leagueEditInfo.getDescription());
+        league.changeActivityArea(leagueEditInfo.getActivityArea());
+        league.changeCategory(category);
+        league.changeMaxCount(leagueEditInfo.getMaxCount());
+        league.changeStartTime(leagueEditInfo.getStartTime());
+    }
+
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
         Category category = getCategoryEntity(leagueCreateInfo.getCategory());
 
@@ -56,6 +75,10 @@ public class LeagueService {
                 .member(host)
                 .category(category)
                 .build();
+    }
+
+    private League getLeagueEntity(Long id) {
+        return leagueRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     private Category getCategoryEntity(String category) {
