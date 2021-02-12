@@ -16,6 +16,5 @@ public interface MatchingParticipantRepository extends JpaRepository<MatchingPar
     List<MatchingParticipant> findByMemberAndStatus(Member member, ParticipantStatus status);
     void deleteAllByMatching(Matching matching);
     void deleteAllByMatchingAndStatus(Matching matching, ParticipantStatus status);
-    void deleteByMemberUidAndMatchingId(String uid, Long matchingId);
     Long countByMatchingAndStatus(Matching matching, ParticipantStatus status);
 }

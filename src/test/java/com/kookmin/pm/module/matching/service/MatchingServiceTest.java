@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -34,6 +35,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 class MatchingServiceTest {
@@ -64,7 +66,7 @@ class MatchingServiceTest {
         memberCreateInfo.setName("이진구");
         memberCreateInfo.setPhoneNumber("010-8784-3827");
 
-        memberService.joinMember(memberCreateInfo);
+        Long usn = memberService.joinMember(memberCreateInfo);
 
         MemberCreateInfo memberCreateInfo2 = new MemberCreateInfo();
         memberCreateInfo2.setUid("dlwlsrn10@kookmin.ac.kr");
@@ -111,7 +113,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setMaxCount(5);
         matchingCreateInfo.setCategory("BOARD_GAME");
 
-        matchingService.openMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo);
+        matchingService.openMatching(usn, matchingCreateInfo);
 
         MatchingCreateInfo matchingCreateInfo2 = new MatchingCreateInfo();
         matchingCreateInfo2.setTitle("title");
@@ -122,7 +124,7 @@ class MatchingServiceTest {
         matchingCreateInfo2.setMaxCount(5);
         matchingCreateInfo2.setCategory("BOARD_GAME");
 
-        matchingService.openMatching("dlwlsrn9412@kookmin.ac.kr", matchingCreateInfo2);
+        matchingService.openMatching(usn, matchingCreateInfo2);
     }
 
     @Test
@@ -140,7 +142,7 @@ class MatchingServiceTest {
         matchingCreateInfo.setMaxCount(5);
         matchingCreateInfo.setCategory("BOARD_GAME");
 
-        Long id = matchingService.openMatching(member.getUid(), matchingCreateInfo);
+        Long id = matchingService.openMatching(member.getId(), matchingCreateInfo);
         Matching matching = matchingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         Category category = categoryRepository.findByName("BOARD_GAME").orElseThrow(EntityNotFoundException::new);
 
@@ -165,7 +167,7 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
 
         MatchingParticipant matchingParticipant = matchingParticipantRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
@@ -184,7 +186,7 @@ class MatchingServiceTest {
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
         assertThatThrownBy(() -> {
-            Long id = matchingService.participateMatching(creater.getUid(), matching.getId());
+            Long id = matchingService.participateMatching(creater.getId(), matching.getId());
         }).isInstanceOf(RuntimeException.class);
     }
 
@@ -205,9 +207,9 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        matchingService.participateMatching(participant.getUid(), matching.getId());
-        matchingService.participateMatching(participant2.getUid(), matching.getId());
-        matchingService.participateMatching(participant3.getUid(), matching.getId());
+        matchingService.participateMatching(participant.getId(), matching.getId());
+        matchingService.participateMatching(participant2.getId(), matching.getId());
+        matchingService.participateMatching(participant3.getId(), matching.getId());
 
         List<Member> members = matchingRepository.searchMemberInMatchingParticipant(matching.getId(),
                 ParticipantStatus.PENDING_ACCEPTANCE);
@@ -235,9 +237,9 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        matchingService.participateMatching(participant.getUid(), matching.getId());
-        matchingService.participateMatching(participant2.getUid(), matching.getId());
-        matchingService.participateMatching(participant3.getUid(), matching.getId());
+        matchingService.participateMatching(participant.getId(), matching.getId());
+        matchingService.participateMatching(participant2.getId(), matching.getId());
+        matchingService.participateMatching(participant3.getId(), matching.getId());
 
         MatchingDetails matchingDetails = matchingService.lookupMatching(matching.getId(),
                 MatchingLookUpType.DEFAULT);
@@ -273,7 +275,7 @@ class MatchingServiceTest {
         matchingEditInfo.setMaxCount(5);
         matchingEditInfo.setStartTime(LocalDateTime.of(2021, 3, 12, 12,0,0));
 
-       matchingService.editMatching(creater.getUid(), matchingEditInfo);
+       matchingService.editMatching(creater.getId(), matchingEditInfo);
 
        matching = matchingRepository.findByMember(creater).get(0);
         Category category = categoryRepository.findByName("ROOM_ESCAPE").orElseThrow(EntityNotFoundException::new);
@@ -296,9 +298,9 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(creater).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
 
-        matchingService.quitMatching(creater.getUid(), matching.getId());
+        matchingService.quitMatching(creater.getId(), matching.getId());
 
         List<MatchingParticipant> result = matchingParticipantRepository.findByMatching(matching);
 
@@ -317,10 +319,10 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(host).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
-        matchingService.approveParticipationRequest(host.getUid(), id);
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
+        matchingService.approveParticipationRequest(host.getId(), id);
 
-        matchingService.cancelParticipation(participant.getUid(), matching.getId());
+        matchingService.cancelParticipation(participant.getId(), matching.getId());
 
         List<MatchingParticipant> participants = matchingParticipantRepository.findByMatching(matching);
 
@@ -331,8 +333,10 @@ class MatchingServiceTest {
     @Test
     @DisplayName("searchMatching 성공 테스트")
     public void searchMatching_success_test() {
+        Member member = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
         MatchingSearchCondition searchCondition = new MatchingSearchCondition();
-        searchCondition.setHost("dlwlsrn9412@kookmin.ac.kr");
+        searchCondition.setHost(member.getId());
         searchCondition.setCategory("BOARD_GAME");
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -379,8 +383,8 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(host).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
-        matchingService.approveParticipationRequest(host.getUid(), id);
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
+        matchingService.approveParticipationRequest(host.getId(), id);
 
         MatchingParticipant matchingParticipant = matchingParticipantRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
@@ -400,8 +404,8 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(host).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
-        matchingService.rejectParticipationRequest(host.getUid(), id);
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
+        matchingService.rejectParticipationRequest(host.getId(), id);
 
         boolean result = matchingParticipantRepository.findByMemberAndMatching(participant, matching).isPresent();
 
@@ -420,9 +424,9 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(host).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
 
-        matchingService.quitParticipationRequest(participant.getUid(), id);
+        matchingService.quitParticipationRequest(participant.getId(), id);
 
         MatchingParticipant matchingParticipant = matchingParticipantRepository.findById(id)
                 .orElse(null);
@@ -439,7 +443,7 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(host).get(0);
 
-        matchingService.startMatching(host.getUid(), matching.getId());
+        matchingService.startMatching(host.getId(), matching.getId());
 
         Matching startedMatching = matchingRepository.findById(matching.getId()).orElse(null);
 
@@ -459,12 +463,12 @@ class MatchingServiceTest {
         Matching matching = matchingRepository.findByMember(host).get(0);
         Matching matching2 = matchingRepository.findByMember(host).get(1);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
-        matchingService.approveParticipationRequest(host.getUid(), id);
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
+        matchingService.approveParticipationRequest(host.getId(), id);
 
-        Long id2 = matchingService.participateMatching(participant.getUid(), matching2.getId());
+        Long id2 = matchingService.participateMatching(participant.getId(), matching2.getId());
 
-        List<MatchingParticipantDetails> details = matchingService.findMyParticipationRequest(participant.getUid());
+        List<MatchingParticipantDetails> details = matchingService.findMyParticipationRequest(participant.getId());
 
         assertThat(details.size())
                 .isEqualTo(1);
@@ -490,14 +494,14 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(host).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
-        matchingService.participateMatching(participant2.getUid(), matching.getId());
-        matchingService.participateMatching(participant3.getUid(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
+        matchingService.participateMatching(participant2.getId(), matching.getId());
+        matchingService.participateMatching(participant3.getId(), matching.getId());
 
-        matchingService.approveParticipationRequest(host.getUid(), id);
+        matchingService.approveParticipationRequest(host.getId(), id);
 
         Map<String, Object> details =
-                matchingService.findMatchingParticipationRequest(host.getUid());
+                matchingService.findMatchingParticipationRequest(host.getId());
 
         assertThat(((List<MatchingParticipantDetails>)details.get("0")).size())
                 .isEqualTo(2);
@@ -528,11 +532,11 @@ class MatchingServiceTest {
 
         Matching matching = matchingRepository.findByMember(host).get(0);
 
-        Long id = matchingService.participateMatching(participant.getUid(), matching.getId());
-        Long id2 = matchingService.participateMatching(participant2.getUid(), matching.getId());
-        Long id3 = matchingService.participateMatching(participant3.getUid(), matching.getId());
+        Long id = matchingService.participateMatching(participant.getId(), matching.getId());
+        Long id2 = matchingService.participateMatching(participant2.getId(), matching.getId());
+        Long id3 = matchingService.participateMatching(participant3.getId(), matching.getId());
 
-        matchingService.approveParticipationRequest(host.getUid(), id);
+        matchingService.approveParticipationRequest(host.getId(), id);
         System.out.println(matchingService.lookupMatchingParticipants(id));
         System.out.println(matchingService.lookupMatchingParticipants(id2));
         System.out.println(matchingService.lookupMatchingParticipants(id3));

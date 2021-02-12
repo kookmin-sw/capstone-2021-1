@@ -18,10 +18,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
@@ -52,21 +54,19 @@ public class MemberService implements UserDetailsService {
         return member.getId();
     }
 
-    public void editMemberInfo(@NonNull String uid, @NonNull MemberEditInfo memberEditInfo) {
-        Member member = getMemberEntityByUid(uid);
+    public void editMemberInfo(@NonNull Long usn, @NonNull MemberEditInfo memberEditInfo) {
+        Member member = getMemberEntity(usn);
 
         member.editNickname(memberEditInfo.getNickname());
         member.editPhoneNumber(memberEditInfo.getPhoneNumber());
         member.editAddress(memberEditInfo.getAddress());
-
         member.changeName(memberEditInfo.getName());
-        member.changePassword(memberEditInfo.getPassword());
-        member.encodePassword(passwordEncoder);
+        member.editDescription(memberEditInfo.getDescription());
     }
 
 
-    public MemberDetails lookUpMemberDetails(@NonNull String uid, @NonNull LookupType type) {
-        Member member = getMemberEntityByUid(uid);
+    public MemberDetails lookUpMemberDetails(@NonNull Long usn, @NonNull LookupType type) {
+        Member member = getMemberEntity(usn);
         //TODO::휴면 계정일 경우 조회 불가능, RuntimeException 정의해야
         if(member.getStatus().equals(MemberStatus.EXPIRED)) throw new RuntimeException();
 
@@ -75,16 +75,16 @@ public class MemberService implements UserDetailsService {
             return new MemberDetails(member);
         } else if(type==LookupType.WITHIMAGE) {
             return new MemberDetails(member,
-                    getMemberImageEntityByUid(uid));
+                    getMemberImageEntity(usn));
         } else {
             return new MemberDetails(member,
-                    getMemberImageEntityByUid(uid),
-                    getMemberStatsEntityByUid(uid));
+                    getMemberImageEntity(usn),
+                    getMemberStatsEntity(usn));
         }
     }
 
-    public boolean secessionMember(@NonNull String uid, @NonNull String password) {
-        Member member = getMemberEntityByUid(uid);
+    public boolean secessionMember(@NonNull Long usn, @NonNull String password) {
+        Member member = getMemberEntity(usn);
 
         if(!passwordEncoder.matches(password, member.getPassword())) return false;
 
@@ -93,26 +93,26 @@ public class MemberService implements UserDetailsService {
         return true;
     }
 
-    public void changeMemberImage(@NonNull String uid, @NonNull String imagePath) {
-        MemberImage memberImage = getMemberImageEntityByUid(uid);
+    public void changeMemberImage(@NonNull Long usn, @NonNull String imagePath) {
+        MemberImage memberImage = getMemberImageEntity(usn);
         memberImage.editImagePath(imagePath);
     }
 
-    public void removeMemberImage(@NonNull String uid) {
-        MemberImage memberImage = getMemberImageEntityByUid(uid);
+    public void removeMemberImage(@NonNull Long usn) {
+        MemberImage memberImage = getMemberImageEntity(usn);
         memberImageRepository.delete(memberImage);
     }
 
     //TODO:: 회원 능력치 평가 메소드 필요
 
     @Override
-    public UserDetails loadUserByUsername(String uid) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String usn) throws UsernameNotFoundException {
         //TODO:: 그냥 UsernameNotFoundException 던져주는 걸로 끝나도 되는지 확인해야함
-        Member member = memberRepository.findByUid(uid)
-                .orElseThrow(() -> new UsernameNotFoundException(uid));
+        Member member = memberRepository.findById(Long.parseLong(usn))
+                .orElseThrow(() -> new UsernameNotFoundException(usn));
 
         return User.builder()
-                .username(member.getUid())
+                .username(member.getId().toString())
                 .password(member.getPassword())
                 .roles(member.getRole().toString())
                 .build();
@@ -126,6 +126,7 @@ public class MemberService implements UserDetailsService {
                 .nickname(memberCreateInfo.getNickname())
                 .phoneNumber(memberCreateInfo.getPhoneNumber())
                 .address(memberCreateInfo.getAddress())
+                .provider(memberCreateInfo.getProvider())
                 .build();
     }
 
@@ -134,17 +135,17 @@ public class MemberService implements UserDetailsService {
         return member!=null;
     }
 
-    private Member getMemberEntityByUid(String uid) {
-        return memberRepository.findByUid(uid).orElseThrow(EntityNotFoundException::new);
+    private Member getMemberEntity(Long usn) {
+        return memberRepository.findById(usn).orElseThrow(EntityNotFoundException::new);
     }
 
-    private MemberImage getMemberImageEntityByUid(String uid) {
-        Member member = getMemberEntityByUid(uid);
+    private MemberImage getMemberImageEntity(Long usn) {
+        Member member = getMemberEntity(usn);
         return memberImageRepository.findByMember(member).orElse(null);
     }
 
-    private MemberStats getMemberStatsEntityByUid(String uid) {
-        Member member = getMemberEntityByUid(uid);
+    private MemberStats getMemberStatsEntity(Long usn) {
+        Member member = getMemberEntity(usn);
         return memberStatsRepository.findByMember(member).orElseThrow(EntityNotFoundException::new);
     }
 }

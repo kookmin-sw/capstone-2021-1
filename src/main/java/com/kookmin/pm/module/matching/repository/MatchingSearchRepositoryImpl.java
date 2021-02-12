@@ -69,8 +69,8 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
         return maxCount==null? null : matching.maxCount.loe(maxCount);
     }
 
-    private BooleanExpression hostEq(String uid) {
-        return uid==null? null : member.uid.eq(uid);
+    private BooleanExpression hostEq(Long id) {
+        return id==null? null : member.id.eq(id);
     }
 
     private BooleanExpression matchingIdEq(Long matchingId) {

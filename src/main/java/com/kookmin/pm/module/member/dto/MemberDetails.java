@@ -16,6 +16,7 @@ public class MemberDetails {
     private String name;
     private String address;
     private String phoneNumber;
+    private String description;
     private MemberStatsInfo memberStats;
     private String imagePath;
 
@@ -26,6 +27,7 @@ public class MemberDetails {
         this.name = member.getName();
         this.address = member.getAddress();
         this.phoneNumber = member.getPhoneNumber();
+        this.description = member.getDescription();
     }
 
     public MemberDetails(Member member, MemberImage memberImage) {

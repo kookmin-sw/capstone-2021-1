@@ -26,10 +26,9 @@
         FROM MATCHING AS M
         LEFT JOIN CATEGORY AS C
         ON M.CATEGORY_ID = C.CATEGORY_ID
-        GROUP BY MATCHING_ID
-        HAVING DISTANCE &lt;= #{distance}
+        WHERE M.MATCHING_ID >= 0
         <if test="title != null and !title.equals('')">
-            AND TITLE CONCAT('%',#{title},'%')
+            AND TITLE LIKE CONCAT('%',#{title},'%')
         </if>
         <if test="status != null and !status.equals('')">
             AND STATUS = #{status}
@@ -37,5 +36,14 @@
         <if test="maxCount != null">
             AND MAX_COUNT &lt;= #{maxCount}
         </if>
+        <if test="category != null and !category.equals('')">
+            AND C.NAME = #{category}
+        </if>
+        <if test="host != null">
+            AND M.MEMBER_ID = #{host}
+        </if>
+        GROUP BY MATCHING_ID
+        HAVING DISTANCE &lt;= #{distance}
+
     </select>
 </mapper>

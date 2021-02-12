@@ -66,6 +66,12 @@
             <artifactId>h2</artifactId>
         </dependency>
 
+        <!-- Mysql 드라이버 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
         <!-- JWT 관련 디펜던시 -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

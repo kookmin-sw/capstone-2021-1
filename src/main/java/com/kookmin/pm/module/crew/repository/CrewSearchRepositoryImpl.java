@@ -28,12 +28,13 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
     }
 
     @Override
-    public List<Member> findMemberInCrewParticipants(Long crewId) {
+    public List<Member> findMemberInCrewParticipants(Long crewId, CrewParticipantStatus status) {
         return getQueryFactory()
                 .select(member)
                 .from(crewParticipants)
                 .leftJoin(crewParticipants.member, member)
-                .where(crewIdEq(crewId))
+                .where(crewIdEq(crewId),
+                        crewParticipants.status.eq(status))
                 .fetch();
     }
 
@@ -70,8 +71,8 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
         return category==null? null : crew.category.name.eq(category);
     }
 
-    public BooleanExpression hostEq(String host) {
-        return host==null? null : crew.member.uid.eq(host);
+    public BooleanExpression hostEq(Long host) {
+        return host==null? null : crew.member.id.eq(host);
     }
 
     public BooleanExpression crewIdEq(Long crewId) {
