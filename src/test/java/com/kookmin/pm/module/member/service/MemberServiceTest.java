@@ -22,10 +22,9 @@ import javax.persistence.EntityNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 @SpringBootTest
 @Transactional
-//TODO::프로파일 적용으로 분리 필요
 public class MemberServiceTest {
     @Autowired
     MemberService memberService;

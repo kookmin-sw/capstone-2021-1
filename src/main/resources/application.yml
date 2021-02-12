@@ -1,24 +1,6 @@
 spring:
   profiles:
     active: local
-  jpa:
-    hibernate:
-      ddl-auto: validate
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-  datasource:
-    url: jdbc:mysql://playmakermaria.c6lllniau47k.ap-northeast-2.rds.amazonaws.com:3306/playmaker
-    username: admin
-    password: qnwk0529
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
 
 mybatis:
   mapper-locations: mapper/**/*.xml
