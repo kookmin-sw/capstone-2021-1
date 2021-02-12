@@ -51,6 +51,10 @@ public class LeagueService {
         if(!league.getMember().getId().equals(usn))
             throw new RuntimeException();
 
+        //TODO::현재 시간 보다 이전 시간을 시작 시간으로 잡을 경우
+        if(leagueEditInfo.getStartTime().isBefore(LocalDateTime.now()))
+            throw new RuntimeException();
+
         //TODO::현재 대회 참가자보다 최대 참가인원수가 작을 경우
 
         league.editTitle(leagueEditInfo.getTitle());
@@ -59,6 +63,18 @@ public class LeagueService {
         league.changeCategory(category);
         league.changeMaxCount(leagueEditInfo.getMaxCount());
         league.changeStartTime(leagueEditInfo.getStartTime());
+    }
+
+    public void deleteLeague(@NonNull Long usn, @NonNull Long leagueId) {
+        League league = getLeagueEntity(leagueId);
+
+        //TODO::주최자와 신청 회원이 일치하지 않는 경우
+        if(!league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
+        //TODO::다른 대회 참가자들에게 대회가 취소되었음을 알려주는 로직 필요
+
+        leagueRepository.delete(league);
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {

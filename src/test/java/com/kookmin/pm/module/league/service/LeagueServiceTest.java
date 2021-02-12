@@ -159,4 +159,30 @@ class LeagueServiceTest {
                 .hasFieldOrPropertyWithValue("description", leagueEditInfo.getDescription())
                 .hasFieldOrPropertyWithValue("category", category);
     }
+
+    @Test
+    @DisplayName("deleteLeague 메소드 성공 테스트")
+    public void deleteLeague_success_test() {
+        Member host = memberRepository.findByUid("dlwlsrn9412@kookmin.ac.kr").get();
+
+        LocalDateTime startTime = LocalDateTime.of(2021, 11, 20, 12, 0, 0);
+
+        LeagueCreateInfo leagueCreateInfo = new LeagueCreateInfo();
+        leagueCreateInfo.setActivityArea("서울");
+        leagueCreateInfo.setCategory("BOARD_GAME");
+        leagueCreateInfo.setDescription("리그 소개");
+        leagueCreateInfo.setLeagueType("LEAGUE");
+        leagueCreateInfo.setMaxCount(30);
+        leagueCreateInfo.setParticipantType("INDIVIDUAL");
+        leagueCreateInfo.setStartTime(startTime);
+        leagueCreateInfo.setTitle("서울 체스 리그");
+
+        Long id = leagueService.openLeague(host.getId(), leagueCreateInfo);
+
+        leagueService.deleteLeague(host.getId(), id);
+
+        League league = leagueRepository.findById(id).orElse(null);
+
+        assertThat(league).isNull();
+    }
 }
