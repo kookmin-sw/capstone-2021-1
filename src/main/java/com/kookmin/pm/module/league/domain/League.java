@@ -2,6 +2,7 @@ package com.kookmin.pm.module.league.domain;
 
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.member.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -59,4 +60,18 @@ public class League {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CATEGORY_ID")
     private Category category;
+
+    @Builder
+    public League(String title, String description, String activityArea, Integer maxCount, LeagueType leagueType,
+                  ParticipantType participantType, LocalDateTime startTime, Member member, Category category) {
+         this.title = title;
+         this.description = description;
+         this.activityArea = activityArea;
+         this.maxCount = maxCount;
+         this.type = leagueType;
+         this.participantType = participantType;
+         this.startTime = startTime;
+         this.member = member;
+         this.category = category;
+    }
 }
