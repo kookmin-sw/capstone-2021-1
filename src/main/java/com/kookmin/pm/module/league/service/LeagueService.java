@@ -3,10 +3,7 @@ package com.kookmin.pm.module.league.service;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.league.domain.*;
-import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
-import com.kookmin.pm.module.league.dto.LeagueDetails;
-import com.kookmin.pm.module.league.dto.LeagueEditInfo;
-import com.kookmin.pm.module.league.dto.LeagueSearchCondition;
+import com.kookmin.pm.module.league.dto.*;
 import com.kookmin.pm.module.league.repository.LeagueParticipantsRepository;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 
@@ -227,6 +224,28 @@ public class LeagueService {
             throw new RuntimeException();
 
         league.endLeague();
+    }
+
+    public List<LeagueParticipantDetails> findMyParticipationRequest(@NonNull Long usn) {
+        Member member = getMemberEntity(usn);
+
+        List<LeagueParticipants> requestList = leagueParticipantsRepository
+                .findByMemberAndStatus(member, LeagueParticipantsStatus.PENDING);
+
+        List<LeagueParticipantDetails> requestDetails = new ArrayList<>();
+
+        for(LeagueParticipants request : requestList) {
+            LeagueParticipantDetails requestDetail = new LeagueParticipantDetails(request);
+            LeagueDetails leagueDetails = lookupLeague(request.getLeague().getId(), LeagueLookupType.WITH_HOST);
+            MemberDetails memberDetails = memberService.lookUpMemberDetails(usn, LookupType.WITHIMAGE);
+
+            requestDetail.setLeague(leagueDetails);
+            requestDetail.setMember(memberDetails);
+
+            requestDetails.add(requestDetail);
+        }
+
+        return requestDetails;
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
