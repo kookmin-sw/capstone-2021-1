@@ -22,7 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -239,6 +241,34 @@ public class LeagueService {
         }
 
         return requestDetails;
+    }
+
+    public Map<String, Object> findLeagueParticipationRequest(@NonNull Long usn) {
+        Map<String, Object> map = new HashMap<>();
+        Member member = getMemberEntity(usn);
+
+        List<League> leagueList = leagueRepository.findByMemberAndStatus(member, LeagueStatus.SCHEDULED);
+        List<String> leagueTitle = new ArrayList<>();
+
+        int index = 0;
+
+        for(League league : leagueList) {
+            leagueTitle.add(league.getTitle());
+            List<LeagueParticipants> requestList = leagueParticipantsRepository
+                    .findByLeagueAndStatus(league, LeagueParticipantsStatus.PENDING);
+
+            List<LeagueParticipantDetails> requestDetailList = new ArrayList<>();
+
+            for(LeagueParticipants request : requestList)
+                requestDetailList.add(new LeagueParticipantDetails(request));
+
+            map.put(Integer.toString(index), requestDetailList);
+            index++;
+        }
+
+        map.put("league", leagueTitle);
+
+        return map;
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {

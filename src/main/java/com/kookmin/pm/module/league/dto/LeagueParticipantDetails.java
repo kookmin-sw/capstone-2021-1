@@ -18,5 +18,7 @@ public class LeagueParticipantDetails {
     public LeagueParticipantDetails(LeagueParticipants participants) {
         this.id = participants.getId();
         this.status = participants.getStatus().toString();
+        this.member = new MemberDetails(participants.getMember());
+        this.league = new LeagueDetails(participants.getLeague());
     }
 }
