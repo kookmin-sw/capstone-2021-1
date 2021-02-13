@@ -82,6 +82,8 @@ public class LeagueService {
 
         //TODO::다른 대회 참가자들에게 대회가 취소되었음을 알려주는 로직 필요
 
+        //TODO::대회 참가자들, 신청 요청자들 정보도 같이 삭제해야함
+
         leagueRepository.delete(league);
     }
 
@@ -208,7 +210,23 @@ public class LeagueService {
         if(!league.getStatus().equals(LeagueStatus.SCHEDULED))
             throw new RuntimeException();
 
+        leagueParticipantsRepository.deleteByLeagueAndStatus(league, LeagueParticipantsStatus.PENDING);
+
         league.startLeague();
+
+        //TODO::대진표 생성해줘야함
+    }
+
+    public void endLeague(@NonNull Long usn, @NonNull Long leagueId) {
+        League league = getLeagueEntity(leagueId);
+
+        if(!league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
+        if(!league.getStatus().equals(LeagueStatus.PROCEEDING))
+            throw new RuntimeException();
+
+        league.endLeague();
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
