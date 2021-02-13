@@ -45,6 +45,7 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
                         crew.activityArea, category.name, crew.createdAt))
                 .from(crewParticipants)
                 .leftJoin(crewParticipants.crew, crew)
+                .leftJoin(crew.category, category)
                 .where(crewParticipants.member.id.eq(usn),
                         crewParticipants.status.eq(CrewParticipantStatus.PARTICIPATING))
                 .fetch();

@@ -155,8 +155,6 @@ public class MatchingController {
                 .body("매칭을 종료합니다.");
     }
 
-    //TODO::내가 만든 매칭(이건 searchMatching으로 대체가 가능하긴 함)
-
     //TODO::내가 보낸 매칭 요청
     @GetMapping(value = "/member/matching/participate")
     public ResponseEntity findMyParticipationRequest(Principal principal) {
@@ -176,5 +174,18 @@ public class MatchingController {
                 .status(HttpStatus.OK)
                 .body(matchingService.findMatchingParticipationRequest(usn));
     }
+
+    @GetMapping(value = "/member/matching")
+    public ResponseEntity findMyMatching(Principal principal,
+                                         Pageable pageable,
+                                         MatchingSearchCondition searchCondition) {
+        Long usn = getPrincipalKey(principal);
+        searchCondition.setHost(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchingService.searchMatching(pageable,searchCondition).getContent());
+    }
+
 
 }
