@@ -63,6 +63,11 @@ public class LeagueService {
             throw new RuntimeException();
 
         //TODO::현재 대회 참가자보다 최대 참가인원수가 작을 경우
+        Long currentCount = leagueParticipantsRepository
+                .countByLeagueAndStatus(league, LeagueParticipantsStatus.PARTICIPATING) + 1L;
+
+        if(currentCount > leagueEditInfo.getMaxCount())
+            throw new RuntimeException();
 
         league.editTitle(leagueEditInfo.getTitle());
         league.editDescription(leagueEditInfo.getDescription());

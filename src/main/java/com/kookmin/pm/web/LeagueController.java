@@ -48,6 +48,8 @@ public class LeagueController {
                 .body("리그 정보를 수정하였습니다.");
     }
 
+
+
     @PostMapping(value = "/league/participate/{leagueId}")
     public ResponseEntity participateLeague(Principal principal,
                                             @PathVariable(name = "leagueId") Long leagueId) {
