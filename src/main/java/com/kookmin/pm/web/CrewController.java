@@ -139,4 +139,13 @@ public class CrewController {
                 .status(HttpStatus.OK)
                 .body(crewService.findMyParticiPateRequest(usn));
     }
+
+    @GetMapping(value = "/member/crew/participate/in")
+    public ResponseEntity findParticipatedCrew(Principal principal) {
+        Long usn = Long.parseLong(principal.getName());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(crewService.findParticipatedCrew(usn));
+    }
 }

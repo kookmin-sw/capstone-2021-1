@@ -114,6 +114,8 @@ public class LeagueController {
                 .body("리그를 탈퇴하셨습니다.");
     }
 
+    
+
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }
