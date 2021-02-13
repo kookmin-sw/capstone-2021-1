@@ -187,5 +187,15 @@ public class MatchingController {
                 .body(matchingService.searchMatching(pageable,searchCondition).getContent());
     }
 
+    @GetMapping(value = "/member/matching/participate/in")
+    public ResponseEntity findParticipatedMatching(Principal principal,
+                                                   MatchingSearchCondition searchCondition) {
+        Long usn = getPrincipalKey(principal);
+        searchCondition.setParticipant(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchingService.findParticipatedMatching(searchCondition));
+    }
 
 }
