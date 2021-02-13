@@ -81,7 +81,34 @@ public class LeagueController {
                 .body("리그 참가요청을 승인하셨습니다.");
     }
 
+    @DeleteMapping(value = "/league/participate/reject/{requestId}")
+    public ResponseEntity rejectParticipationRequest(Principal principal,
+                                                     @PathVariable(name = "requestId") Long requestId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.rejectParticipationRequest(usn, requestId);
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그 참가요청을 거절하셨습니다.");
+    }
+
+    @DeleteMapping(value = "/league/participate/cancel/{requestId}")
+    public ResponseEntity cancelParticipationRequest(Principal principal,
+                                                     @PathVariable(name = "requestId") Long requestId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.quitParticipationRequest(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그 참가요청을 거절하셨습니다.");
+    }
+
+    @DeleteMapping(value = "/league/participate/{leagueId}")
+    public ResponseEntity quitParticipation(Principal principal,
+                                            @PathVariable(name="leagueId") Long leagueId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService
+    }
 
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());

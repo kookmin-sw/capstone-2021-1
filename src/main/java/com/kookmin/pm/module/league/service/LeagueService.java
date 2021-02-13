@@ -178,6 +178,19 @@ public class LeagueService {
         leagueParticipantsRepository.delete(request);
     }
 
+    public void quitParticipation(@NonNull Long participantUsn, @NonNull Long leagueId) {
+        Member participant = getMemberEntity(participantUsn);
+        League league = getLeagueEntity(leagueId);
+        LeagueParticipants leagueParticipants = leagueParticipantsRepository
+                .findByMemberAndLeague(participant,league).orElseThrow(EntityNotFoundException::new);
+
+        //TODO::참여중이 아닌 경우
+        if(!leagueParticipants.getStatus().equals(LeagueParticipantsStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        leagueParticipantsRepository.delete(leagueParticipants);
+    }
+
     public LeagueDetails lookupLeague(@NonNull Long leagueId, @NonNull LeagueLookupType lookupType) {
         League league = getLeagueEntity(leagueId);
 
