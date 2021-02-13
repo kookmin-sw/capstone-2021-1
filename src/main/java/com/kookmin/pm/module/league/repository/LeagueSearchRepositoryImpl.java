@@ -30,10 +30,10 @@ public class LeagueSearchRepositoryImpl extends PmQuerydslRepositorySupport impl
     public List<Member> findMemberInLeague(Long leagueId, LeagueParticipantsStatus status) {
         return getQueryFactory()
                 .select(member)
-                .from(league)
+                .from(leagueParticipants)
                 .leftJoin(leagueParticipants.member, member)
-                .where(leagueParticipants.status.eq(status),
-                        leagueParticipants.league.id.eq(leagueId))
+                .where(leagueParticipantsLeagueEq(leagueId),
+                        leagueParticipantsStatusEq(status))
                 .fetch();
     }
 
@@ -55,6 +55,14 @@ public class LeagueSearchRepositoryImpl extends PmQuerydslRepositorySupport impl
                 hostEq(searchCondition.getHost()),
                 categoryEq(searchCondition.getCategory()))
         );
+    }
+
+    public BooleanExpression leagueParticipantsStatusEq(LeagueParticipantsStatus status) {
+        return status==null ? null : leagueParticipants.status.eq(status);
+    }
+
+    public BooleanExpression leagueParticipantsLeagueEq(Long leagueId) {
+        return leagueId==null ? null : leagueParticipants.league.id.eq(leagueId);
     }
 
     public BooleanExpression titleContains(String title) {

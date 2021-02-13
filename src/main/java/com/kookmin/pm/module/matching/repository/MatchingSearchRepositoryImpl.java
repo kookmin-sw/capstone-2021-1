@@ -37,6 +37,22 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
                 .fetch();
     }
 
+    @Override
+    public List<MatchingDetails> findParticipatedMatching(MatchingSearchCondition searchCondition) {
+        return getQueryFactory()
+                .select(new QMatchingDetails(matching.id, matching.title, matching.description, matching.startTime,
+                        matching.endTime, matching.latitude, matching.longitude, matching.status.stringValue(),
+                        matching.maxCount, category.name))
+                .from(matchingParticipant)
+                .leftJoin(matchingParticipant.member, member)
+                .leftJoin(matchingParticipant.matching, matching)
+                .leftJoin(matching.category, category)
+                .where(matchingParticipant.member.id.eq(searchCondition.getParticipant()),
+                        statusEq(searchCondition.getStatus()),
+                        matchingParticipant.status.eq(ParticipantStatus.PARTICIPATING))
+                .fetch();
+    }
+
     public Page<MatchingDetails> searchMatching(Pageable pageable, MatchingSearchCondition condition) {
         return applyPagination(pageable, contentQuery -> contentQuery
         .select(new QMatchingDetails(matching.id, matching.title, matching.description, matching.startTime,
@@ -52,6 +68,8 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
                 categoryEq(condition.getCategory()))
         .orderBy(matching.startTime.desc()));
     }
+
+
 
     private BooleanExpression titleContains(String title) {
         return title==null? null : matching.title.contains(title);

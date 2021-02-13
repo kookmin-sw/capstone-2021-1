@@ -63,6 +63,11 @@ public class LeagueService {
             throw new RuntimeException();
 
         //TODO::현재 대회 참가자보다 최대 참가인원수가 작을 경우
+        Long currentCount = leagueParticipantsRepository
+                .countByLeagueAndStatus(league, LeagueParticipantsStatus.PARTICIPATING) + 1L;
+
+        if(currentCount > leagueEditInfo.getMaxCount())
+            throw new RuntimeException();
 
         league.editTitle(leagueEditInfo.getTitle());
         league.editDescription(leagueEditInfo.getDescription());
@@ -82,6 +87,7 @@ public class LeagueService {
         //TODO::다른 대회 참가자들에게 대회가 취소되었음을 알려주는 로직 필요
 
         //TODO::대회 참가자들, 신청 요청자들 정보도 같이 삭제해야함
+        leagueParticipantsRepository.deleteByLeague(league);
 
         leagueRepository.delete(league);
     }
@@ -90,8 +96,19 @@ public class LeagueService {
         Member participant = getMemberEntity(usn);
         League league = getLeagueEntity(leagueId);
 
+        //TODO::참가 신청한 사람이 호스트인 경우
+        if(league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
         //TODO::이미 참가중이거나 신청을 했을 경우
         if(leagueParticipantsRepository.findByMemberAndLeague(participant,league).isPresent())
+            throw new RuntimeException();
+
+        //TODO::참가 인원이 다 찬 경우
+        long currentCount = leagueParticipantsRepository
+                .countByLeagueAndStatus(league, LeagueParticipantsStatus.PARTICIPATING) + 1L;
+
+        if(currentCount >= league.getMaxCount())
             throw new RuntimeException();
 
         LeagueParticipants request = LeagueParticipants.builder()
@@ -159,6 +176,19 @@ public class LeagueService {
             throw new RuntimeException();
 
         leagueParticipantsRepository.delete(request);
+    }
+
+    public void quitParticipation(@NonNull Long participantUsn, @NonNull Long leagueId) {
+        Member participant = getMemberEntity(participantUsn);
+        League league = getLeagueEntity(leagueId);
+        LeagueParticipants leagueParticipants = leagueParticipantsRepository
+                .findByMemberAndLeague(participant,league).orElseThrow(EntityNotFoundException::new);
+
+        //TODO::참여중이 아닌 경우
+        if(!leagueParticipants.getStatus().equals(LeagueParticipantsStatus.PARTICIPATING))
+            throw new RuntimeException();
+
+        leagueParticipantsRepository.delete(leagueParticipants);
     }
 
     public LeagueDetails lookupLeague(@NonNull Long leagueId, @NonNull LeagueLookupType lookupType) {

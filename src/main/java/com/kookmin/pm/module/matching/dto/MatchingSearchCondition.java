@@ -18,6 +18,7 @@ public class MatchingSearchCondition {
     private String status;
     private Integer maxCount;
     private Long host;
+    private Long participant;
     private Double latitude;
     private Double longitude;
     private String category;

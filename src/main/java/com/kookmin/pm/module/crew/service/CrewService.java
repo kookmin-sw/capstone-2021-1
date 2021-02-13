@@ -276,6 +276,10 @@ public class CrewService {
         crewRepository.delete(crew);
     }
 
+    public List<CrewDetails> findParticipatedCrew(@NonNull Long usn) {
+        return crewRepository.findParticipatedCrew(usn);
+    }
+
     private Crew getCrewEntity(Long id) {
         return crewRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);

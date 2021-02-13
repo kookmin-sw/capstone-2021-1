@@ -39,6 +39,19 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
     }
 
     @Override
+    public List<CrewDetails> findParticipatedCrew(Long usn) {
+        return getQueryFactory()
+                .select(new QCrewDetails(crew.id, crew.name, crew.description, crew.maxCount,
+                        crew.activityArea, category.name, crew.createdAt))
+                .from(crewParticipants)
+                .leftJoin(crewParticipants.crew, crew)
+                .leftJoin(crew.category, category)
+                .where(crewParticipants.member.id.eq(usn),
+                        crewParticipants.status.eq(CrewParticipantStatus.PARTICIPATING))
+                .fetch();
+    }
+
+    @Override
     public Page<CrewDetails> searchCrew(Pageable pageable, CrewSearchCondition searchCondition) {
         return applyPagination(pageable, contentQuery -> contentQuery
         .select(new QCrewDetails(crew.id, crew.name, crew.description, crew.maxCount, crew.activityArea,
@@ -50,7 +63,8 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
                 maxCountLoe(searchCondition.getMaxCount()),
                 activityAreaEq(searchCondition.getActivityArea()),
                 categoryEq(searchCondition.getCategory()),
-                hostEq(searchCondition.getHost()))
+                hostEq(searchCondition.getHost())
+                )
         .orderBy(crew.createdAt.desc())
         );
     }
@@ -78,5 +92,4 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
     public BooleanExpression crewIdEq(Long crewId) {
         return crewId==null? null : crewParticipants.crew.id.eq(crewId);
     }
-
 }

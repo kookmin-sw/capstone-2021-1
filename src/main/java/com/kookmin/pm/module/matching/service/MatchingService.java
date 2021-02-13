@@ -381,4 +381,8 @@ public class MatchingService {
         return matchingRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
     }
+
+    public List<MatchingDetails> findParticipatedMatching(MatchingSearchCondition searchCondition) {
+        return matchingRepository.findParticipatedMatching(searchCondition);
+    }
 }
