@@ -16,6 +16,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -37,6 +38,7 @@ public class LeagueDetails {
     private String status;
     private MemberDetails host;
     private String category;
+    private List<MemberDetails> participants;
 
     public LeagueDetails(League league) {
         this.id = league.getId();

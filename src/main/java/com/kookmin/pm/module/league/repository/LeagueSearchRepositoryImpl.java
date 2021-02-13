@@ -5,6 +5,7 @@ import com.kookmin.pm.module.league.domain.*;
 import com.kookmin.pm.module.league.dto.LeagueDetails;
 import com.kookmin.pm.module.league.dto.LeagueSearchCondition;
 import com.kookmin.pm.module.league.dto.QLeagueDetails;
+import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.QMember;
 import com.kookmin.pm.support.util.PmQuerydslRepositorySupport;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -12,14 +13,28 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.kookmin.pm.module.category.domain.QCategory.*;
 import static com.kookmin.pm.module.league.domain.QLeague.*;
+import static com.kookmin.pm.module.league.domain.QLeagueParticipants.*;
 import static com.kookmin.pm.module.member.domain.QMember.*;
 
 @Repository
 public class LeagueSearchRepositoryImpl extends PmQuerydslRepositorySupport implements LeagueSearchRepository {
     public LeagueSearchRepositoryImpl() {
         super(League.class);
+    }
+
+    @Override
+    public List<Member> findMemberInLeague(Long leagueId, LeagueParticipantsStatus status) {
+        return getQueryFactory()
+                .select(member)
+                .from(league)
+                .leftJoin(leagueParticipants.member, member)
+                .where(leagueParticipants.status.eq(status),
+                        leagueParticipants.league.id.eq(leagueId))
+                .fetch();
     }
 
     @Override

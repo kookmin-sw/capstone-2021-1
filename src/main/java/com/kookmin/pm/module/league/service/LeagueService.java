@@ -13,6 +13,7 @@ import com.kookmin.pm.module.league.repository.LeagueRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
+import com.kookmin.pm.module.member.service.LookupType;
 import com.kookmin.pm.module.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -162,11 +165,28 @@ public class LeagueService {
 
         if(lookupType.equals(LeagueLookupType.DEFAULT)) {
             return new LeagueDetails(league);
-        } else if(lookupType.equals(LeagueLookupType.WITH_PARTICIPANTS)) {
+        } else if(lookupType.equals(LeagueLookupType.WITH_HOST)) {
             LeagueDetails leagueDetails = new LeagueDetails(league);
             MemberDetails memberDetails = new MemberDetails(league.getMember());
 
             leagueDetails.setHost(memberDetails);
+
+            return leagueDetails;
+        } else if(lookupType.equals(LeagueLookupType.WITH_PARTICIPANTS)) {
+            LeagueDetails leagueDetails = new LeagueDetails(league);
+            MemberDetails memberDetails = new MemberDetails(league.getMember());
+            leagueDetails.setHost(memberDetails);
+
+            List<Member> participants = leagueRepository
+                    .findMemberInLeague(leagueId, LeagueParticipantsStatus.PARTICIPATING);
+
+            List<MemberDetails> participantDetails = new ArrayList<>();
+
+            for(Member participant : participants) {
+                participantDetails.add(memberService.lookUpMemberDetails(participant.getId(), LookupType.WITHIMAGE));
+            }
+
+            leagueDetails.setParticipants(participantDetails);
 
             return leagueDetails;
         }
@@ -176,6 +196,11 @@ public class LeagueService {
 
     public Page<LeagueDetails> searchLeague(@NonNull Pageable pageable, @NonNull LeagueSearchCondition searchCondition) {
         return leagueRepository.searchLeague(pageable, searchCondition);
+    }
+
+    //TODO::토너먼트는 시작시 매칭을 생성해주는 시퀀스, 리그도 마찬가지로 미리 생성
+    public void startLeague(@NonNull Long usn, @NonNull Long leagueId) {
+
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
