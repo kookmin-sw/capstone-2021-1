@@ -15,4 +15,5 @@ public interface LeagueParticipantsRepository extends JpaRepository<LeaguePartic
     public List<LeagueParticipants> findByLeagueAndStatus(League league, LeagueParticipantsStatus status);
     public Long countByLeagueAndStatus(League league, LeagueParticipantsStatus status);
     public void deleteByLeagueAndStatus(League league, LeagueParticipantsStatus status);
+    public void deleteByLeague(League league);
 }

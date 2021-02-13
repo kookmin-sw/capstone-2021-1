@@ -48,7 +48,16 @@ public class LeagueController {
                 .body("리그 정보를 수정하였습니다.");
     }
 
+    @DeleteMapping(value = "/league/{leagueId}")
+    public ResponseEntity deleteLeague(Principal principal,
+                                       @PathVariable(name = "leagueId") Long leagueId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.deleteLeague(usn, leagueId);
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그를 삭제하셨습니다.");
+    }
 
     @PostMapping(value = "/league/participate/{leagueId}")
     public ResponseEntity participateLeague(Principal principal,

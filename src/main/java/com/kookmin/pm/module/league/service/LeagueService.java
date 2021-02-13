@@ -87,6 +87,7 @@ public class LeagueService {
         //TODO::다른 대회 참가자들에게 대회가 취소되었음을 알려주는 로직 필요
 
         //TODO::대회 참가자들, 신청 요청자들 정보도 같이 삭제해야함
+        leagueParticipantsRepository.deleteByLeague(league);
 
         leagueRepository.delete(league);
     }
