@@ -32,7 +32,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 @SpringBootTest
 @Transactional
 class CrewServiceTest {
@@ -277,7 +277,7 @@ class CrewServiceTest {
                 .orElseThrow(EntityNotFoundException::new);
 
         crewService.approveParticipationRequest(host.getId(), crewParticipants.getId());
-        crewService.deportParticipant(host.getId(), crew.getId(), crewParticipants.getId());
+        crewService.deportParticipant(host.getId(), crew.getId(), participant.getId());
 
         assertThat(crewParticipantsRepository.countCrewParticipantsByCrewAndStatus(crew, CrewParticipantStatus.PENDING))
                 .isEqualTo(0L);
