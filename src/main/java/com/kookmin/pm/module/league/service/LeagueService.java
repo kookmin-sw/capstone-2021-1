@@ -200,7 +200,15 @@ public class LeagueService {
 
     //TODO::토너먼트는 시작시 매칭을 생성해주는 시퀀스, 리그도 마찬가지로 미리 생성
     public void startLeague(@NonNull Long usn, @NonNull Long leagueId) {
+        League league = getLeagueEntity(leagueId);
 
+        if(!league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
+        if(!league.getStatus().equals(LeagueStatus.SCHEDULED))
+            throw new RuntimeException();
+
+        league.startLeague();
     }
 
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
