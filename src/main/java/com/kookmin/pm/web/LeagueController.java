@@ -33,6 +33,17 @@ public class LeagueController {
                 .body("대회를 생성했습니다.");
     }
 
+    @PostMapping(value = "/league/participate/{leagueId}")
+    public ResponseEntity participateLeague(Principal principal,
+                                            @PathVariable(name = "leagueId") Long leagueId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.participateLeague(usn, leagueId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("대회에 참여 신청을 했습니다.");
+    }
+
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }

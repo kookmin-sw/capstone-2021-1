@@ -90,8 +90,19 @@ public class LeagueService {
         Member participant = getMemberEntity(usn);
         League league = getLeagueEntity(leagueId);
 
+        //TODO::참가 신청한 사람이 호스트인 경우
+        if(league.getMember().getId().equals(usn))
+            throw new RuntimeException();
+
         //TODO::이미 참가중이거나 신청을 했을 경우
         if(leagueParticipantsRepository.findByMemberAndLeague(participant,league).isPresent())
+            throw new RuntimeException();
+
+        //TODO::참가 인원이 다 찬 경우
+        long currentCount = leagueParticipantsRepository
+                .countByLeagueAndStatus(league, LeagueParticipantsStatus.PARTICIPATING) + 1L;
+
+        if(currentCount >= league.getMaxCount())
             throw new RuntimeException();
 
         LeagueParticipants request = LeagueParticipants.builder()
