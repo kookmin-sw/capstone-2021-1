@@ -100,14 +100,18 @@ public class LeagueController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("리그 참가요청을 거절하셨습니다.");
+                .body("리그 참가요청을 취소하셨습니다.");
     }
 
     @DeleteMapping(value = "/league/participate/{leagueId}")
     public ResponseEntity quitParticipation(Principal principal,
                                             @PathVariable(name="leagueId") Long leagueId) {
         Long usn = getPrincipalKey(principal);
-        leagueService
+        leagueService.quitParticipation(usn, leagueId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그를 탈퇴하셨습니다.");
     }
 
     private Long getPrincipalKey(Principal principal) {
