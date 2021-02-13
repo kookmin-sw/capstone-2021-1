@@ -235,14 +235,7 @@ public class LeagueService {
         List<LeagueParticipantDetails> requestDetails = new ArrayList<>();
 
         for(LeagueParticipants request : requestList) {
-            LeagueParticipantDetails requestDetail = new LeagueParticipantDetails(request);
-            LeagueDetails leagueDetails = lookupLeague(request.getLeague().getId(), LeagueLookupType.WITH_HOST);
-            MemberDetails memberDetails = memberService.lookUpMemberDetails(usn, LookupType.WITHIMAGE);
-
-            requestDetail.setLeague(leagueDetails);
-            requestDetail.setMember(memberDetails);
-
-            requestDetails.add(requestDetail);
+            requestDetails.add(new LeagueParticipantDetails(request));
         }
 
         return requestDetails;
