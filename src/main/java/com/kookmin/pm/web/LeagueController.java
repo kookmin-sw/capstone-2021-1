@@ -44,6 +44,17 @@ public class LeagueController {
                 .body("대회에 참여 신청을 했습니다.");
     }
 
+    @PutMapping(value = "/league/participate/approve/{requestId}")
+    public ResponseEntity approveParticipationRequest(Principal principal,
+                                                      @PathVariable(name="requestId") Long requestId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.approveParticipationRequest(usn, requestId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그 참가요청을 승인하셨습니다.");
+    }
+
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }
