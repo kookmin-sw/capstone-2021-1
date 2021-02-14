@@ -21,5 +21,6 @@ public class LeagueSearchCondition {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startTime;
     private Long host;
+    private Long participant;
     private String category;
 }

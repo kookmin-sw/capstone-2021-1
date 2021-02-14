@@ -11,5 +11,6 @@ import java.util.List;
 
 public interface LeagueSearchRepository {
     public List<Member> findMemberInLeague(Long leagueId, LeagueParticipantsStatus status);
+    public List<LeagueDetails> findParticipatedLeague(LeagueSearchCondition searchCondition);
     public Page<LeagueDetails> searchLeague(Pageable pageable, LeagueSearchCondition searchCondition);
 }

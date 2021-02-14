@@ -38,6 +38,20 @@ public class LeagueSearchRepositoryImpl extends PmQuerydslRepositorySupport impl
     }
 
     @Override
+    public List<LeagueDetails> findParticipatedLeague(LeagueSearchCondition searchCondition) {
+        return getQueryFactory()
+                .select(new QLeagueDetails(league.id, league.title, league.description, league.activityArea,
+                        league.type, league.maxCount, league.participantType, league.createdAt, league.startTime,
+                        league.endTime, league.status, category.name))
+                .from(leagueParticipants)
+                .leftJoin(leagueParticipants.league, league)
+                .leftJoin(league.category, category)
+                .where(statusEq(searchCondition.getStatus()),
+                        participantEq(searchCondition.getParticipant()))
+                .fetch();
+    }
+
+    @Override
     public Page<LeagueDetails> searchLeague(Pageable pageable, LeagueSearchCondition searchCondition) {
         return applyPagination(pageable, contentQuery -> contentQuery
         .select(new QLeagueDetails(league.id, league.title, league.description, league.activityArea,
@@ -95,5 +109,8 @@ public class LeagueSearchRepositoryImpl extends PmQuerydslRepositorySupport impl
 
     public BooleanExpression categoryEq(String category) {
         return category==null? null : league.category.name.eq(category);
+    }
+    public BooleanExpression participantEq(Long participant) {
+        return participant==null? null : leagueParticipants.member.id.eq(participant);
     }
 }
