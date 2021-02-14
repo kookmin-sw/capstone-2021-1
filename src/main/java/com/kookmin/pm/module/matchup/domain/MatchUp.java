@@ -23,12 +23,12 @@ public class MatchUp {
     private MatchUpStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
-    private Member participant1;
+    @JoinColumn(name = "FIRST_MEMBER_ID")
+    private Member firstMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
-    private Member participant2;
+    @JoinColumn(name = "SECOND_MEMBER_ID")
+    private Member secondMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="LEAGUE_ID")
