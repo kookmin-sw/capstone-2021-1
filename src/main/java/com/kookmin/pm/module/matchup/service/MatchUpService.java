@@ -1,7 +1,10 @@
 package com.kookmin.pm.module.matchup.service;
 
 import com.kookmin.pm.module.league.domain.League;
+import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
+import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
 import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
 import com.kookmin.pm.module.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchUpService {
     private final MatchUpRepository matchUpRepository;
+    private final MatchingRepository matchingRepository;
 
     public void createIndividualLeagueMatchUp(@NonNull League league,
                                               @NonNull List<Member> participantList) {
@@ -33,11 +37,22 @@ public class MatchUpService {
         }
     }
 
-    //TODO::토너먼트 매치업
-
-    public void startMatching(@NonNull Long usn, @NonNull Long matchUpId) {
+    public Long startMatching(@NonNull Long usn,
+                              @NonNull Long matchUpId,
+                              @NonNull MatchUpCreateInfo matchUpCreateInfo) {
         //TODO::리그에 지역제한있었는데 어떻게 처리할거냐
         MatchUp matchUp = getMatchUpEntity(matchUpId);
+        League league = matchUp.getLeague();
+
+        if(!(matchUp.getFirstMember().getId().equals(usn) || matchUp.getSecondMember().getId().equals(usn)))
+            throw new RuntimeException();
+
+        //TODO::시작 시간 유효성 체크
+
+        Matching matching = buildMatchingByMatchUp(league, matchUpCreateInfo);
+        matching = matchingRepository.save(matching);
+
+        return matching.getId();
     }
 
     private MatchUp getMatchUpEntity(Long matchUpId) {
@@ -49,6 +64,17 @@ public class MatchUpService {
                 .league(league)
                 .first(first)
                 .second(second)
+                .build();
+    }
+
+    private Matching buildMatchingByMatchUp(League league, MatchUpCreateInfo matchUpCreateInfo) {
+        return Matching.builder()
+                .title(league.getTitle())
+                .category(league.getCategory())
+                .latitude(matchUpCreateInfo.getLatitude())
+                .longitude(matchUpCreateInfo.getLongitude())
+                .maxCount(2)
+                .startTime(matchUpCreateInfo.getStartTime())
                 .build();
     }
 }
