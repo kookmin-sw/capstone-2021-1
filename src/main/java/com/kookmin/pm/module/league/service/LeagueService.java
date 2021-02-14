@@ -301,6 +301,10 @@ public class LeagueService {
         return map;
     }
 
+    public List<LeagueDetails> findParticipatedLeague(LeagueSearchCondition searchCondition) {
+        return leagueRepository.findParticipatedLeague(searchCondition);
+    }
+
     private League buildLeagueEntity(@NonNull LeagueCreateInfo leagueCreateInfo, @NonNull Member host) {
         Category category = getCategoryEntity(leagueCreateInfo.getCategory());
 

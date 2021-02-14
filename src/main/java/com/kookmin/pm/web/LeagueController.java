@@ -1,15 +1,19 @@
 package com.kookmin.pm.web;
 
 import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
+import com.kookmin.pm.module.league.dto.LeagueDetails;
 import com.kookmin.pm.module.league.dto.LeagueEditInfo;
+import com.kookmin.pm.module.league.dto.LeagueSearchCondition;
 import com.kookmin.pm.module.league.service.LeagueLookupType;
 import com.kookmin.pm.module.league.service.LeagueService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -114,7 +118,30 @@ public class LeagueController {
                 .body("리그를 탈퇴하셨습니다.");
     }
 
-    
+    @GetMapping("/member/league")
+    public ResponseEntity findMyLeague(Principal principal,
+                                       Pageable pageable,
+                                       LeagueSearchCondition searchCondition) {
+
+        Long usn = getPrincipalKey(principal);
+        searchCondition.setHost(usn);
+
+        List<LeagueDetails> response = leagueService.searchLeague(pageable, searchCondition).getContent();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @GetMapping("/member/league/participate/in")
+    public ResponseEntity findParticipatedLeague(Principal principal,
+                                                 LeagueSearchCondition searchCondition) {
+        List<LeagueDetails> response = leagueService.findParticipatedLeague(searchCondition);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
 
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
