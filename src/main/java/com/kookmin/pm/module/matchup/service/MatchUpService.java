@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -17,8 +18,8 @@ import java.util.List;
 public class MatchUpService {
     private final MatchUpRepository matchUpRepository;
 
-    public void createIndividualMatchUp(@NonNull League league,
-                                        @NonNull List<Member> participantList) {
+    public void createIndividualLeagueMatchUp(@NonNull League league,
+                                              @NonNull List<Member> participantList) {
 
         for(int i = 0; i < participantList.size(); ++i) {
             Member first = participantList.get(i);
@@ -32,13 +33,15 @@ public class MatchUpService {
         }
     }
 
-    //TODO::승,무,패 전적 처리
-    public void editMatchUp() {
+    //TODO::토너먼트 매치업
 
+    public void startMatching(@NonNull Long usn, @NonNull Long matchUpId) {
+        //TODO::리그에 지역제한있었는데 어떻게 처리할거냐
+        MatchUp matchUp = getMatchUpEntity(matchUpId);
     }
 
-    public void lookupMatchUp() {
-
+    private MatchUp getMatchUpEntity(Long matchUpId) {
+        return matchUpRepository.findById(matchUpId).orElseThrow(EntityNotFoundException::new);
     }
 
     private MatchUp buildMatchUp(League league, Member first, Member second) {
