@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -48,6 +49,8 @@ public class MatchUpService {
             throw new RuntimeException();
 
         //TODO::시작 시간 유효성 체크
+        if(matchUpCreateInfo.getStartTime().isBefore(LocalDateTime.now()))
+            throw new RuntimeException();
 
         Matching matching = buildMatchingByMatchUp(league, matchUpCreateInfo);
         matching = matchingRepository.save(matching);

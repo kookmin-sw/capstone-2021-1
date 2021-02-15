@@ -10,6 +10,7 @@ import com.kookmin.pm.module.league.repository.LeagueRepository;
 import com.kookmin.pm.module.league.repository.LeagueSearchRepository;
 import com.kookmin.pm.module.league.service.LeagueService;
 import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
@@ -182,6 +183,9 @@ class MatchUpServiceTest {
         Matching matching = matchingRepository.findById(matchingId).get();
 
         assertThat(matching)
-                .hasFieldOrPropertyWithValue("title", league.getTitle());
+                .hasFieldOrPropertyWithValue("title", league.getTitle())
+                .hasFieldOrPropertyWithValue("status", MatchingStatus.SCHEDULED);
     }
+
+
 }
