@@ -1,6 +1,7 @@
 package com.kookmin.pm.module.matchup.domain;
 
 import com.kookmin.pm.module.member.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,16 @@ public class MatchUpRecord {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOSER_ID")
     private Member loser;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="TYPE")
+    private RecordType type;
+
+    @Builder
+    public MatchUpRecord(MatchUp matchUp, Member winner, Member loser, RecordType type) {
+        this.matchUp = matchUp;
+        this.winner = winner;
+        this.loser = loser;
+        this.type = type;
+    }
 }

@@ -51,6 +51,10 @@ public class MatchUp {
         this.status = MatchUpStatus.PROCEEDING;
     }
 
+    public void endMatchUp() {
+        this.status = MatchUpStatus.END;
+    }
+
     public void setMatching(Matching matching) {
         this.matching = matching;
     }

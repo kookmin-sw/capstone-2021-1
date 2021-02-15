@@ -5,9 +5,13 @@ import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
+import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
+import com.kookmin.pm.module.matchup.domain.RecordType;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
+import com.kookmin.pm.module.matchup.repository.MatchUpRecordRepository;
 import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
 import com.kookmin.pm.module.member.domain.Member;
+import com.kookmin.pm.module.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,8 @@ import java.util.List;
 public class MatchUpService {
     private final MatchUpRepository matchUpRepository;
     private final MatchingRepository matchingRepository;
+    private final MemberRepository memberRepository;
+    private final MatchUpRecordRepository matchUpRecordRepository;
 
     public void createIndividualLeagueMatchUp(@NonNull League league,
                                               @NonNull List<Member> participantList) {
@@ -78,15 +84,47 @@ public class MatchUpService {
     }
 
     //TODO::대회 매칭 기권패 요청
-    public void giveUpMatching() {
+    public void giveUpMatchUp(@NonNull Long usn, @NonNull Long matchUpId, @NonNull Long matchingId) {
+        Matching matching = getMatchingEntity(matchingId);
+        MatchUp matchUp = getMatchUpEntity(matchUpId);
 
+        Member first = matchUp.getFirstMember();
+        Member second = matchUp.getSecondMember();
+
+        if(!(first.getId().equals(usn) || second.getId().equals(usn)))
+            throw new RuntimeException();
+
+        if(!matchUp.getMatching().getId().equals(matchingId))
+            throw new RuntimeException();
+
+        matchUp.endMatchUp();
+        matching.endMatching();
+
+        //TODO::매치업 전적 엔티티 생성해서 기록해야함
+        Member loser = first.getId().equals(usn)? first : second;
+        Member winner = first.getId().equals(usn)? second : first;
+
+        MatchUpRecord record = MatchUpRecord.builder()
+                .matchUp(matchUp)
+                .winner(winner)
+                .loser(loser)
+                .type(RecordType.ABSTENTION)
+                .build();
+
+        matchUpRecordRepository.save(record);
     }
+
+    //TODO::매치업 끝내기(승/패 처리)
 
     //TODO::매치업 목록 조회
 
     //TODO::매치업 목록 검색
 
     //TODO::내 매치업 목록 조회
+
+    private Member getMemberEntity(Long usn) {
+        return memberRepository.findById(usn).orElseThrow(EntityNotFoundException::new);
+    }
 
     private MatchUp getMatchUpEntity(Long matchUpId) {
         return matchUpRepository.findById(matchUpId).orElseThrow(EntityNotFoundException::new);
