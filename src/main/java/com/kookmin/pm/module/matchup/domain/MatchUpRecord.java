@@ -1,6 +1,5 @@
-package com.kookmin.pm.module.matching.domain;
+package com.kookmin.pm.module.matchup.domain;
 
-import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.member.domain.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

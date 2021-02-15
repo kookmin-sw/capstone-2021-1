@@ -189,6 +189,8 @@ public class LeagueService {
             throw new RuntimeException();
 
         leagueParticipantsRepository.delete(leagueParticipants);
+
+        //TODO::이미 리그가 시작 중인 경우 모든 매치업들을 기권패 처리하는 로직 필요
     }
 
     public LeagueDetails lookupLeague(@NonNull Long leagueId, @NonNull LeagueLookupType lookupType) {

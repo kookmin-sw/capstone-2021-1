@@ -47,6 +47,10 @@ public class MatchUp {
         this.status = MatchUpStatus.PENDING;
     }
 
+    public void startMatchUp() {
+        this.status = MatchUpStatus.PROCEEDING;
+    }
+
     public void setMatching(Matching matching) {
         this.matching = matching;
     }

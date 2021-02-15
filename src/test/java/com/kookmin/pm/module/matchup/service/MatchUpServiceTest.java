@@ -13,6 +13,7 @@ import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
+import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
 import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -168,7 +169,8 @@ class MatchUpServiceTest {
 
         matchUpService.createIndividualLeagueMatchUp(league, participants);
 
-        List<MatchUp> matchUpList = matchUpRepository.findByFirstMemberOrSecondMember(host, host);
+        List<MatchUp> matchUpList = matchUpRepository
+                .findByFirstMemberOrSecondMemberAndLeague(host, host,league);
         MatchUp matchUp = matchUpList.get(0);
 
         MatchUpCreateInfo matchUpCreateInfo = new MatchUpCreateInfo();
@@ -187,5 +189,44 @@ class MatchUpServiceTest {
                 .hasFieldOrPropertyWithValue("status", MatchingStatus.SCHEDULED);
     }
 
+    @Test
+    @DisplayName("approveMatchUp 메소드 성공 테스트")
+    public void approveMatchUp_success_test() {
+        League league = leagueRepository.findById(leagueId).get();
 
+        List<Member> participants =
+                leagueSearchRepositoryImpl.findMemberInLeague(leagueId, LeagueParticipantsStatus.PARTICIPATING);
+
+        Member host = memberRepository.findById(usn).get();
+        participants.add(host);
+
+        assertThat(participants.size())
+                .isEqualTo(4);
+
+        matchUpService.createIndividualLeagueMatchUp(league, participants);
+
+        List<MatchUp> matchUpList = matchUpRepository
+                .findByFirstMemberOrSecondMemberAndLeague(host, host, league);
+        MatchUp matchUp = matchUpList.get(0);
+
+        MatchUpCreateInfo matchUpCreateInfo = new MatchUpCreateInfo();
+        LocalDateTime startTime = LocalDateTime.of(2021, 12, 12, 12,0,0);
+
+        matchUpCreateInfo.setLatitude(30.500);
+        matchUpCreateInfo.setLongitude(128.123);
+        matchUpCreateInfo.setStartTime(startTime);
+
+        Long matchingId = matchUpService.startMatching(usn, matchUp.getId(), matchUpCreateInfo);
+        matchUpService.approveMatchUp(host.getId(), matchUp.getId(), matchingId);
+
+        Matching matching = matchingRepository.findById(matchingId).get();
+        MatchUp recentMatchUp = matchUpRepository.findById(matchUp.getId()).get();
+
+        assertThat(matching)
+                .hasFieldOrPropertyWithValue("status", MatchingStatus.PROCEEDING);
+
+        assertThat(recentMatchUp)
+                .hasFieldOrPropertyWithValue("status", MatchUpStatus.PROCEEDING)
+                .hasFieldOrPropertyWithValue("matching", matching);
+    }
 }
