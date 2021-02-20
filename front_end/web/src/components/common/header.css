@@ -1,0 +1,42 @@
+.header{
+    height:300px;
+    position:relative;
+    text-align: right;
+}
+
+.header_header{
+    background-color: #000000;
+    height: 50px;
+    width: 100%;
+    margin: auto;
+    float: right;
+    color:#ffffff;
+    padding-right: 5%;
+    line-height:50px;
+}
+
+.hamburger_bar{
+    width:50px;
+    height:100%;
+    float:right;
+    background-color:#ffffff;
+    margin-left: 20px;
+}
+
+.header_logo{
+    height:250px;
+    top:50px;
+    text-align:center;
+    position: inherit;
+    background-image: url('../../images/common/logo.jpg');
+}
+
+.logo_text{
+    font-weight: bold;
+    text-align: center;
+    line-height: 250px;
+    width:100%;
+    position:absolute;
+    margin:auto;
+    font-size:100px;
+}
