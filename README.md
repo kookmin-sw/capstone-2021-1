@@ -3,7 +3,6 @@
 팀페이지 주소: https://github.com/kookmin-sw/capstone-2021-1/
 
 
-
 ## 1. 프로잭트 소개
 
 ### 프로젝트 의미
