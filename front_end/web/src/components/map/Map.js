@@ -9,10 +9,6 @@ class Map extends React.Component {
         console.log(props)
     }
 
-    onMarkerClick(event){
-      this.props.store.dispatch(actionMarkerclick(marker_data))
-    }
-    
     map;
     markers = markerdata;
     infowindows = []
