@@ -1,6 +1,6 @@
-# 플레이 메이커
+# 플레이 메이커 (Playmaker)
 
-**팀페이지 주소** -> https://github.com/kookmin-sw/capstone-2021-1
+**팀페이지 주소** -> https://github.com/kookmin-sw/capstone-2021-1/
 
 ## 1. 프로잭트 소개
 
