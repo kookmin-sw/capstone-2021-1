@@ -65,7 +65,7 @@
 ~~~~~~~~~~
 이름:   이진구
 학번:   20143095
-역할:   Back-end(Server)
+역할:   Back-end(Server, DB)
 이메일: dlwlsrn9411@kookmin.ac.kr
 ~~~~~~~~~~
 
