@@ -41,31 +41,31 @@
 ~~~~~~~~~~
 이름:   이민규
 학번:   20163136
-역할:   팀장, Back-end(DB)
+역할:   팀장, Back-end(DB), App Design, Web Design
 이메일: bomblmk97@naver.com
 ~~~~~~~~~~
 ~~~~~~~~~~
 이름:   고동훈
 학번:   20143027
-역할:   Front-end(iOS)
+역할:   Front-end(iOS), App Design
 이메일: kdhkdh0101@gmail.com
 ~~~~~~~~~~
 ~~~~~~~~~~
 이름:   김낙원
 학번:   20113254
-역할:   Front-end(Android)
+역할:   Front-end(Android), App Design
 이메일: nwkim3254@gmail.com
 ~~~~~~~~~~
 ~~~~~~~~~~
 이름:   음승호
 학번:   20181652
-역할:   Front-end(Web)
+역할:   Front-end(Web), App Design, Web Design
 이메일: dmatmdgh49@gmail.com
 ~~~~~~~~~~
 ~~~~~~~~~~
 이름:   이진구
 학번:   20143095
-역할:   Back-end(Server, DB)
+역할:   Back-end(Server, DB), App Design
 이메일: dlwlsrn9411@kookmin.ac.kr
 ~~~~~~~~~~
 
