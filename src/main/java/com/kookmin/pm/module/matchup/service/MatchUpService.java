@@ -1,14 +1,15 @@
 package com.kookmin.pm.module.matchup.service;
 
 import com.kookmin.pm.module.league.domain.League;
+import com.kookmin.pm.module.league.repository.LeagueRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
-import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
 import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
 import com.kookmin.pm.module.matchup.domain.RecordType;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
+import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
 import com.kookmin.pm.module.matchup.repository.MatchUpRecordRepository;
 import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,6 +32,7 @@ public class MatchUpService {
     private final MatchingRepository matchingRepository;
     private final MemberRepository memberRepository;
     private final MatchUpRecordRepository matchUpRecordRepository;
+    private final LeagueRepository leagueRepository;
 
     public void createIndividualLeagueMatchUp(@NonNull League league,
                                               @NonNull List<Member> participantList) {
@@ -155,10 +158,24 @@ public class MatchUpService {
     }
 
     //TODO::매치업 목록 조회
+    public List<MatchUpDetails> getMatchUpListByLeague(@NonNull Long leagueId) {
+        League league = getLeagueEntity(leagueId);
+
+        List<MatchUp> matchUpList = matchUpRepository.findByLeague(league);
+        List<MatchUpDetails> matchUpDetailsList = new ArrayList<>();
+
+        for(MatchUp matchUp : matchUpList) {
+            MatchUpRecord record = getMatchUpRecordEntityByMatchUp(matchUp);
+            matchUpDetailsList.add(new MatchUpDetails(matchUp, record));
+        }
+
+        return matchUpDetailsList;
+    }
 
     //TODO::매치업 목록 검색
 
     //TODO::내 매치업 목록 조회
+
 
     private Member getMemberEntity(Long usn) {
         return memberRepository.findById(usn).orElseThrow(EntityNotFoundException::new);
@@ -170,6 +187,14 @@ public class MatchUpService {
 
     private Matching getMatchingEntity(Long matchingId) {
         return matchingRepository.findById(matchingId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private League getLeagueEntity(Long leagueId) {
+        return leagueRepository.findById(leagueId).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private MatchUpRecord getMatchUpRecordEntityByMatchUp(MatchUp matchUp) {
+        return matchUpRecordRepository.findByMatchUp(matchUp).orElse(null);
     }
 
     private MatchUp buildMatchUp(League league, Member first, Member second) {

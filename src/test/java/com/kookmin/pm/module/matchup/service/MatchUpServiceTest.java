@@ -17,6 +17,7 @@ import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
 import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
 import com.kookmin.pm.module.matchup.domain.RecordType;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
+import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
 import com.kookmin.pm.module.matchup.repository.MatchUpRecordRepository;
 import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -327,5 +328,26 @@ class MatchUpServiceTest {
                 .hasFieldOrPropertyWithValue("matchUp", matchUp)
                 .hasFieldOrPropertyWithValue("winner", winner)
                 .hasFieldOrPropertyWithValue("loser", loser);
+    }
+
+    @Test
+    @DisplayName("getMatchUpListByLeague 메소드 성공 테스트")
+    public void getMatchUpListByLeague_success_test() {
+        League league = leagueRepository.findById(leagueId).get();
+
+        List<Member> participants =
+                leagueSearchRepositoryImpl.findMemberInLeague(leagueId, LeagueParticipantsStatus.PARTICIPATING);
+
+        Member host = memberRepository.findById(usn).get();
+        participants.add(host);
+
+        assertThat(participants.size())
+                .isEqualTo(4);
+
+        matchUpService.createIndividualLeagueMatchUp(league, participants);
+        List<MatchUpDetails> matchUpDetailsList = matchUpService.getMatchUpListByLeague(leagueId);
+
+        for(MatchUpDetails matchUpDetails : matchUpDetailsList)
+            System.out.println(matchUpDetails);
     }
 }
