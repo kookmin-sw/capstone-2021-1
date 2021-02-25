@@ -350,4 +350,25 @@ class MatchUpServiceTest {
         for(MatchUpDetails matchUpDetails : matchUpDetailsList)
             System.out.println(matchUpDetails);
     }
+
+    @Test
+    @DisplayName("searchMyMatchUp 메소드 성공 테스트")
+    public void searchMyMatchUp_success_test() {
+        League league = leagueRepository.findById(leagueId).get();
+
+        List<Member> participants =
+                leagueSearchRepositoryImpl.findMemberInLeague(leagueId, LeagueParticipantsStatus.PARTICIPATING);
+
+        Member host = memberRepository.findById(usn).get();
+        participants.add(host);
+
+        assertThat(participants.size())
+                .isEqualTo(4);
+
+        matchUpService.createIndividualLeagueMatchUp(league, participants);
+        List<MatchUpDetails> matchUpDetailsList = matchUpService.searchMyMatchUp(host.getId());
+
+        for(MatchUpDetails matchUpDetails : matchUpDetailsList)
+            System.out.println(matchUpDetails);
+    }
 }

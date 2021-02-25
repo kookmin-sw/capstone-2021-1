@@ -189,7 +189,7 @@ public class MatchUpService {
     }
 
     public MatchUpDetails lookUpMatchUp(@NonNull Long matchUpId) {
-
+        return null;
     }
 
     private Member getMemberEntity(Long usn) {
