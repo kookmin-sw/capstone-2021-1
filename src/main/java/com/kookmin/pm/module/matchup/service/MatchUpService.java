@@ -6,6 +6,7 @@ import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
+import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
 import com.kookmin.pm.module.matchup.domain.RecordType;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
 import com.kookmin.pm.module.matchup.repository.MatchUpRecordRepository;
@@ -100,7 +101,6 @@ public class MatchUpService {
         matchUp.endMatchUp();
         matching.endMatching();
 
-        //TODO::매치업 전적 엔티티 생성해서 기록해야함
         Member loser = first.getId().equals(usn)? first : second;
         Member winner = first.getId().equals(usn)? second : first;
 
@@ -115,6 +115,44 @@ public class MatchUpService {
     }
 
     //TODO::매치업 끝내기(승/패 처리)
+    public void endMathUp(@NonNull Long winnerUsn, @NonNull Long loserUsn, @NonNull Long matchUpId) {
+        MatchUp matchUp = getMatchUpEntity(matchUpId);
+        Member firstMember = matchUp.getFirstMember();
+        Member secondMember = matchUp.getSecondMember();
+        Matching matching = matchUp.getMatching();
+
+        //TODO::진행중인 매치업이 아닌 경우
+        if(!matchUp.getStatus().equals(MatchUpStatus.PROCEEDING))
+            throw new RuntimeException();
+
+        //TODO::winner 혹은 loser가 매치업에 속해있지 않은 경우
+        if(!(firstMember.getId().equals(winnerUsn)
+                || secondMember.getId().equals(winnerUsn)))
+            throw  new RuntimeException();
+
+        if(!(firstMember.getId().equals(loserUsn)
+                || secondMember.getId().equals(loserUsn)))
+            throw  new RuntimeException();
+
+        //TODO::둘다 같은 회원을 winner와 loser로 요청했을 경우
+        if(winnerUsn.equals(loserUsn))
+            throw new RuntimeException();
+
+        matchUp.endMatchUp();
+        matching.endMatching();
+
+        Member winner = firstMember.getId().equals(winnerUsn)?firstMember:secondMember;
+        Member loser = firstMember.getId().equals(loserUsn)?firstMember:secondMember;
+
+        MatchUpRecord matchUpRecord = MatchUpRecord.builder()
+                .winner(winner)
+                .loser(loser)
+                .matchUp(matchUp)
+                .type(RecordType.MATCH_UP)
+                .build();
+
+        matchUpRecordRepository.save(matchUpRecord);
+    }
 
     //TODO::매치업 목록 조회
 

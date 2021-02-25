@@ -277,4 +277,55 @@ class MatchUpServiceTest {
                 .hasFieldOrPropertyWithValue("matchUp", matchUp)
                 .hasFieldOrPropertyWithValue("loser", host);
     }
+
+    @Test
+    @DisplayName("endMatchUp 메소드 성공 테스트")
+    public void endMatchUp_success_test() {
+        League league = leagueRepository.findById(leagueId).get();
+
+        List<Member> participants =
+                leagueSearchRepositoryImpl.findMemberInLeague(leagueId, LeagueParticipantsStatus.PARTICIPATING);
+
+        Member host = memberRepository.findById(usn).get();
+        participants.add(host);
+
+        assertThat(participants.size())
+                .isEqualTo(4);
+
+        matchUpService.createIndividualLeagueMatchUp(league, participants);
+
+        List<MatchUp> matchUpList = matchUpRepository
+                .findByFirstMemberOrSecondMemberAndLeague(host, host, league);
+        MatchUp matchUp = matchUpList.get(0);
+
+        MatchUpCreateInfo matchUpCreateInfo = new MatchUpCreateInfo();
+        LocalDateTime startTime = LocalDateTime.of(2021, 12, 12, 12,0,0);
+
+        matchUpCreateInfo.setLatitude(30.500);
+        matchUpCreateInfo.setLongitude(128.123);
+        matchUpCreateInfo.setStartTime(startTime);
+
+        Long matchingId = matchUpService.startMatching(usn, matchUp.getId(), matchUpCreateInfo);
+
+        Member winner = matchUp.getFirstMember();
+        Member loser = matchUp.getSecondMember();
+
+        matchUpService.approveMatchUp(winner.getId(),matchUp.getId(), matchingId);
+
+        matchUpService.endMathUp(winner.getId(),
+                loser.getId(), matchUp.getId());
+
+        Matching matching = matchingRepository.findById(matchingId).get();
+        MatchUp recentMatchUp = matchUpRepository.findById(matchUp.getId()).get();
+
+        MatchUpRecord record = matchUpRecordRepository.findByMatchUp(matchUp).get();
+
+        assertThat(matching).hasFieldOrPropertyWithValue("status", MatchingStatus.END);
+        assertThat(recentMatchUp).hasFieldOrPropertyWithValue("status", MatchUpStatus.END);
+        assertThat(record)
+                .hasFieldOrPropertyWithValue("type", RecordType.MATCH_UP)
+                .hasFieldOrPropertyWithValue("matchUp", matchUp)
+                .hasFieldOrPropertyWithValue("winner", winner)
+                .hasFieldOrPropertyWithValue("loser", loser);
+    }
 }
