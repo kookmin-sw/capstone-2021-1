@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface MatchUpRepository extends JpaRepository<MatchUp, Long> {
     List<MatchUp> findByLeague(League league);
     List<MatchUp> findByFirstMemberOrSecondMemberAndLeague(Member first, Member second, League league);
+    List<MatchUp> findByFirstMemberOrSecondMember(Member first, Member second);
 }

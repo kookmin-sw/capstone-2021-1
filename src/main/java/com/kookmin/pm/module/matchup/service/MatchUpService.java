@@ -172,10 +172,25 @@ public class MatchUpService {
         return matchUpDetailsList;
     }
 
-    //TODO::매치업 목록 검색
+    //TODO::매치업 목록 검색 => 이미 끝난 매치업에 대한 조회가 필요할 경우
 
     //TODO::내 매치업 목록 조회
+    public List<MatchUpDetails> searchMyMatchUp(@NonNull Long usn) {
+        Member member =getMemberEntity(usn);
+        List<MatchUp> matchUpList = matchUpRepository.findByFirstMemberOrSecondMember(member, member);
 
+        List<MatchUpDetails> matchUpDetailsList = new ArrayList<>();
+
+        for(MatchUp matchUp : matchUpList){
+            matchUpDetailsList.add(new MatchUpDetails(matchUp));
+        }
+
+        return matchUpDetailsList;
+    }
+
+    public MatchUpDetails lookUpMatchUp(@NonNull Long matchUpId) {
+
+    }
 
     private Member getMemberEntity(Long usn) {
         return memberRepository.findById(usn).orElseThrow(EntityNotFoundException::new);
