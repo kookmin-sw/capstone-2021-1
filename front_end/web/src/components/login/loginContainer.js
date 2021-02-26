@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import KakaoSignUp from "./KaKaoSignUp";
 import GoogleSignUp from "./GoogleSignUp";
+import EnrollmentButton from "./EnrollmentButton";
 
 class LoginContainer extends Component {
     
@@ -11,6 +12,7 @@ class LoginContainer extends Component {
                 <div>
                     <KakaoSignUp></KakaoSignUp>
                     <GoogleSignUp></GoogleSignUp>
+                    <EnrollmentButton></EnrollmentButton>
                 </div>
 
             </>

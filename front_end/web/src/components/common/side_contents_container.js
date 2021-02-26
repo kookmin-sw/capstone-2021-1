@@ -1,6 +1,6 @@
 import React from "react";
-import "./side_contents_container.css";
-import "./common.css";
+import "../../assets/css/Common/side_contents_container.css";
+import "../../assets/css/Common/common.css";
 
 
 function SideContentsContainer() {

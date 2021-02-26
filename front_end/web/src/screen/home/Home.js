@@ -4,8 +4,7 @@ import Header from "../../components/common/header";
 import MainContentsContainer from "../../components/common/main_contents_container";
 import SideContentsContainer from "../../components/common/side_contents_container";
 
-import "./Home.css";
-
+import "../../assets/css/Home/Home.css"
 class Home extends React.Component {
   
   componentDidMount() {

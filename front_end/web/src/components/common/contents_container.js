@@ -1,6 +1,6 @@
 import React from "react";
-import "./contents_container.css";
-import "./common.css";
+import "../../assets/css/Common/contents_container";
+import "../../assets/css/Common/common.css";
 
 
 function ContentsContainer() {

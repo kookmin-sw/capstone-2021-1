@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "../../components/common/header";
 import LoginContentsContainer from "../../components/login/loginContainer";
-import "./Login.css";
 
 class Login extends React.Component {
 
@@ -10,7 +9,6 @@ class Login extends React.Component {
       <section className="container">
         <Header/>
         <LoginContentsContainer>
-            
         </LoginContentsContainer>
       </section>
     );
