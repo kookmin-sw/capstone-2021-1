@@ -1,7 +1,7 @@
 import React from "react";
 //import axios from "axios";
 import Header from "../../components/common/header";
-import "./Matching.css";
+import "../../assets/css/Matching/Matching.css";
 import Map from "../../components/map/Map";
 import { connect } from 'react-redux';
 import { actionMarkerclick } from '../../redux/actions/index';

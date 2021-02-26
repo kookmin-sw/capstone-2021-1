@@ -1,6 +1,6 @@
 import React from "react";
-import "./header.css";
-import Hamburger_icon from '../../images/common/Hamburger_icon.png';
+import "../../assets/css/Common/header.css";
+import Hamburger_icon from '../../assets/images/common/Hamburger_icon.png';
 
 function Header() {
   return (

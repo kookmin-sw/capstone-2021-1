@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import "./MarkerInfo.css";
+import "../../assets/css/Matching/MarkerInfo.css";
 class MarkerInfo extends Component {
     render() {
         return (
