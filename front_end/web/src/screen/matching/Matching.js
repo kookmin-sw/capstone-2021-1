@@ -1,47 +1,48 @@
+/*global kakao*/
 import React from "react";
-//import axios from "axios";
+import { markerdata } from "../../components/map/markerData"
 import Header from "../../components/common/header";
-import "../../assets/css/Matching/Matching.css";
-import Map from "../../components/map/Map";
-import { connect } from 'react-redux';
-import { actionMarkerclick } from '../../redux/actions/index';
 import MarkerInfo from "../../components/map/MarkerInfo";
 
 class Matching extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentDidMount() {
-    // 전체 데이터 받아오기
-    // 1. 매칭데이터
-    // 2. 크루데이터
-    // 3. 대회데이터
-  }
+  
+map;
+markers = markerdata;
+
+componentDidMount(){
+    var container = document.getElementById('myMap'); //지도를 담을 영역의 DOM 레퍼런스
+    var options = { //지도를 생성할 때 필요한 기본 옵션
+        center: new kakao.maps.LatLng(37.62197524055062, 127.16017523675508), //지도의 중심좌표.
+        level: 4 //지도의 레벨(확대, 축소 정도)
+    };
+  this.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+  markerdata.forEach((el) => {
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+      //마커가 표시 될 지도
+      map: this.map,
+      //마커가 표시 될 위치
+      position: new kakao.maps.LatLng(el.lat, el.lng),
+      //마커에 hover시 나타날 title
+      title: el.title,
+    });
+
+    kakao.maps.event.addListener(marker, 'click', function() {
+      this.setState({clicked_marker: marker})
+      console.log(marker.Fb)
+    });
+  });    
+}
 
   render() {
     return (
       <section className="container">
         <Header/>
-        <Map store={this.props.store}/>
-        <MarkerInfo store={this.props.store}/>
+        <div id='myMap' style={{width:"50%", height:"600px", float:"left", marginLeft:"25%"}}/>
+        <MarkerInfo marker={this.state.clicked_marker}/>
       </section>
     );
   }
 }
-
-let mapDispatchToProps = (dispatch) => {
-  return {
-      onMarkerClick: () => dispatch(actionMarkerclick()),
-  }
-}
-
-let mapStateToProps = (state) => {
-  return {
-      marker_clicked : state.markerClick.marker_clicked
-  };
-}
-
-//mapStateToProps를 사용하여 컴포넌트를 store에 연결시킨다.
-Matching = connect(mapStateToProps,mapDispatchToProps)(Matching);
 
 export default Matching;

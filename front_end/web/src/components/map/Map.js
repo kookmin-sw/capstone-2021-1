@@ -12,6 +12,7 @@ class Map extends React.Component {
     map;
     markers = markerdata;
     infowindows = []
+
     componentDidMount(){
         var container = document.getElementById('myMap'); //지도를 담을 영역의 DOM 레퍼런스
         var options = { //지도를 생성할 때 필요한 기본 옵션
@@ -33,11 +34,8 @@ class Map extends React.Component {
     }
 
     render() {
-      
         return (
-            
                <div id='myMap' style={{width:"50%", height:"600px", float:"left", marginLeft:"25%"}}/>
-            
         )
     }
 }
