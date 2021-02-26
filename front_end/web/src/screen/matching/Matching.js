@@ -5,7 +5,11 @@ import Header from "../../components/common/header";
 import MarkerInfo from "../../components/map/MarkerInfo";
 
 class Matching extends React.Component {
-  
+
+state = {
+  isClick: false
+}
+
 map;
 markers = markerdata;
 
@@ -25,21 +29,25 @@ componentDidMount(){
       position: new kakao.maps.LatLng(el.lat, el.lng),
       //마커에 hover시 나타날 title
       title: el.title,
+      info:el
     });
 
     kakao.maps.event.addListener(marker, 'click', function() {
-      this.setState({clicked_marker: marker})
-      console.log(marker.Fb)
-    });
+      console.log(marker)
+      this.setState({clicked_marker:marker.Fb,isClick:true});
+    }.bind(this));
   });    
 }
 
   render() {
+    const {isClick} = this.state;
     return (
       <section className="container">
         <Header/>
         <div id='myMap' style={{width:"50%", height:"600px", float:"left", marginLeft:"25%"}}/>
-        <MarkerInfo marker={this.state.clicked_marker}/>
+        {
+          isClick ? <div className="map_info">{this.state.clicked_marker}</div> : null
+        }
       </section>
     );
   }
