@@ -2,7 +2,7 @@
 import React from "react";
 import { markerdata } from "../../components/map/markerData"
 import Header from "../../components/common/header";
-import MarkerInfo from "../../components/map/MarkerInfo";
+
 
 class Matching extends React.Component {
 
