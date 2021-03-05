@@ -1,1 +1,1 @@
-leeminkyu database folder
+DB 관련
