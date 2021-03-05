@@ -5,19 +5,18 @@ import "../../assets/css/Common/main_contents_container.css";
 import "../../assets/css/Crew/Crew.css";
 import search_icon from '../../assets/images/common/search.jpg';
 import reset_icon from '../../assets/images/common/reset.png';
-import axios from 'axios';
 
 
-async function getCrewData(){
-    try {
-        const response = await axios.get('http://54.180.98.138:8080/crew/search');
-        console.log(response)
-        return response;
+// async function getCrewData(){
+//     try {
+//         const response = await axios.get('http://54.180.98.138:8080/crew/search');
+//         console.log(response)
+//         return response;
         
-      } catch (error) {
-        console.error(error);
-      }
-}
+//       } catch (error) {
+//         console.error(error);
+//       }
+// }
 
 class Crew extends React.Component {
 
