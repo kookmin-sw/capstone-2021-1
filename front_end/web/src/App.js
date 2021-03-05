@@ -5,7 +5,8 @@ import Matching from "./screen/matching/Matching";
 import Login from "./screen/login/Login";
 import Enroll from "./screen/Enrollment/Enrollment";
 import Crew from "./screen/Crew/Crew";
-import Mypage from "./screen/Mypage/Mypage";
+import Manage from "./screen/manage/Manage";
+import Mypage from "./screen/mypage/Mypage";
 function App(){
   return (
     <HashRouter>
@@ -15,6 +16,7 @@ function App(){
       <Route path="/enroll" exact={true} component={Enroll}/>
       <Route path="/crew" exact={true} component={Crew}/>
       <Route path="/mypage" exact={true} component={Mypage}/>
+      <Route path="/manage" exact={true} component={Manage}/>
     </HashRouter>
     );
 }

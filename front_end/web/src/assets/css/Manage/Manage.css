@@ -1,0 +1,42 @@
+.manage_container{
+    width:50%;
+    float:right;
+    background-color: gray;
+}
+
+.manage_receive_sending_request{
+    padding:20px;
+}
+.matching_league_data_container{
+    margin-bottom:30px;
+}
+.matching_image{
+    background-image: url("../../images/common/logo.jpg");
+}
+.manage_sending_request{
+    background-color: white;
+    width:48%;
+    float:left;
+    margin-bottom: 20px;
+}
+
+.float_right{
+    float: right;
+}
+
+.matching_image{
+    width: 64px;
+    height: 64px;
+    float: left;
+}
+
+.matching_info_title{
+    text-align: center;
+    font-weight: bold;
+}
+
+.matching_info_description{
+    font-size:10px;
+    text-align: center;
+    margin-top:10px;
+}
