@@ -1,0 +1,30 @@
+.home_main{
+    width:50%;
+    float:right;
+}
+
+.home_main div{
+    height: 150px;
+    width: 47%;
+    float: right;
+    text-align: center;
+    line-height: 150px;
+    border: solid 2px #000000;
+    margin:10px;
+    border-radius: 20px;
+}
+.home_to_league{
+
+}
+
+.home_to_matching{
+
+}
+
+.home_to_mypage{
+
+}
+
+.home_to_setting{
+
+}

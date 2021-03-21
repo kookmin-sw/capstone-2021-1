@@ -15,12 +15,22 @@
     line-height:50px;
 }
 
+.no_right_border{
+    border-right: none;
+}
+
+.header_header div{
+    float:right;
+    width:100px;
+    text-align: center;
+    border-right: solid 2px;
+}
 .hamburger_bar{
     width:50px;
     height:100%;
     float:right;
     background-color:#ffffff;
-    margin-left: 20px;
+    
 }
 
 .header_logo{
