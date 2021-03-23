@@ -10,13 +10,14 @@ import Mypage from "./screen/Mypage/Mypage";
 function App(){
   return (
     <HashRouter>
-      <Route path="/" exact={true} component={Home}/>
+     
       <Route path="/matching" exact={true} component={Matching}/>
       <Route path="/login" exact={true} component={Login}/>
       <Route path="/enroll" exact={true} component={Enroll}/>
       <Route path="/crew" exact={true} component={Crew}/>
       <Route path="/mypage" exact={true} component={Mypage}/>
       <Route path="/manage" exact={true} component={Manage}/>
+      <Route path="/" exact={true} component={Home}/>
     </HashRouter>
     );
 }
