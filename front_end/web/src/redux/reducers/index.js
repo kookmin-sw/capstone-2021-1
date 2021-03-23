@@ -1,19 +1,21 @@
-import { MARKERCLICK , REGISTER} from '../actions/index';
+
 import { bindActionCreators, combineReducers } from 'redux';
+import { LOGIN_USER , REGISTER_USER } from '../types';
 
 const counterInitialState = { isLogin: false, marker_clicked: null };
 
 function allFunction(state = counterInitialState, action){
     switch (action.type) {
-        case MARKERCLICK:
+        case REGISTER_USER:
             return state = {
                 ...state,
-                marker_clicked : action.marker_data
+
             }
-        case REGISTER:
+        case LOGIN_USER:
             return {
                 ...state,
-                register: action.payload
+                user_info: action.payload,
+                isLogin: true
             }
         default: 
             return state;
