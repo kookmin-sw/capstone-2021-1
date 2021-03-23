@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, AUTH_USER } from "../types/index";
+import { REGISTER_USER, LOGIN_USER } from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -27,11 +27,3 @@ export function loginUser(dataToSubmit) {
 //     payload: data,
 //   };
 // }
-
- export function authUser() {
-   const data = axios.request("post", USER_URL + "/auth");
-   return {
-     type: AUTH_USER,
-     payload: data,
-   };
- }
