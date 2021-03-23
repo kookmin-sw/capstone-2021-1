@@ -6,7 +6,7 @@ import Login from "./screen/login/Login";
 import Enroll from "./screen/Enrollment/Enrollment";
 import Crew from "./screen/Crew/Crew";
 import Manage from "./screen/manage/Manage";
-import Mypage from "./screen/mypage/Mypage";
+import Mypage from "./screen/Mypage/Mypage";
 function App(){
   return (
     <HashRouter>
