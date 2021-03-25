@@ -6,6 +6,7 @@ import "../../assets/css/Enroll/Enrollment.css";
 import EnrollText from "../../components/enrollment/enroll_text";
 import DoubleCheckBtn from "../../components/enrollment/doubleCheckBtn";
 import EnrollInput from "../../components/enrollment/enrollInput";
+import SubmitBtn from "../../components/enrollment/submitBtn";
 class Enrollment extends React.Component {
     constructor(props) {
         super(props);
@@ -50,27 +51,27 @@ class Enrollment extends React.Component {
         <div id="Enroll_Container" className="main_contents_container">
                     <div className="enroll_id">
                         <EnrollText text="id"/>
-                        <EnrollInput doubleChecked={false} info="id"/> 
+                        <EnrollInput doubleChecked={true} info="id"/> 
                         <DoubleCheckBtn/>
                     </div>
                     <div className="enroll_pw">
                         <EnrollText text="pw"/>
-                        <input name="enroll_pw" className="input_non_double_check"  onChange={this.pwChange} placeholder="pw를 입력해주세요."></input>
+                        <EnrollInput doubleChecked={false} info="pw"/> 
                     </div>
                     <div className="enroll_nickname">
                         <EnrollText text="nickname"/>
-                        <input name="enroll_nickname" className="input_double_check" onChange={this.nicknameChange} placeholder="nickname을 입력해주세요."></input>
+                        <EnrollInput doubleChecked={true} info="nickname"/> 
                         <DoubleCheckBtn/>
                     </div>
                     <div className="enroll_name">
                         <EnrollText text="name"/>
-                        <input name="enroll_name" className="input_non_double_check" onChange={this.nameChange} placeholder="이름을 입력해주세요."></input>
+                        <EnrollInput doubleChecked={false} info="name"/> 
                     </div>
                     <div className="enroll_phoneNumber">
                         <EnrollText text="phoneNumber"/>
-                        <input name="enroll_phoneNum" className="input_non_double_check" onChange={this.phoneNumChange} placeholder="휴대폰 번호를 입력해주세요."></input>
+                        <EnrollInput doubleChecked={false} info="phoneNumber"/> 
                     </div>
-                    <div className="submit_btn">제출하기</div>
+                    <SubmitBtn/>
         </div>
                 
       </section>
