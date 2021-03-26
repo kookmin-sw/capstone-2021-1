@@ -6,10 +6,9 @@ import { createStore } from 'redux';
 import { reducer } from './redux/reducers/index';
 
 const store = createStore(reducer);
-
 ReactDOM.render(
   <Provider store = {store}>
-    <App />
+    <App store={store}/>
   </Provider>,
   document.getElementById('root')
 );

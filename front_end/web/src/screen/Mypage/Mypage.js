@@ -42,24 +42,26 @@ class Mypage extends React.Component {
                 <div className="my_stat">
                     <div className="my_stat_text">평점</div>
                     <div className="my_stat_src">
-                    <RadarChart
+                    <RadarChart 
             captions={{
               manner: '매너지수',
               physical: '피지컬',
               intellect: '능지',
               comprehension: '이해력',
-              affinity: '친화도'
+              affinity: '친화도',
+              dsa:'참여도'
             }}
             data={[
               {
                 data: {
-                  manner: 0.6,
-                  affinity: 0.7,
-                  physical: 0.5,
-                  intellect: 0.8,
-                  comprehension: 0.8
+                  dsa: 0.6,
+                  manner: 1,
+                  affinity: 1,
+                  physical: 1,
+                  intellect: 1,
+                  comprehension: 1
                 },
-                meta: { color: '#58FCEC' }
+                meta: { color: '#dcdcdc' }
               },
             ]}
             size={200}

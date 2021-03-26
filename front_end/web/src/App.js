@@ -8,7 +8,9 @@ import Crew from "./screen/Crew/Crew";
 import Manage from "./screen/manage/Manage";
 import Mypage from "./screen/Mypage/Mypage";
 
-function App(){
+class App extends React.Component{
+  render(){
+  const {store} = this.props;
   return (
     <HashRouter>
       <Route path="/matching" exact={true} component={Matching}/>
@@ -20,6 +22,7 @@ function App(){
       <Route path="/" exact={true} component={Home}/>
     </HashRouter>
     );
+  }
 }
 
 export default App;

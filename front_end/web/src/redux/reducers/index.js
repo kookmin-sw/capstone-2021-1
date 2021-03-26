@@ -2,9 +2,9 @@
 import { combineReducers } from 'redux';
 import { LOGIN_USER , REGISTER_USER } from '../types';
 
-const counterInitialState = { isLogin: false, user_nickname: null, access_token: null};
+const InitialState = { isLogin: false, user_nickname: null, access_token: null};
 
-function allFunction(state = counterInitialState, action){
+function allFunction(state = InitialState, action){
     switch (action.type) {
         case REGISTER_USER:
             return state = {
