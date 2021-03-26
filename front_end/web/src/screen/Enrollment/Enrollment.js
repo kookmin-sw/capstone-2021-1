@@ -5,7 +5,7 @@ import "../../assets/css/Common/main_contents_container.css";
 import "../../assets/css/Enroll/Enrollment.css";
 import EnrollText from "../../components/enrollment/enroll_text";
 import DoubleCheckBtn from "../../components/enrollment/doubleCheckBtn";
-import EnrollInput from "../../components/enrollment/enrollInput";
+import CommonInput from "../../components/enrollment/enrollInput";
 import SubmitBtn from "../../components/enrollment/submitBtn";
 class Enrollment extends React.Component {
     constructor(props) {
@@ -51,25 +51,25 @@ class Enrollment extends React.Component {
         <div id="Enroll_Container" className="main_contents_container">
                     <div className="enroll_id">
                         <EnrollText text="id"/>
-                        <EnrollInput doubleChecked={true} info="id"/> 
+                        <CommonInput doubleChecked={true} info="id"/> 
                         <DoubleCheckBtn/>
                     </div>
                     <div className="enroll_pw">
                         <EnrollText text="pw"/>
-                        <EnrollInput doubleChecked={false} info="pw"/> 
+                        <CommonInput doubleChecked={false} info="pw"/> 
                     </div>
                     <div className="enroll_nickname">
                         <EnrollText text="nickname"/>
-                        <EnrollInput doubleChecked={true} info="nickname"/> 
+                        <CommonInput doubleChecked={true} info="nickname"/> 
                         <DoubleCheckBtn/>
                     </div>
                     <div className="enroll_name">
                         <EnrollText text="name"/>
-                        <EnrollInput doubleChecked={false} info="name"/> 
+                        <CommonInput doubleChecked={false} info="name"/> 
                     </div>
                     <div className="enroll_phoneNumber">
                         <EnrollText text="phoneNumber"/>
-                        <EnrollInput doubleChecked={false} info="phoneNumber"/> 
+                        <CommonInput doubleChecked={false} info="phoneNumber"/> 
                     </div>
                     <SubmitBtn/>
         </div>

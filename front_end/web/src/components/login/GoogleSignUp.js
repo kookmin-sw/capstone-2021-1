@@ -1,5 +1,6 @@
 import React from 'react';
 import GoogleLogin from 'react-google-login';
+import "../../assets/css/Login/Login.css"
 
 const clientId = "267810043777-e4a9h4smd6nvsk137in0mcmbctrv0ujc.apps.googleusercontent.com";
 
@@ -23,7 +24,7 @@ export default function GoogleSignUp({ onSocial }){
 
     return(
         <div>
-            <GoogleLogin
+            <GoogleLogin className="google_login_btn"
                 clientId={clientId}
                 responseType={"id_token"}
                 onSuccess={onSuccess}
