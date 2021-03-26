@@ -1,10 +1,30 @@
 
 import { combineReducers } from 'redux';
-import { LOGIN_USER , REGISTER_USER } from '../types';
+import { REGISTER_USER, LOGIN_USER } from "../types/index";
+import axios from 'axios';
 
-const InitialState = { isLogin: false, user_nickname: null, access_token: null};
+const USER_URL = "http://54.180.98.138:8080";
 
-function allFunction(state = InitialState, action){
+
+export function registerUser(dataToSubmit) {
+  const data = axios.request("post", USER_URL + "/signup", dataToSubmit);
+  return {
+    type: REGISTER_USER,
+    payload: data,
+  };
+}
+
+export function loginUser(dataToSubmit) {
+  const data = axios.request("post", USER_URL + "/signin", dataToSubmit);
+  return {
+    type: LOGIN_USER,
+    payload: data,
+  };
+}
+
+const InitialState = { isLogin: false };
+
+function reducer(state = InitialState, action){
     switch (action.type) {
         case REGISTER_USER:
             return state = {
@@ -21,8 +41,14 @@ function allFunction(state = InitialState, action){
             return state;
     }
 }
+const actionCreators = {
+    loginUser,
+    registerUser
+  };
+
+export { actionCreators };
+
+export default reducer;
 
 
-
-export const reducer = combineReducers({ allFunction });
 
