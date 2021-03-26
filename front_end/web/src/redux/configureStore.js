@@ -24,13 +24,13 @@ const reducers = combineReducers({
 let store;
 
 if (env === "development") {
-  store = initialState =>
+  store = () =>
     createStore(reducers,
     composeWithDevTools(applyMiddleware(...middlewares)));
 } else {
-  store = initialState => createStore(reducers, applyMiddleware(...middlewares));
+  store = () => createStore(reducers, applyMiddleware(...middlewares));
 }
 
-export { history };
 
+export {history};
 export default store();
