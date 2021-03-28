@@ -13,7 +13,7 @@ const middlewares = [thunk, routerMiddleware(history)];
 
 const reducers = combineReducers({
   reducer,
-  routing: connectRouter(history)
+  router: connectRouter(history)
 });
 
 let store;
