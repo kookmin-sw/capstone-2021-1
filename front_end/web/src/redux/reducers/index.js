@@ -1,5 +1,3 @@
-
-
 import { REGISTER_USER, LOGIN_USER } from "../types/index";
 import axios from 'axios';
 
