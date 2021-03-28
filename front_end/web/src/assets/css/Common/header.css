@@ -38,7 +38,7 @@
     top:50px;
     text-align:center;
     position: inherit;
-    background-image: url('../../images/common/logo.jpg');
+    background-color: #dcdcdc;
 }
 
 .logo_text{
