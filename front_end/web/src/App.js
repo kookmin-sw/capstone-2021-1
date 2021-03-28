@@ -1,5 +1,7 @@
 import React from "react";
-import { BrowserRouter, Route} from "react-router-dom";
+import { BrowserRouter, Route, withRouter} from "react-router-dom";
+import { connect } from 'react-redux';
+
 import Home from "./screen/home/Home";
 import Matching from "./screen/matching/Matching";
 import Login from "./screen/login/Login";
@@ -9,8 +11,9 @@ import Manage from "./screen/manage/Manage";
 import Mypage from "./screen/Mypage/Mypage";
 
 class App extends React.Component{
+ 
   render(){
-  console.log("asddsad : ", this.props)
+    console.log(this.props);
   return (
     <BrowserRouter>
       <Route path="/matching" exact={true} component={Matching}/>
@@ -25,5 +28,5 @@ class App extends React.Component{
   }
 }
 
-export default App;
 
+export default connect(null,null)(withRouter(App))
