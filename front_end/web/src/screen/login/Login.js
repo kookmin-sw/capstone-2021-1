@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import Header from "../../components/common/header";
 import SideContentsContainer from "../../components/common/side_contents_container";
 import KakaoSignUp from "../../components/login/KaKaoSignUp";
@@ -8,8 +8,17 @@ import LoginText from "../../components/login/login_text";
 import CommonInput from "../../components/enrollment/enrollInput";
 import "../../assets/css/Login/Login.css"
 import LoginSubmitBtn from "../../components/login/loginSubmitBtn";
-class Login extends React.Component {
+import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import {actionCreators} from "../../redux/reducers/index"
 
+class Login extends React.Component {
+ 
+  handleLogin=data=>{
+    const{loginUser} = this.props;
+    loginUser(data);
+  }
+  
   render() {
     return (
       <section className="container">
@@ -22,7 +31,10 @@ class Login extends React.Component {
             <div className="login_input_pw"><LoginText text="password"/><CommonInput doubleChecked={false} info="pw"/></div>
           </div>
           <div className="login_submit">
-            <LoginSubmitBtn/>
+          <div className="login_submit_btn" onClick={()=>this.handleLogin({
+    "uid":"dlwlsrn94@naver.com",
+    "password":"1234"
+})}>로그인</div>
             <EnrollmentButton/>          
           </div>
           <div className="sns_login">
@@ -36,4 +48,5 @@ class Login extends React.Component {
 }
 
 
-export default Login;
+
+export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(Login);
