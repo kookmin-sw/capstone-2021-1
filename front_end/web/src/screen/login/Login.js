@@ -11,7 +11,6 @@ import LoginSubmitBtn from "../../components/login/loginSubmitBtn";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
-
 class Login extends React.Component {
  
   handleLogin=data=>{
