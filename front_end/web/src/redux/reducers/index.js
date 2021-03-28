@@ -3,16 +3,16 @@ import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
 
-async function registerUser(dataToSubmit) {
-  const data = await axios.request("post", USER_URL + "/signup", dataToSubmit);
+function registerUser(dataToSubmit) {
+  const data = axios.request("post", USER_URL + "/signup", dataToSubmit);
   return {
     type: REGISTER_USER,
     payload: data,
   };
 }
 
-async function loginUser(dataToSubmit) {
-  const data = await axios.request("post", USER_URL + "/signin", dataToSubmit);
+function loginUser(dataToSubmit) {
+  const data = axios.post(USER_URL + "/signin", dataToSubmit);
   return {
     type: LOGIN_USER,
     payload: data,

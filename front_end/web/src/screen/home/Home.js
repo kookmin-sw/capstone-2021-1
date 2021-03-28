@@ -5,9 +5,10 @@ import "../../assets/css/Common/common.css"
 import SideContentsContainer from "../../components/common/side_contents_container";
 import LinkForHomeBtn from "../../components/Home/link_for_home_btn";
 import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import "../../assets/css/Home/Home.css"
-import { connect } from "react-redux";
+
 class Home extends React.Component {
   
   componentDidMount() {

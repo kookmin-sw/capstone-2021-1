@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import Header from "../../components/common/header";
 import SideContentsContainer from "../../components/common/side_contents_container";
 import KakaoSignUp from "../../components/login/KaKaoSignUp";
@@ -8,14 +8,26 @@ import LoginText from "../../components/login/login_text";
 import CommonInput from "../../components/enrollment/enrollInput";
 import "../../assets/css/Login/Login.css"
 import LoginSubmitBtn from "../../components/login/loginSubmitBtn";
-
-import  {actionCreators} from "../../redux/reducers/index"
-import { LOGIN_USER } from "../../redux/types";
+import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import {actionCreators} from "../../redux/reducers/index"
+import { loginUser } from "../../redux/actions";
 
 class Login extends React.Component {
+  constructor(){
+    super();
+    this.state={data:{
+      "uid":"dlwlsrn94@naver.com",
+      "password":"1234"
+  }}
+  
+  }
+  handleLogin=data=>{
+    const{loginUser} = this.props;
+    loginUser(data);
+  }
   
   render() {
-    console.log(this.props);
     return (
       <section className="container">
         <Header/>
@@ -27,7 +39,7 @@ class Login extends React.Component {
             <div className="login_input_pw"><LoginText text="password"/><CommonInput doubleChecked={false} info="pw"/></div>
           </div>
           <div className="login_submit">
-            <LoginSubmitBtn/>
+          <div className="login_submit_btn" onClick={this.handleLogin(this.state.data)}>로그인</div>
             <EnrollmentButton/>          
           </div>
           <div className="sns_login">
@@ -41,4 +53,5 @@ class Login extends React.Component {
 }
 
 
-export default Login;
+
+export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(Login);
