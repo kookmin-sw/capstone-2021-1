@@ -11,17 +11,9 @@ import LoginSubmitBtn from "../../components/login/loginSubmitBtn";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
-import { loginUser } from "../../redux/actions";
 
 class Login extends React.Component {
-  constructor(){
-    super();
-    this.state={data:{
-      "uid":"dlwlsrn94@naver.com",
-      "password":"1234"
-  }}
-  
-  }
+ 
   handleLogin=data=>{
     const{loginUser} = this.props;
     loginUser(data);
@@ -39,7 +31,10 @@ class Login extends React.Component {
             <div className="login_input_pw"><LoginText text="password"/><CommonInput doubleChecked={false} info="pw"/></div>
           </div>
           <div className="login_submit">
-          <div className="login_submit_btn" onClick={this.handleLogin(this.state.data)}>로그인</div>
+          <div className="login_submit_btn" onClick={()=>this.handleLogin({
+    "uid":"dlwlsrn94@naver.com",
+    "password":"1234"
+})}>로그인</div>
             <EnrollmentButton/>          
           </div>
           <div className="sns_login">
