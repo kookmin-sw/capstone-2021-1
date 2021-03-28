@@ -10,6 +10,7 @@ import Crew from "./screen/Crew/Crew";
 import Manage from "./screen/manage/Manage";
 import Mypage from "./screen/Mypage/Mypage";
 
+
 class App extends React.Component{
  
   render(){
@@ -28,5 +29,6 @@ class App extends React.Component{
   }
 }
 
-
-export default connect(null,null)(withRouter(App))
+export default connect(
+  store => ({ store })
+)(App)

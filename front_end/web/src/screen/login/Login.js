@@ -8,9 +8,14 @@ import LoginText from "../../components/login/login_text";
 import CommonInput from "../../components/enrollment/enrollInput";
 import "../../assets/css/Login/Login.css"
 import LoginSubmitBtn from "../../components/login/loginSubmitBtn";
+
+import  {actionCreators} from "../../redux/reducers/index"
+import { LOGIN_USER } from "../../redux/types";
+
 class Login extends React.Component {
   
   render() {
+    console.log(this.props);
     return (
       <section className="container">
         <Header/>

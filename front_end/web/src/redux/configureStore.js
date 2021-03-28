@@ -12,7 +12,7 @@ const history = createBrowserHistory()
 const middlewares = [thunk, routerMiddleware(history)];
 
 const reducers = combineReducers({
-  reducer,
+  state: reducer,
   router: connectRouter(history)
 });
 
@@ -26,6 +26,5 @@ if (env === "development") {
   store = () => createStore(reducers, applyMiddleware(...middlewares));
 }
 
-console.log("history123 : ", store)
 export {history};
 export default store();
