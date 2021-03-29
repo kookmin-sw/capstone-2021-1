@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
@@ -32,13 +33,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //초기 세팅
         http.authorizeRequests()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/**/signin", "/**/signin/**", "/**/signup", "/social/**").permitAll()
                 .antMatchers("/**/all").permitAll()
+                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/**/search").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/crew/detail/*").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/matching/detail/*").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/league/detail/*").permitAll()
                 .anyRequest().hasRole(MemberRole.USER.toString());
+
+
 
         //TODO::초기 세팅, 허용할 origin, header, method 제한을 줘야
         http.cors().configurationSource(corsConfigurationSource());
