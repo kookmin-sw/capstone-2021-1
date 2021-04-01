@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Playmaker
 
 You can use the [editor on GitHub](https://github.com/kookmin-sw/capstone-2021-1/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
