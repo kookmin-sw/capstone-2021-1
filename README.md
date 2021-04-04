@@ -1,7 +1,8 @@
 # 플레이 메이커 (Playmaker)
 
 팀페이지 주소: https://github.com/kookmin-sw/capstone-2021-1/
-![ㅇㄴㅁ](https://user-images.githubusercontent.com/28519975/113509424-7377ea80-9590-11eb-8f90-d09b60b0b217.jpg)
+![pm mp4_20210404_215153 647 (1)](https://user-images.githubusercontent.com/28519975/113509473-bd60d080-9590-11eb-8059-4c0a730d48db.png)
+
 
 
 
