@@ -2,6 +2,11 @@
 
 팀페이지 주소: https://github.com/kookmin-sw/capstone-2021-1/
 
+![pm mp4_20210404_220500 631](https://user-images.githubusercontent.com/28519975/113509713-18df8e00-9592-11eb-8148-6fd026bef244.png)
+![pm mp4_20210404_220516 786](https://user-images.githubusercontent.com/28519975/113509715-1b41e800-9592-11eb-98f2-7ef8fe243b37.png)
+![pm mp4_20210404_220536 942](https://user-images.githubusercontent.com/28519975/113509719-1d0bab80-9592-11eb-8ca1-9099cda94152.png)
+![pm mp4_20210404_220549 942](https://user-images.githubusercontent.com/28519975/113509725-1ed56f00-9592-11eb-83c2-bf72e1d9e561.png)
+
 ## 1. 프로잭트 소개
 
 ### 프로젝트 의미
