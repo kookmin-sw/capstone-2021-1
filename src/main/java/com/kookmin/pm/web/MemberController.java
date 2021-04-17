@@ -3,6 +3,7 @@ package com.kookmin.pm.web;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
+import com.kookmin.pm.module.matchup.service.MatchUpLookUpType;
 import com.kookmin.pm.module.matchup.service.MatchUpService;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberRole;
@@ -105,6 +106,28 @@ public class MemberController {
                 .status(HttpStatus.OK)
                 .body(matchUpList);
     }
+
+    @GetMapping(value = "/member/match-up/{matchUpId}")
+    public ResponseEntity getMyMatchUpDetails(Principal principal,
+                                              @PathVariable(name = "matchUpId") Long matchUpId) {
+        Long usn = getPrincipalKey(principal);
+        MatchUpDetails matchUpDetails = matchUpService.lookUpMatchUp(matchUpId, MatchUpLookUpType.WITH_ALL_INFOS);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchUpDetails);
+    }
+
+    @GetMapping(value = "/member/record")
+    public ResponseEntity getMyRecord(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(null);
+    }
+
+
 
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
