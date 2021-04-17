@@ -358,7 +358,7 @@ public class LeagueService {
             matchUpService.createIndividualLeagueMatchUp(league, leagueParticipants);
         } else if(leagueType.equals(LeagueType.TOURNAMENT)) {
             //TODO::토너먼트용 대진표 생성 기능 추가필요
-            matchUpService.createIndividualTournamnetMatchUp(league, leagueParticipants);
+            matchUpService.createIndividualTournamentMatchUp(league, leagueParticipants);
         }
     }
 

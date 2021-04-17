@@ -49,6 +49,11 @@ public class MatchUpService {
         }
     }
 
+    public void createIndividualTournamentMatchUp(@NonNull League league,
+                                                  @NonNull List<Member> participantList) {
+
+    }
+
     public Long startMatching(@NonNull Long usn,
                               @NonNull Long matchUpId,
                               @NonNull MatchUpCreateInfo matchUpCreateInfo) {
