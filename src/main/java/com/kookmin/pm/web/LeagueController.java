@@ -118,6 +118,17 @@ public class LeagueController {
                 .body("리그를 탈퇴하셨습니다.");
     }
 
+    @PutMapping(value = "/league/{leagueId}/start")
+    public ResponseEntity startLeague(Principal principal,
+                                      @PathVariable(name = "leagueId") Long leagueId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.startLeague(usn, leagueId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그를 시작합니다.");
+    }
+
     @GetMapping("/member/league")
     public ResponseEntity findMyLeague(Principal principal,
                                        Pageable pageable,
