@@ -129,6 +129,17 @@ public class LeagueController {
                 .body("리그를 시작합니다.");
     }
 
+    @PutMapping(value = "/league/{leagueId}/end")
+    public ResponseEntity endLeague(Principal principal,
+                                    @PathVariable(name = "leagueId") Long leagueId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.endLeague(usn, leagueId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그를 종료합니다.");
+    }
+
     @GetMapping("/member/league")
     public ResponseEntity findMyLeague(Principal principal,
                                        Pageable pageable,
