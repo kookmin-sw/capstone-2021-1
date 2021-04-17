@@ -3,6 +3,7 @@ package com.kookmin.pm.web;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
+import com.kookmin.pm.module.matchup.dto.MemberRecord;
 import com.kookmin.pm.module.matchup.service.MatchUpLookUpType;
 import com.kookmin.pm.module.matchup.service.MatchUpService;
 import com.kookmin.pm.module.member.domain.Member;
@@ -121,10 +122,11 @@ public class MemberController {
     @GetMapping(value = "/member/record")
     public ResponseEntity getMyRecord(Principal principal) {
         Long usn = getPrincipalKey(principal);
+        MemberRecord record = matchUpService.lookUpMyRecord(usn);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(null);
+                .body(record);
     }
 
 
