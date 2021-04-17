@@ -10,6 +10,7 @@ import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
 import com.kookmin.pm.module.matchup.domain.RecordType;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
 import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
+import com.kookmin.pm.module.matchup.dto.MemberRecord;
 import com.kookmin.pm.module.matchup.repository.MatchUpRecordRepository;
 import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -207,6 +208,25 @@ public class MatchUpService {
         }
 
         return matchUpDetails;
+    }
+
+    public MemberRecord lookUpMyRecord(@NonNull Long usn) {
+        Member member = getMemberEntity(usn);
+        List<MatchUpRecord> matchUpRecordList = matchUpRecordRepository.findByWinnerOrLoser(member, member);
+
+        int winCount = 0, loseCount = 0;
+
+        for(MatchUpRecord record : matchUpRecordList) {
+            if(record.getWinner().equals(member)) {
+                winCount++;
+            } else {
+                loseCount++;
+            }
+        }
+
+        MemberRecord memberRecord = new MemberRecord(winCount, loseCount);
+
+        return memberRecord;
     }
 
     private Member getMemberEntity(Long usn) {
