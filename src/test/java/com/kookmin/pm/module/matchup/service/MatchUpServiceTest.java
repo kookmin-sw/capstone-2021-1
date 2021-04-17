@@ -371,4 +371,47 @@ class MatchUpServiceTest {
         for(MatchUpDetails matchUpDetails : matchUpDetailsList)
             System.out.println(matchUpDetails);
     }
+
+    @Test
+    @DisplayName("lookUpMatchUp 메소드 성공 테스트")
+    public void lookUpMatchUp_success_test() {
+        League league = leagueRepository.findById(leagueId).get();
+
+        List<Member> participants =
+                leagueSearchRepositoryImpl.findMemberInLeague(leagueId, LeagueParticipantsStatus.PARTICIPATING);
+
+        Member host = memberRepository.findById(usn).get();
+        participants.add(host);
+
+        assertThat(participants.size())
+                .isEqualTo(4);
+
+        matchUpService.createIndividualLeagueMatchUp(league, participants);
+
+        List<MatchUp> matchUpList = matchUpRepository
+                .findByFirstMemberOrSecondMemberAndLeague(host, host, league);
+        MatchUp matchUp = matchUpList.get(0);
+
+        MatchUpCreateInfo matchUpCreateInfo = new MatchUpCreateInfo();
+        LocalDateTime startTime = LocalDateTime.of(2021, 12, 12, 12,0,0);
+
+        matchUpCreateInfo.setLatitude(30.500);
+        matchUpCreateInfo.setLongitude(128.123);
+        matchUpCreateInfo.setStartTime(startTime);
+
+        Long matchingId = matchUpService.startMatching(usn, matchUp.getId(), matchUpCreateInfo);
+
+        Member winner = matchUp.getFirstMember();
+        Member loser = matchUp.getSecondMember();
+
+        matchUpService.approveMatchUp(winner.getId(),matchUp.getId(), matchingId);
+
+        matchUpService.endMathUp(winner.getId(),
+                loser.getId(), matchUp.getId());
+
+        Matching matching = matchingRepository.findById(matchingId).get();
+
+        MatchUpDetails details = matchUpService.lookUpMatchUp(matchUp.getId(), MatchUpLookUpType.WITH_ALL_INFOS);
+        System.out.println(details);
+    }
 }

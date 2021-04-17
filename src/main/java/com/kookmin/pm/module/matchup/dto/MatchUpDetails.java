@@ -30,13 +30,13 @@ public class MatchUpDetails {
         this.secondMember = new MemberDetails(matchUp.getSecondMember());
     }
 
-    //TODO::리팩토링 대토
     public MatchUpDetails(MatchUp matchUp, MatchUpRecord matchUpRecord) {
-        this.id = matchUp.getId();
-        this.status = matchUp.getStatus().toString();
-        this.firstMember = new MemberDetails(matchUp.getFirstMember());
-        this.secondMember = new MemberDetails(matchUp.getSecondMember());
-
+        this(matchUp);
         if(matchUpRecord != null) this.matchUpRecord = new MatchUpRecordDetails(matchUpRecord);
+    }
+
+    public MatchUpDetails(MatchUp matchUp, MatchUpRecord matchUpRecord, League league) {
+        this(matchUp,matchUpRecord);
+        this.league = new LeagueDetails(league);
     }
 }

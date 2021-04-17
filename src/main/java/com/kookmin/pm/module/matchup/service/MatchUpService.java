@@ -189,10 +189,14 @@ public class MatchUpService {
     public MatchUpDetails lookUpMatchUp(@NonNull Long matchUpId, @NonNull MatchUpLookUpType lookUpType) {
         MatchUpDetails matchUpDetails = null;
         MatchUp matchUp = getMatchUpEntity(matchUpId);
-        MatchUpRecord record = getMatchUpRecordEntityByMatchUp(matchUp);
 
         if(lookUpType.equals(MatchUpLookUpType.WITH_RECORD)) {
+            MatchUpRecord record = getMatchUpRecordEntityByMatchUp(matchUp);
             matchUpDetails = new MatchUpDetails(matchUp, record);
+        } else if(lookUpType.equals(MatchUpLookUpType.WITH_ALL_INFOS)) {
+            MatchUpRecord record = getMatchUpRecordEntityByMatchUp(matchUp);
+            League league = matchUp.getLeague();
+            matchUpDetails = new MatchUpDetails(matchUp, record, league);
         } else {
             matchUpDetails = new MatchUpDetails(matchUp);
         }
