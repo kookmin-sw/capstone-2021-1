@@ -186,8 +186,18 @@ public class MatchUpService {
         return matchUpDetailsList;
     }
 
-    public MatchUpDetails lookUpMatchUp(@NonNull Long matchUpId) {
-        return null;
+    public MatchUpDetails lookUpMatchUp(@NonNull Long matchUpId, @NonNull MatchUpLookUpType lookUpType) {
+        MatchUpDetails matchUpDetails = null;
+        MatchUp matchUp = getMatchUpEntity(matchUpId);
+        MatchUpRecord record = getMatchUpRecordEntityByMatchUp(matchUp);
+
+        if(lookUpType.equals(MatchUpLookUpType.WITH_RECORD)) {
+            matchUpDetails = new MatchUpDetails(matchUp, record);
+        } else {
+            matchUpDetails = new MatchUpDetails(matchUp);
+        }
+
+        return matchUpDetails;
     }
 
     private Member getMemberEntity(Long usn) {
