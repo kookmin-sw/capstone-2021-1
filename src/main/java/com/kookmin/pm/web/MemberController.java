@@ -130,7 +130,8 @@ public class MemberController {
     }
 
     @PutMapping(value = "/member/validate")
-    public ResponseEntity validateUid (@RequestBody String uid) {
+    public ResponseEntity validateUid (@RequestBody Map<String,String> requestBody) {
+        String uid = requestBody.get("uid");
         boolean result = memberService.isDuplicated(uid);
 
         return ResponseEntity
