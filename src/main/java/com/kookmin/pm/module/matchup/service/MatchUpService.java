@@ -203,7 +203,9 @@ public class MatchUpService {
         } else if(lookUpType.equals(MatchUpLookUpType.WITH_ALL_INFOS)) {
             MatchUpRecord record = getMatchUpRecordEntityByMatchUp(matchUp);
             League league = matchUp.getLeague();
-            matchUpDetails = new MatchUpDetails(matchUp, record, league);
+            Matching matching = matchUp.getMatching();
+
+            matchUpDetails = new MatchUpDetails(matchUp, record, league, matching);
         } else {
             matchUpDetails = new MatchUpDetails(matchUp);
         }

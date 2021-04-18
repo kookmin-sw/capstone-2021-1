@@ -2,6 +2,7 @@ package com.kookmin.pm.web;
 
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
 import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
+import com.kookmin.pm.module.matchup.service.MatchUpLookUpType;
 import com.kookmin.pm.module.matchup.service.MatchUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,17 @@ public class MatchUpController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(matchUpDetailsList);
+    }
+
+    @GetMapping("/league/{leagueId}/match-up/{matchUpId}")
+    public ResponseEntity lookUpMatchUp(@PathVariable(name = "leagueId") Long leagueId,
+                                        @PathVariable(name = "matchUpId") Long matchUpId) {
+
+        MatchUpDetails matchUpDetails = matchUpService.lookUpMatchUp(matchUpId, MatchUpLookUpType.WITH_ALL_INFOS);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchUpDetails);
     }
 
     @PostMapping("/league/{leagueId}/match-up/{matchUpId}")

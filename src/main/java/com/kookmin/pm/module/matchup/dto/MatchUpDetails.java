@@ -3,6 +3,7 @@ package com.kookmin.pm.module.matchup.dto;
 import com.kookmin.pm.module.league.domain.League;
 import com.kookmin.pm.module.league.dto.LeagueDetails;
 import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.dto.MatchingDetails;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
 import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
@@ -21,6 +22,7 @@ public class MatchUpDetails {
     private MemberDetails firstMember;
     private MemberDetails secondMember;
     private LeagueDetails league;
+    private MatchingDetails matching;
     private MatchUpRecordDetails matchUpRecord;
 
     public MatchUpDetails(MatchUp matchUp) {
@@ -35,8 +37,9 @@ public class MatchUpDetails {
         if(matchUpRecord != null) this.matchUpRecord = new MatchUpRecordDetails(matchUpRecord);
     }
 
-    public MatchUpDetails(MatchUp matchUp, MatchUpRecord matchUpRecord, League league) {
+    public MatchUpDetails(MatchUp matchUp, MatchUpRecord matchUpRecord, League league, Matching matching) {
         this(matchUp,matchUpRecord);
         this.league = new LeagueDetails(league);
+        if(matching != null) this.matching = new MatchingDetails(matching);
     }
 }
