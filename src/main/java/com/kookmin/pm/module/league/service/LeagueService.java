@@ -353,6 +353,9 @@ public class LeagueService {
     private void createMatchUps(League league) {
         List<Member> leagueParticipants = leagueRepository.findMemberInLeague(league.getId(), LeagueParticipantsStatus.PARTICIPATING);
         LeagueType leagueType = league.getType();
+        Member host = league.getMember();
+
+        leagueParticipants.add(host);
 
         if(leagueType.equals(LeagueType.LEAGUE)) {
             matchUpService.createIndividualLeagueMatchUp(league, leagueParticipants);
