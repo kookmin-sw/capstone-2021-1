@@ -67,6 +67,24 @@ public class MatchUpController {
                 .body("매칭이 성사되었습니다.");
     }
 
+    @PutMapping("/league/{leagueId}/match-up/{matchUpId}/end")
+    public ResponseEntity endMatchUp (Principal principal,
+                                      @PathVariable(name="leagueId") Long leagueId,
+                                      @PathVariable(name="matchUpId") Long matchUpId,
+                                      @RequestBody Map<String, Object> requestBody) {
+        Long usn = getPrincipalKey(principal);
+        Long winnerUsn = (Long)requestBody.get("winnerUsn");
+        Long loserUsn = (Long)requestBody.get("loserUsn");
+
+        matchUpService.endMathUp(winnerUsn, loserUsn, matchUpId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매치업이 종료되었습니다.");
+    }
+
+
+
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }
