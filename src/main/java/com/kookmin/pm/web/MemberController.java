@@ -129,6 +129,15 @@ public class MemberController {
                 .body(record);
     }
 
+    @PutMapping(value = "/member/validate")
+    public ResponseEntity validateUid (@RequestBody String uid) {
+        boolean result = memberService.isDuplicated(uid);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(result);
+    }
+
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }
