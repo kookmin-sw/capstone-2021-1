@@ -43,6 +43,19 @@ public class MatchUpController {
                 .body(result);
     }
 
+    @PutMapping("/league/{leagueId}/match-up/{matchUpId}/matching/{matchingId}")
+    public ResponseEntity approveMatching (Principal principal,
+                                           @PathVariable(name="leagueId") Long leagueId,
+                                           @PathVariable(name="matchUpId") Long matchUpId,
+                                           @PathVariable(name="matchingId") Long matchingId) {
+        Long usn = getPrincipalKey(principal);
+        matchUpService.approveMatchUp(usn, matchUpId, matchingId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매칭이 성사되었습니다.");
+    }
+
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }
