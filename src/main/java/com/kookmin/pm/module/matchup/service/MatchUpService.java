@@ -95,9 +95,9 @@ public class MatchUpService {
     }
 
     //TODO::대회 매칭 기권패 요청
-    public void giveUpMatchUp(@NonNull Long usn, @NonNull Long matchUpId, @NonNull Long matchingId) {
-        Matching matching = getMatchingEntity(matchingId);
+    public void giveUpMatchUp(@NonNull Long usn, @NonNull Long matchUpId) {
         MatchUp matchUp = getMatchUpEntity(matchUpId);
+        Matching matching = matchUp.getMatching();
 
         Member first = matchUp.getFirstMember();
         Member second = matchUp.getSecondMember();
@@ -105,7 +105,7 @@ public class MatchUpService {
         if(!(first.getId().equals(usn) || second.getId().equals(usn)))
             throw new RuntimeException();
 
-        if(!matchUp.getMatching().getId().equals(matchingId))
+        if(matching == null)
             throw new RuntimeException();
 
         matchUp.endMatchUp();

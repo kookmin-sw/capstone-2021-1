@@ -264,7 +264,7 @@ class MatchUpServiceTest {
         matchUpCreateInfo.setStartTime(startTime);
 
         Long matchingId = matchUpService.startMatching(usn, matchUp.getId(), matchUpCreateInfo);
-        matchUpService.giveUpMatchUp(host.getId(), matchUp.getId(), matchingId);
+        matchUpService.giveUpMatchUp(host.getId(), matchUp.getId());
 
         Matching matching = matchingRepository.findById(matchingId).get();
         MatchUp recentMatchUp = matchUpRepository.findById(matchUp.getId()).get();

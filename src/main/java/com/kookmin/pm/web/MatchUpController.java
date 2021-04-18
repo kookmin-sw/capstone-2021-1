@@ -1,5 +1,8 @@
 package com.kookmin.pm.web;
 
+import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
+import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
+import com.kookmin.pm.module.matchup.domain.RecordType;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
 import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
 import com.kookmin.pm.module.matchup.service.MatchUpLookUpType;
@@ -83,7 +86,17 @@ public class MatchUpController {
                 .body("매치업이 종료되었습니다.");
     }
 
+    @PutMapping("/league/{leagueId}/match-up/{matchUpId}/abstention")
+    public ResponseEntity abstentionMatchUp (Principal principal,
+                                      @PathVariable(name="leagueId") Long leagueId,
+                                      @PathVariable(name="matchUpId") Long matchUpId) {
+        Long usn = getPrincipalKey(principal);
+        matchUpService.giveUpMatchUp(usn, matchUpId);
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("매치업을 기권하셨습니다.");
+    }
 
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
