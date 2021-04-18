@@ -130,7 +130,7 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
-    private boolean isDuplicated(String uid) {
+    public boolean isDuplicated(String uid) {
         Member member = memberRepository.findByUid(uid).orElse(null);
         return member!=null;
     }

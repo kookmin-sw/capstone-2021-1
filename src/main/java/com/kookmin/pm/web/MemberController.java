@@ -1,6 +1,11 @@
 package com.kookmin.pm.web;
 
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
+import com.kookmin.pm.module.matchup.domain.MatchUp;
+import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
+import com.kookmin.pm.module.matchup.dto.MemberRecord;
+import com.kookmin.pm.module.matchup.service.MatchUpLookUpType;
+import com.kookmin.pm.module.matchup.service.MatchUpService;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.domain.MemberRole;
 import com.kookmin.pm.module.member.dto.MemberCreateInfo;
@@ -31,6 +36,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final MatchUpService matchUpService;
 
     @PostMapping(value = "/signin")
     public ResponseEntity signIn(@RequestBody Map<String, String> user) {
@@ -90,5 +96,50 @@ public class MemberController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(memberRepository.findAll());
+    }
+
+    @GetMapping(value = "/member/match-up")
+    public ResponseEntity getMyMatchUp(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+        List<MatchUpDetails> matchUpList = matchUpService.searchMyMatchUp(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchUpList);
+    }
+
+    @GetMapping(value = "/member/match-up/{matchUpId}")
+    public ResponseEntity getMyMatchUpDetails(Principal principal,
+                                              @PathVariable(name = "matchUpId") Long matchUpId) {
+        Long usn = getPrincipalKey(principal);
+        MatchUpDetails matchUpDetails = matchUpService.lookUpMatchUp(matchUpId, MatchUpLookUpType.WITH_ALL_INFOS);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(matchUpDetails);
+    }
+
+    @GetMapping(value = "/member/record")
+    public ResponseEntity getMyRecord(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+        MemberRecord record = matchUpService.lookUpMyRecord(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(record);
+    }
+
+    @PutMapping(value = "/member/validate")
+    public ResponseEntity validateUid (@RequestBody Map<String,String> requestBody) {
+        String uid = requestBody.get("uid");
+        boolean result = memberService.isDuplicated(uid);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(result);
+    }
+
+    private Long getPrincipalKey(Principal principal) {
+        return Long.parseLong(principal.getName());
     }
 }

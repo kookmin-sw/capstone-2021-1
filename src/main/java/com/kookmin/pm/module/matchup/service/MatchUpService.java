@@ -3,6 +3,7 @@ package com.kookmin.pm.module.matchup.service;
 import com.kookmin.pm.module.league.domain.League;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
@@ -10,6 +11,7 @@ import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
 import com.kookmin.pm.module.matchup.domain.RecordType;
 import com.kookmin.pm.module.matchup.dto.MatchUpCreateInfo;
 import com.kookmin.pm.module.matchup.dto.MatchUpDetails;
+import com.kookmin.pm.module.matchup.dto.MemberRecord;
 import com.kookmin.pm.module.matchup.repository.MatchUpRecordRepository;
 import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
 import com.kookmin.pm.module.member.domain.Member;
@@ -49,6 +51,11 @@ public class MatchUpService {
         }
     }
 
+    public void createIndividualTournamentMatchUp(@NonNull League league,
+                                                  @NonNull List<Member> participantList) {
+
+    }
+
     public Long startMatching(@NonNull Long usn,
                               @NonNull Long matchUpId,
                               @NonNull MatchUpCreateInfo matchUpCreateInfo) {
@@ -56,7 +63,7 @@ public class MatchUpService {
         MatchUp matchUp = getMatchUpEntity(matchUpId);
         League league = matchUp.getLeague();
 
-        if(!(matchUp.getFirstMember().getId().equals(usn) || matchUp.getSecondMember().getId().equals(usn)))
+        if(!matchUp.getFirstMember().getId().equals(usn))
             throw new RuntimeException();
 
         //TODO::시작 시간 유효성 체크
@@ -71,14 +78,14 @@ public class MatchUpService {
     }
 
     //TODO::대회 매칭 수락 요청
-    public void approveMatchUp(@NonNull Long usn, @NonNull Long matchUpId, @NonNull Long matchingId) {
-        Matching matching = getMatchingEntity(matchingId);
+    public void approveMatchUp(@NonNull Long usn, @NonNull Long matchUpId) {
         MatchUp matchUp = getMatchUpEntity(matchUpId);
+        Matching matching = matchUp.getMatching();
 
-        if(!(matchUp.getFirstMember().getId().equals(usn) || matchUp.getSecondMember().getId().equals(usn)))
+        if(!matchUp.getSecondMember().getId().equals(usn))
             throw new RuntimeException();
 
-        if(!matchUp.getMatching().getId().equals(matchingId))
+        if(matching == null || !matching.getStatus().equals(MatchingStatus.SCHEDULED))
             throw new RuntimeException();
 
         //TODO:: 매치업 참가들에게 알려줘야함
@@ -88,9 +95,9 @@ public class MatchUpService {
     }
 
     //TODO::대회 매칭 기권패 요청
-    public void giveUpMatchUp(@NonNull Long usn, @NonNull Long matchUpId, @NonNull Long matchingId) {
-        Matching matching = getMatchingEntity(matchingId);
+    public void giveUpMatchUp(@NonNull Long usn, @NonNull Long matchUpId) {
         MatchUp matchUp = getMatchUpEntity(matchUpId);
+        Matching matching = matchUp.getMatching();
 
         Member first = matchUp.getFirstMember();
         Member second = matchUp.getSecondMember();
@@ -98,7 +105,7 @@ public class MatchUpService {
         if(!(first.getId().equals(usn) || second.getId().equals(usn)))
             throw new RuntimeException();
 
-        if(!matchUp.getMatching().getId().equals(matchingId))
+        if(matching == null)
             throw new RuntimeException();
 
         matchUp.endMatchUp();
@@ -196,12 +203,33 @@ public class MatchUpService {
         } else if(lookUpType.equals(MatchUpLookUpType.WITH_ALL_INFOS)) {
             MatchUpRecord record = getMatchUpRecordEntityByMatchUp(matchUp);
             League league = matchUp.getLeague();
-            matchUpDetails = new MatchUpDetails(matchUp, record, league);
+            Matching matching = matchUp.getMatching();
+
+            matchUpDetails = new MatchUpDetails(matchUp, record, league, matching);
         } else {
             matchUpDetails = new MatchUpDetails(matchUp);
         }
 
         return matchUpDetails;
+    }
+
+    public MemberRecord lookUpMyRecord(@NonNull Long usn) {
+        Member member = getMemberEntity(usn);
+        List<MatchUpRecord> matchUpRecordList = matchUpRecordRepository.findByWinnerOrLoser(member, member);
+
+        int winCount = 0, loseCount = 0;
+
+        for(MatchUpRecord record : matchUpRecordList) {
+            if(record.getWinner().equals(member)) {
+                winCount++;
+            } else {
+                loseCount++;
+            }
+        }
+
+        MemberRecord memberRecord = new MemberRecord(winCount, loseCount);
+
+        return memberRecord;
     }
 
     private Member getMemberEntity(Long usn) {

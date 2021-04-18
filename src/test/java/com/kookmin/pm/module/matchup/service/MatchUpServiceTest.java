@@ -223,7 +223,7 @@ class MatchUpServiceTest {
         matchUpCreateInfo.setStartTime(startTime);
 
         Long matchingId = matchUpService.startMatching(usn, matchUp.getId(), matchUpCreateInfo);
-        matchUpService.approveMatchUp(host.getId(), matchUp.getId(), matchingId);
+        matchUpService.approveMatchUp(host.getId(), matchUp.getId());
 
         Matching matching = matchingRepository.findById(matchingId).get();
         MatchUp recentMatchUp = matchUpRepository.findById(matchUp.getId()).get();
@@ -264,7 +264,7 @@ class MatchUpServiceTest {
         matchUpCreateInfo.setStartTime(startTime);
 
         Long matchingId = matchUpService.startMatching(usn, matchUp.getId(), matchUpCreateInfo);
-        matchUpService.giveUpMatchUp(host.getId(), matchUp.getId(), matchingId);
+        matchUpService.giveUpMatchUp(host.getId(), matchUp.getId());
 
         Matching matching = matchingRepository.findById(matchingId).get();
         MatchUp recentMatchUp = matchUpRepository.findById(matchUp.getId()).get();
@@ -311,7 +311,7 @@ class MatchUpServiceTest {
         Member winner = matchUp.getFirstMember();
         Member loser = matchUp.getSecondMember();
 
-        matchUpService.approveMatchUp(winner.getId(),matchUp.getId(), matchingId);
+        matchUpService.approveMatchUp(winner.getId(),matchUp.getId());
 
         matchUpService.endMathUp(winner.getId(),
                 loser.getId(), matchUp.getId());
@@ -404,7 +404,7 @@ class MatchUpServiceTest {
         Member winner = matchUp.getFirstMember();
         Member loser = matchUp.getSecondMember();
 
-        matchUpService.approveMatchUp(winner.getId(),matchUp.getId(), matchingId);
+        matchUpService.approveMatchUp(winner.getId(),matchUp.getId());
 
         matchUpService.endMathUp(winner.getId(),
                 loser.getId(), matchUp.getId());

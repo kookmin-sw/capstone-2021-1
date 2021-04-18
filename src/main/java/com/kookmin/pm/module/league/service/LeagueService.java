@@ -7,6 +7,10 @@ import com.kookmin.pm.module.league.dto.*;
 import com.kookmin.pm.module.league.repository.LeagueParticipantsRepository;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 
+import com.kookmin.pm.module.matchup.domain.MatchUp;
+import com.kookmin.pm.module.matchup.domain.MatchUpStatus;
+import com.kookmin.pm.module.matchup.repository.MatchUpRepository;
+import com.kookmin.pm.module.matchup.service.MatchUpService;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
@@ -34,7 +38,9 @@ public class LeagueService {
     private final LeagueParticipantsRepository leagueParticipantsRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final MatchUpRepository matchUpRepository;
     private final MemberService memberService;
+    private final MatchUpService matchUpService;
 
     public Long openLeague(@NonNull Long usn, @NonNull LeagueCreateInfo leagueCreateInfo) {
         Member host = getMemberEntity(usn);
@@ -245,7 +251,9 @@ public class LeagueService {
 
         league.startLeague();
 
-        //TODO::대진표 생성해줘야함
+        this.createMatchUps(league);
+
+        //TODO::참가자들에게 알림 보내줘야함
     }
 
     public void endLeague(@NonNull Long usn, @NonNull Long leagueId) {
@@ -255,6 +263,9 @@ public class LeagueService {
             throw new RuntimeException();
 
         if(!league.getStatus().equals(LeagueStatus.PROCEEDING))
+            throw new RuntimeException();
+
+        if(!this.validateMatchUpStatus(league))
             throw new RuntimeException();
 
         league.endLeague();
@@ -337,5 +348,32 @@ public class LeagueService {
 
     private Member getMemberEntity(Long usn) {
         return memberRepository.findById(usn).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void createMatchUps(League league) {
+        List<Member> leagueParticipants = leagueRepository.findMemberInLeague(league.getId(), LeagueParticipantsStatus.PARTICIPATING);
+        LeagueType leagueType = league.getType();
+        Member host = league.getMember();
+
+        leagueParticipants.add(host);
+
+        if(leagueType.equals(LeagueType.LEAGUE)) {
+            matchUpService.createIndividualLeagueMatchUp(league, leagueParticipants);
+        } else if(leagueType.equals(LeagueType.TOURNAMENT)) {
+            //TODO::토너먼트용 대진표 생성 기능 추가필요
+            matchUpService.createIndividualTournamentMatchUp(league, leagueParticipants);
+        }
+    }
+
+    private boolean validateMatchUpStatus(League league) {
+        List<MatchUp> matchUpList = matchUpRepository.findByLeague(league);
+
+        for(MatchUp matchUp : matchUpList) {
+            if(!matchUp.getStatus().equals(MatchUpStatus.END)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

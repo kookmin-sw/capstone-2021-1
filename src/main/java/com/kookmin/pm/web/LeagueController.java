@@ -1,9 +1,6 @@
 package com.kookmin.pm.web;
 
-import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
-import com.kookmin.pm.module.league.dto.LeagueDetails;
-import com.kookmin.pm.module.league.dto.LeagueEditInfo;
-import com.kookmin.pm.module.league.dto.LeagueSearchCondition;
+import com.kookmin.pm.module.league.dto.*;
 import com.kookmin.pm.module.league.service.LeagueLookupType;
 import com.kookmin.pm.module.league.service.LeagueService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -118,6 +116,28 @@ public class LeagueController {
                 .body("리그를 탈퇴하셨습니다.");
     }
 
+    @PutMapping(value = "/league/{leagueId}/start")
+    public ResponseEntity startLeague(Principal principal,
+                                      @PathVariable(name = "leagueId") Long leagueId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.startLeague(usn, leagueId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그를 시작합니다.");
+    }
+
+    @PutMapping(value = "/league/{leagueId}/end")
+    public ResponseEntity endLeague(Principal principal,
+                                    @PathVariable(name = "leagueId") Long leagueId) {
+        Long usn = getPrincipalKey(principal);
+        leagueService.endLeague(usn, leagueId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("리그를 종료합니다.");
+    }
+
     @GetMapping("/member/league")
     public ResponseEntity findMyLeague(Principal principal,
                                        Pageable pageable,
@@ -141,6 +161,27 @@ public class LeagueController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
+    }
+
+    @GetMapping("/member/league/participate")
+    public ResponseEntity findMyLeagueParticipationRequest(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+
+        List<LeagueParticipantDetails> leagueParticipantDetailList = leagueService.findMyParticipationRequest(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(leagueParticipantDetailList);
+    }
+
+    @GetMapping("/member/league/participate/request")
+    public ResponseEntity findLeagueParticipationRequest(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+        Map<String,Object> participationRequestList = leagueService.findLeagueParticipationRequest(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(participationRequestList);
     }
 
     private Long getPrincipalKey(Principal principal) {
