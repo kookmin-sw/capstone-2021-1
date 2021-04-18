@@ -129,8 +129,6 @@ public class MemberController {
                 .body(record);
     }
 
-
-
     private Long getPrincipalKey(Principal principal) {
         return Long.parseLong(principal.getName());
     }
