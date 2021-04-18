@@ -43,13 +43,12 @@ public class MatchUpController {
                 .body(result);
     }
 
-    @PutMapping("/league/{leagueId}/match-up/{matchUpId}/matching/{matchingId}")
+    @PutMapping("/league/{leagueId}/match-up/{matchUpId}/matching")
     public ResponseEntity approveMatching (Principal principal,
                                            @PathVariable(name="leagueId") Long leagueId,
-                                           @PathVariable(name="matchUpId") Long matchUpId,
-                                           @PathVariable(name="matchingId") Long matchingId) {
+                                           @PathVariable(name="matchUpId") Long matchUpId) {
         Long usn = getPrincipalKey(principal);
-        matchUpService.approveMatchUp(usn, matchUpId, matchingId);
+        matchUpService.approveMatchUp(usn, matchUpId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

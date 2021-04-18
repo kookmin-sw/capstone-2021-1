@@ -3,6 +3,7 @@ package com.kookmin.pm.module.matchup.service;
 import com.kookmin.pm.module.league.domain.League;
 import com.kookmin.pm.module.league.repository.LeagueRepository;
 import com.kookmin.pm.module.matching.domain.Matching;
+import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.repository.MatchingRepository;
 import com.kookmin.pm.module.matchup.domain.MatchUp;
 import com.kookmin.pm.module.matchup.domain.MatchUpRecord;
@@ -62,7 +63,7 @@ public class MatchUpService {
         MatchUp matchUp = getMatchUpEntity(matchUpId);
         League league = matchUp.getLeague();
 
-        if(!(matchUp.getFirstMember().getId().equals(usn) || matchUp.getSecondMember().getId().equals(usn)))
+        if(!matchUp.getFirstMember().getId().equals(usn))
             throw new RuntimeException();
 
         //TODO::시작 시간 유효성 체크
@@ -77,14 +78,14 @@ public class MatchUpService {
     }
 
     //TODO::대회 매칭 수락 요청
-    public void approveMatchUp(@NonNull Long usn, @NonNull Long matchUpId, @NonNull Long matchingId) {
-        Matching matching = getMatchingEntity(matchingId);
+    public void approveMatchUp(@NonNull Long usn, @NonNull Long matchUpId) {
         MatchUp matchUp = getMatchUpEntity(matchUpId);
+        Matching matching = matchUp.getMatching();
 
-        if(!(matchUp.getFirstMember().getId().equals(usn) || matchUp.getSecondMember().getId().equals(usn)))
+        if(!matchUp.getSecondMember().getId().equals(usn))
             throw new RuntimeException();
 
-        if(!matchUp.getMatching().getId().equals(matchingId))
+        if(matching == null || !matching.getStatus().equals(MatchingStatus.SCHEDULED))
             throw new RuntimeException();
 
         //TODO:: 매치업 참가들에게 알려줘야함
