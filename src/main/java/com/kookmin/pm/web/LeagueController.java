@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -163,7 +164,7 @@ public class LeagueController {
     }
 
     @GetMapping("/member/league/participate")
-    public ResponseEntity findMyParticipationRequestLeague(Principal principal) {
+    public ResponseEntity findMyLeagueParticipationRequest(Principal principal) {
         Long usn = getPrincipalKey(principal);
 
         List<LeagueParticipantDetails> leagueParticipantDetailList = leagueService.findMyParticipationRequest(usn);
@@ -171,6 +172,16 @@ public class LeagueController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(leagueParticipantDetailList);
+    }
+
+    @GetMapping("/member/league/participate/request")
+    public ResponseEntity findLeagueParticipationRequest(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+        Map<String,Object> participationRequestList = leagueService.findLeagueParticipationRequest(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(participationRequestList);
     }
 
     private Long getPrincipalKey(Principal principal) {
