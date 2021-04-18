@@ -172,10 +172,12 @@ public class MatchingService {
         } else if(lookUpType.equals(MatchingLookUpType.WITH_PARTICIPANTS)) {
             matchingDetails = new MatchingDetails(matching);
 
-            MemberDetails memberDetails = memberService
-                    .lookUpMemberDetails(matching.getMember().getId(), LookupType.WITHALLINFOS);
+            if(matching.getMember() != null) {
+                MemberDetails memberDetails = memberService
+                        .lookUpMemberDetails(matching.getMember().getId(), LookupType.WITHALLINFOS);
 
-            matchingDetails.setHost(memberDetails);
+                matchingDetails.setHost(memberDetails);
+            }
 
             List<Member> participants = matchingRepository
                     .searchMemberInMatchingParticipant(matchingId, ParticipantStatus.PARTICIPATING);
