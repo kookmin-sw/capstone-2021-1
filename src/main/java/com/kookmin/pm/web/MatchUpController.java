@@ -73,8 +73,8 @@ public class MatchUpController {
                                       @PathVariable(name="matchUpId") Long matchUpId,
                                       @RequestBody Map<String, Object> requestBody) {
         Long usn = getPrincipalKey(principal);
-        Long winnerUsn = (Long)requestBody.get("winnerUsn");
-        Long loserUsn = (Long)requestBody.get("loserUsn");
+        Long winnerUsn = new Long((int)requestBody.get("winnerUsn"));
+        Long loserUsn = new Long((int)requestBody.get("loserUsn"));
 
         matchUpService.endMathUp(winnerUsn, loserUsn, matchUpId);
 
