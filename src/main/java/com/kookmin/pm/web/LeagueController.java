@@ -1,9 +1,6 @@
 package com.kookmin.pm.web;
 
-import com.kookmin.pm.module.league.dto.LeagueCreateInfo;
-import com.kookmin.pm.module.league.dto.LeagueDetails;
-import com.kookmin.pm.module.league.dto.LeagueEditInfo;
-import com.kookmin.pm.module.league.dto.LeagueSearchCondition;
+import com.kookmin.pm.module.league.dto.*;
 import com.kookmin.pm.module.league.service.LeagueLookupType;
 import com.kookmin.pm.module.league.service.LeagueService;
 import lombok.RequiredArgsConstructor;
@@ -163,6 +160,17 @@ public class LeagueController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
+    }
+
+    @GetMapping("/member/league/participate")
+    public ResponseEntity findMyParticipationRequestLeague(Principal principal) {
+        Long usn = getPrincipalKey(principal);
+
+        List<LeagueParticipantDetails> leagueParticipantDetailList = leagueService.findMyParticipationRequest(usn);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(leagueParticipantDetailList);
     }
 
     private Long getPrincipalKey(Principal principal) {
