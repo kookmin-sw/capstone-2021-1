@@ -7,38 +7,49 @@ import EnrollText from "../../components/enrollment/enroll_text";
 import DoubleCheckBtn from "../../components/enrollment/doubleCheckBtn";
 import CommonInput from "../../components/enrollment/enrollInput";
 import SubmitBtn from "../../components/enrollment/submitBtn";
+import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import {actionCreators} from "../../redux/reducers/index"
 class Enrollment extends React.Component {
     constructor(props) {
         super(props);
-        this.state={data: {
-            uid:'',password:'',name:'',nickname:'',phoneNumber:''}}
+        this.state={
+            uid:'',password:'',name:'',nickname:'',phoneNumber:'',provider:'default',address:'seoul'}
     }
-    
+
+    handleDoubleckecked = () => {
+        const { doubleChecked_ID } = this.props;
+        doubleChecked_ID(this.state.data.uid);
+    }
+    handleSubmit = () =>  {
+        const { registerUser } = this.props;
+        registerUser(this.state);
+    }
     uidChange = (e) => {
-        this.setState({data:{
+        this.setState({
             uid:e.target.value,
-        }})
+        })
     }
 
     pwChange = (e) => {
-        this.setState({data:{
+        this.setState({
             password:e.target.value,
-        }})
+        })
     }
     nameChange = (e) => {
-        this.setState({data:{
+        this.setState({
             name:e.target.value,
-        }})
+        })
     }
     nicknameChange = (e) => {
-        this.setState({data:{
+        this.setState({
             nickname:e.target.value,
-        }})
+        })
     }
     phoneNumChange = (e) => {
-        this.setState({data:{
+        this.setState({
             phoneNumber:e.target.value,
-        }})
+        })
     }
         
     render() {
@@ -51,27 +62,26 @@ class Enrollment extends React.Component {
         <div id="Enroll_Container" className="main_contents_container">
                     <div className="enroll_id">
                         <EnrollText text="id"/>
-                        <CommonInput doubleChecked={true} info="id"/> 
-                        <DoubleCheckBtn/>
+                        <input className="doubleckecked_input" onChange={this.uidChange} placeholder="id를 입력해주세요."></input>
+                        <div className="id_double_check" onClick={this.handleDoubleckecked}>중복확인</div>
                     </div>
                     <div className="enroll_pw">
                         <EnrollText text="pw"/>
-                        <CommonInput doubleChecked={false} info="pw"/> 
+                        <input className="nondoubleckecked_input" onChange={this.pwChange} placeholder="pw를 입력해주세요."></input>
                     </div>
                     <div className="enroll_nickname">
                         <EnrollText text="nickname"/>
-                        <CommonInput doubleChecked={true} info="nickname"/> 
-                        <DoubleCheckBtn/>
+                        <input className="nondoubleckecked_input" onChange={this.nicknameChange} placeholder="닉네임을 입력해주세요."></input>
                     </div>
                     <div className="enroll_name">
                         <EnrollText text="name"/>
-                        <CommonInput doubleChecked={false} info="name"/> 
+                        <input className="nondoubleckecked_input" onChange={this.nameChange} placeholder="이름을 입력해주세요."></input>
                     </div>
                     <div className="enroll_phoneNumber">
                         <EnrollText text="phoneNumber"/>
-                        <CommonInput doubleChecked={false} info="phoneNumber"/> 
+                        <input className="nondoubleckecked_input" onChange={this.phoneNumChange} placeholder="휴대폰 번호를 입력해주세요."></input>
                     </div>
-                    <SubmitBtn/>
+                    <div className="submit_btn" onClick={this.handleSubmit}>제출하기</div>
         </div>
                 
       </section>
@@ -79,4 +89,5 @@ class Enrollment extends React.Component {
   }
 }
 
-export default Enrollment;
+
+export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(Enrollment);

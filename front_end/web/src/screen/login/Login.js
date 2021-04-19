@@ -18,6 +18,10 @@ class Login extends React.Component {
     loginUser(data);
   }
   
+  state = {
+  }
+
+  
   render() {
     return (
       <section className="container">

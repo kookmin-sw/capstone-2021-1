@@ -62,4 +62,18 @@
     text-align: center;
     margin-top:5px;
     background-color: #dcdcdc;
+    width: 18%;
+    float:right;
+}
+
+.doubleckecked_input{
+    height: fit-content;
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.nondoubleckecked_input{
+    height: fit-content;
+    width:100%;
+    margin-bottom:20px;
 }
