@@ -15,9 +15,22 @@ class Login extends React.Component {
  
   handleLogin=data=>{
     const{loginUser} = this.props;
-    loginUser(data);
+    var data = loginUser(data);
+    this.props.history.push("/login")
+    console.log(data)
   }
-  
+
+  uidChange = (e) => {
+    this.setState({
+        uid:e.target.value,
+    })
+}
+
+pwChange = (e) => {
+    this.setState({
+        password:e.target.value,
+    })
+}
   state = {
   }
 
@@ -30,8 +43,8 @@ class Login extends React.Component {
         </SideContentsContainer>
         <div className="login_contents">
           <div className="login_input">
-            <div className="login_input_id"><LoginText text="email"/><CommonInput doubleChecked={false} info="email"/></div>
-            <div className="login_input_pw"><LoginText text="password"/><CommonInput doubleChecked={false} info="pw"/></div>
+            <div className="login_input_id"><LoginText text="email"/><input onChange={this.uidChange} placeholder="email을 입력해 주세요."></input></div>
+            <div className="login_input_pw"><LoginText text="password"/><input  onChange={this.pwChange} placeholder="비밀번호를 입력해 주세요."></input></div>
           </div>
           <div className="login_submit">
           <div className="login_submit_btn" onClick={()=>this.handleLogin({
