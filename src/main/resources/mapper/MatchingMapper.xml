@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kookmin.pm.module.matching.repository.MatchingMapper">
+    <resultMap id="matchingDetails" type="com.kookmin.pm.module.matching.dto.MatchingDetails">
+        <result column="MATCHING_ID" property="id"/>
+        <result column="TITLE" property="title"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="START_TIME" property="startTime"/>
+        <result column="END_TIME" property="endTime"/>
+        <result column="LATITUDE" property="latitude"/>
+        <result column="LONGITUDE" property="longitude"/>
+        <result column="STATUS" property="status"/>
+        <result column="MAX_COUNT" property="maxCount"/>
+        <result column="DISTANCE" property="distance"/>
+        <result column="NAME" property="category"/>
+    </resultMap>
+
+    <!--DISTANCE &lt;= #{distance}-->
+    <select id="searchMatchingWithLocationInfo" parameterType="hashMap" resultMap="matchingDetails">
+        SELECT M.MATCHING_ID, M.TITLE, M.DESCRIPTION, M.START_TIME, M.END_TIME, M.LATITUDE, M.LONGITUDE, M.STATUS, M.MAX_COUNT,
+        	(6371*ACOS(COS(RADIANS(#{latitude}))*cos(RADIANS(M.LATITUDE))*COS(RADIANS(M.LONGITUDE)
+        	-RADIANS(#{longitude}))+SIN(RADIANS(#{latitude}))*SIN(RADIANS(M.LATITUDE)))) AS DISTANCE,
+        	C.NAME
+        FROM MATCHING AS M
+        LEFT JOIN CATEGORY AS C
+        ON M.CATEGORY_ID = C.CATEGORY_ID
+        WHERE M.MATCHING_ID >= 0
+        <if test="title != null and !title.equals('')">
+            AND TITLE LIKE CONCAT('%',#{title},'%')
+        </if>
+        <if test="status != null and !status.equals('')">
+            AND STATUS = #{status}
+        </if>
+        <if test="maxCount != null">
+            AND MAX_COUNT &lt;= #{maxCount}
+        </if>
+        <if test="category != null and !category.equals('')">
+            AND C.NAME = #{category}
+        </if>
+        <if test="host != null">
+            AND M.MEMBER_ID = #{host}
+        </if>
+        GROUP BY MATCHING_ID
+        HAVING DISTANCE &lt;= #{distance}
+
+    </select>
+</mapper>
