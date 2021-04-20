@@ -50,28 +50,12 @@ function doubleChecked_ID(dataToSubmit){
   };
 }
 
-async function loginUser(dataToSubmit) {
+function loginUser(data) {
   
-  await axios({
-    method:'post',
-    url: USER_URL+"/signin",
-    data: {
-      uid: dataToSubmit.uid,
-      password : dataToSubmit.password,
-      nickname: dataToSubmit.nickname,
-      name: dataToSubmit.name,
-      phoneNumber:dataToSubmit.phoneNumber,
-    },
-  }).then(function(response){
-    return {
-      type: LOGIN_USER,
-      payload: response.data,
-    };
-  }).catch(function(error){
-    alert(error.message);
-  })
-
-  
+  return {
+    type : LOGIN_USER,
+    payload : data,
+  }
 }
 
 const InitialState = { isLogin: false };
