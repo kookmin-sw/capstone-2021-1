@@ -10,21 +10,25 @@ import SubmitBtn from "../../components/enrollment/submitBtn";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
+import { Redirect } from "react-router";
 class Enrollment extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            uid:'',password:'',name:'',nickname:'',phoneNumber:'',provider:'default',address:'seoul'}
+            uid:'',password:'',name:'',nickname:'',phoneNumber:'',provider:'default',address:'seoul',complete:false}
     }
 
     handleDoubleckecked = () => {
         const { doubleChecked_ID } = this.props;
-        doubleChecked_ID(this.state.data.uid);
+        doubleChecked_ID(this.state.uid);
     }
+
     handleSubmit = () =>  {
         const { registerUser } = this.props;
         registerUser(this.state);
+        this.props.history.push("/");
     }
+    
     uidChange = (e) => {
         this.setState({
             uid:e.target.value,
@@ -55,6 +59,7 @@ class Enrollment extends React.Component {
     render() {
         
     return (
+        
       <section className="container">
         <Header/>
         <SideContentsContainer>

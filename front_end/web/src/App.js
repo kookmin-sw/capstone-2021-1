@@ -15,7 +15,7 @@ import Mypage from "./screen/Mypage/Mypage";
 class App extends React.Component{
  
   render(){
-    console.log(this.props);
+    
   return (
     <BrowserRouter>
       <Route path="/matching" exact={true} component={Matching}/>

@@ -8,7 +8,7 @@ function CommonInput({info , doubleChecked}) {
     var ph = info+"를 입력해주세요.";
 
   return (
-    <input name={Name} className={Cn} placeholder={ph} value={Name} onChange={onChange}></input>
+    <input name={Name} className={Cn} placeholder={ph} value={Name}></input>
   )
 }
 

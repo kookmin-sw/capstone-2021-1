@@ -11,18 +11,60 @@ import LoginSubmitBtn from "../../components/login/loginSubmitBtn";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
+import axios from "axios";
+
+var LOGIN_DATA ;
+
+async function handleLogin(data){
+  var data = await axios({
+    method:'post',
+    url: "http://54.180.98.138:8080"+"/signin",
+    data: {
+      uid: data.uid,
+      password : data.password,
+    },
+  }).then(function(response){
+    return response.data
+  }).catch(function(error){
+    alert(error.message);
+  })
+  LOGIN_DATA = data
+  return data;
+}
+
 class Login extends React.Component {
- 
-  handleLogin=data=>{
-    const{loginUser} = this.props;
-    loginUser(data);
+
+  uidChange = (e) => {
+    this.setState({
+        uid:e.target.value,
+    })
+  }
+
+  pwChange = (e) => {
+      this.setState({
+          password:e.target.value,
+      })
+  }
+
+  state = {
+
   }
   
-  state = {
+  setAccessToken = (data) =>{
+    const { loginUser } = this.props;
+    loginUser(data);
+    alert(data.nickname + "님 환영합니다.");
   }
 
   
   render() {
+    setInterval(() => {
+      if(LOGIN_DATA != null){
+        this.setAccessToken(LOGIN_DATA);
+        this.props.history.go(-1);
+        LOGIN_DATA = null;
+      }
+    }, 500);
     return (
       <section className="container">
         <Header/>
@@ -30,11 +72,11 @@ class Login extends React.Component {
         </SideContentsContainer>
         <div className="login_contents">
           <div className="login_input">
-            <div className="login_input_id"><LoginText text="email"/><CommonInput doubleChecked={false} info="email"/></div>
-            <div className="login_input_pw"><LoginText text="password"/><CommonInput doubleChecked={false} info="pw"/></div>
+            <div className="login_input_id"><LoginText text="email"/><input onChange={this.uidChange} placeholder="email을 입력해 주세요."></input></div>
+            <div className="login_input_pw"><LoginText text="password"/><input  onChange={this.pwChange} placeholder="비밀번호를 입력해 주세요."></input></div>
           </div>
           <div className="login_submit">
-          <div className="login_submit_btn" onClick={()=>this.handleLogin({
+          <div className="login_submit_btn" onClick={()=>handleLogin({
     "uid":"dlwlsrn94@naver.com",
     "password":"1234"
 })}>로그인</div>

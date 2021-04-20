@@ -4,7 +4,6 @@ import axios from 'axios';
 const USER_URL = "http://54.180.98.138:8080";
 
 function registerUser(dataToSubmit) {
-  console.log(dataToSubmit)
   const data = axios({
     method: 'post',
     url: USER_URL + "/signup",
@@ -17,11 +16,16 @@ function registerUser(dataToSubmit) {
       provider: dataToSubmit.provider,
       address: dataToSubmit.address
     },
+}).then(function(response){
+  alert("회원 가입 되었습니다.");
+
+}).catch(function(error){
+  alert(error.message);
 })
-return {
-  type: DOUBLECHECKED_ID,
-  payload: data,
-};
+  return {
+    type: DOUBLECHECKED_ID,
+    payload: data,
+  };
 }
 
 function doubleChecked_ID(dataToSubmit){
@@ -29,32 +33,29 @@ function doubleChecked_ID(dataToSubmit){
     method:'put',
     url: USER_URL + "/member/validate",
     data:{
-      uid: dataToSubmit.uid
+      uid: dataToSubmit
     }
+  }).then(function(response){
+    if (response.data == false){
+      alert("사용 가능한 ID 입니다.")
+    }else{
+      alert("이미 있는 ID 입니다.")
+    }
+  }).catch(function(error){
+    alert(error.message)
   })
-
   return {
     type: DOUBLECHECKED_ID,
     payload: data,
   };
 }
 
-function loginUser(dataToSubmit) {
-  const data = axios({
-    method:'post',
-    url: USER_URL+"/signin",
-    data: {
-      uid: dataToSubmit.uid,
-      password : dataToSubmit.password,
-      nickname: dataToSubmit.nickname,
-      name: dataToSubmit.name,
-      phoneNumber:dataToSubmit.phoneNumber,
-    }
-  })
+function loginUser(data) {
+  
   return {
-    type: LOGIN_USER,
-    payload: data,
-  };
+    type : LOGIN_USER,
+    payload : data,
+  }
 }
 
 const InitialState = { isLogin: false };
