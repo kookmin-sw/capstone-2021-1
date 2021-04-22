@@ -39,6 +39,7 @@ class Login extends React.Component {
         uid:e.target.value,
     })
   }
+  
 
   pwChange = (e) => {
       this.setState({
@@ -51,9 +52,15 @@ class Login extends React.Component {
   }
   
   setAccessToken = (data) =>{
-    const { loginUser } = this.props;
+    const { loginUser,setHeader } = this.props;
     loginUser(data);
     alert(data.nickname + "님 환영합니다.");
+    const header = {
+    'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    'Accept': '*/*',
+    'X-AUTH-TOKEN': data.accessToken,
+    }
+    setHeader(header);
   }
 
   
@@ -65,6 +72,7 @@ class Login extends React.Component {
         LOGIN_DATA = null;
       }
     }, 500);
+    
     return (
       <section className="container">
         <Header/>

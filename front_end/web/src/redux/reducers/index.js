@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID } from "../types/index";
+import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW} from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -50,8 +50,28 @@ function doubleChecked_ID(dataToSubmit){
   };
 }
 
+function setUserCrew(data){
+  return{
+    type: SET_USER_CREW,
+    payload: data
+  }
+}
+
+function setUserDetail(data){
+  return{
+    type: SET_USER_DETAIL,
+    payload: data
+  }
+}
+
+function setHeader(data){
+  return {
+    type : SET_HEADER,
+    payload : data
+  }
+}
+
 function loginUser(data) {
-  
   return {
     type : LOGIN_USER,
     payload : data,
@@ -62,6 +82,21 @@ const InitialState = { isLogin: false };
 
 function reducer(state = InitialState, action){
     switch (action.type) {
+        case SET_USER_DETAIL:
+          return{
+            ...state,
+            userDetail: action.payload,
+          }
+        case SET_USER_CREW:
+          return{
+            ...state,
+            userCreww: action.payload,
+          }
+        case SET_HEADER:
+          return{
+            ...state,
+            request_header : action.payload
+          }
         case REGISTER_USER:
             return state = {
                 ...state,
@@ -85,7 +120,10 @@ function reducer(state = InitialState, action){
 const actionCreators = {
     loginUser,
     registerUser,
-    doubleChecked_ID
+    doubleChecked_ID,
+    setHeader,
+    setUserDetail,
+    setUserCrew
   };
 
 export { actionCreators };
