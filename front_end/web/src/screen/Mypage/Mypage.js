@@ -4,17 +4,64 @@ import "../../assets/css/Mypage/Mypage.css";
 import SideContentsContainer from "../../components/common/side_contents_container";
 import default_profile from "../../assets/images/common/default_profile.png";
 import RadarChart from 'react-svg-radar-chart';
+import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import {actionCreators} from "../../redux/reducers/index"
+import axios from "axios";
+
+var user_detail;
+var user_crew = [];
+async function getCrewData(data){
+  var data = await axios({
+    method:'get',
+    url: "http://54.180.98.138:8080"+"/member/crew",
+    headers: {'X-AUTH-TOKEN': data.accessToken}
+  }).then(function(response){
+    return response.data
+  }).catch(function(error){
+    alert(error.message);
+  })
+  console.log(data);
+  user_crew = data;
+  return data;
+}
+
+async function getUserData(data){
+  var data = await axios({
+    method:'get',
+    url: "http://54.180.98.138:8080"+"/member/detail/" + data.id,
+    headers: {'X-AUTH-TOKEN': data.accessToken}
+  }).then(function(response){
+    return response.data
+  }).catch(function(error){
+    alert(error.message);
+  })
+  user_detail = data;
+  return data;
+}
 
 class Mypage extends React.Component {
 
-  state={user_data:[{"id":1,"uid":"dlwlsrn94@naver.com","password":"{bcrypt}$2a$10$xf5HGxFwKlqTZRwx/4HPEOw3bpR8SubTM9inm4FHNAF7e6A4iBdfq","nickname":"닉네임9","name":"이진구구","address":"서울특별시 서대문구","description":"자기소개","phoneNumber":"010-8784-3827","provider":"default","status":"ACTIVE","role":"USER"},{"id":8,"uid":"dlwlsrn8","password":"{bcrypt}$2a$10$SseHs69gKw7XH8cDmGRpxujMGUsjyYDFXSpSNcwFTk1rnAm39Bi3q","nickname":"이진팔","name":"이진팔","address":"대구광역시 동구","description":"자기 소개","phoneNumber":"010-8784-3827","provider":"default","status":"ACTIVE","role":"USER"},{"id":12,"uid":"dlwlsrn7","password":"{bcrypt}$2a$10$8JttqrnQDpNy6ZW67j2sSu0ic8GnHhVf9mONUevfZu/8elM2W3sqS","nickname":"이진칠","name":"이진칠","address":" 부산","description":"자기 소개","phoneNumber":"010-8784-3827","provider":"default","status":"ACTIVE","role":"USER"}]}
+  state={}
   componentDidMount() {
-    
+      const { login_data } = this.props.store.state;
+      getUserData(login_data);
+      getCrewData(login_data);
+  }
+
+  componentWillUnmount(){
+    const {setUserDetail, setUserCrew} = this.props;
+    setUserDetail(user_detail);
+    setUserCrew(user_crew);
   }
 
   render() {
-    const user =this.state.user_data[0];
     
+    const { login_data } = this.props.store.state;
+    if (login_data == undefined){
+      this.props.history.push("/login");
+    }else{
+      
     return (
       <section className="container">
         <Header/>
@@ -26,9 +73,9 @@ class Mypage extends React.Component {
                     <img src={default_profile}></img>
                 </div>
                 <div className="my_info_info">
-                    {user.nickname}
+                    {login_data.nickname}
                     <div className="my_info_descript">
-                        {user.description}
+                        
                     </div>
                 </div>
             </div>
@@ -70,17 +117,22 @@ class Mypage extends React.Component {
                 </div>
             <div className="info_mycrew">
                 내 크루
-                <div className="mycrew">
-                    <div className="mycrew_img"></div>
-                    <div className="mycrew_info">crew1</div>
-                </div>
+                {
+                        user_crew.map((crew) => (
+                          <div className="mycrew">
+                            <div className="mycrew_img"></div>
+                            <div className="mycrew_info">{crew.name}     {crew.description}</div>
+                      </div>
+                        ))
+                    }
+                
             </div>
             </div>
         </div>
       </section>
     );
   }
+} 
 }
 
-
-export default Mypage;
+export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(Mypage);
