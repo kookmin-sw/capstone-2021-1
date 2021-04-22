@@ -52,10 +52,11 @@ public class MemberController {
         List<String> roles = new ArrayList<>();
         roles.add(MemberRole.USER.toString());
 
-        Map<String,String> userInfos = new HashMap<>();
+        Map<String,Object> userInfos = new HashMap<>();
 
-        userInfos.put("access-token", jwtTokenProvider.createToken(member.getId().toString(), roles));
+        userInfos.put("accessToken", jwtTokenProvider.createToken(member.getId().toString(), roles));
         userInfos.put("nickname", member.getNickname());
+        userInfos.put("id", member.getId());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
