@@ -1,0 +1,17 @@
+.map_info{
+    float:left;
+    width:23%;
+    height:600px;
+    text-align: center;
+    padding:20px;
+}
+
+.propose_matching_btn{
+    margin:auto;
+    margin-top: 100px;
+    border: solid 2px #dcdcdc;
+    height:50px;
+    width: 200px;
+    font-size:32px;
+    font-weight: bold;
+}

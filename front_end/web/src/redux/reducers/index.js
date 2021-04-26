@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW} from "../types/index";
+import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER} from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -71,6 +71,13 @@ function setHeader(data){
   }
 }
 
+function setClickMarker(data){
+  return{
+    type: SET_CLICK_MARKER,
+    payload:data
+  }
+}
+
 function loginUser(data) {
   return {
     type : LOGIN_USER,
@@ -82,6 +89,11 @@ const InitialState = { isLogin: false };
 
 function reducer(state = InitialState, action){
     switch (action.type) {
+        case SET_CLICK_MARKER:
+          return{
+            ...state,
+            ClickMarker: action.payload,
+          }
         case SET_USER_DETAIL:
           return{
             ...state,
@@ -123,7 +135,8 @@ const actionCreators = {
     doubleChecked_ID,
     setHeader,
     setUserDetail,
-    setUserCrew
+    setUserCrew,
+    setClickMarker,
   };
 
 export { actionCreators };
