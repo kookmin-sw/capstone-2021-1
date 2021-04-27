@@ -7,3 +7,4 @@ export const SET_HEADER= "SET_HEADER";
 export const SET_USER_DETAIL= "SET_USER_DETAIL";
 export const SET_USER_CREW = "SET_USER_CREW";
 export const SET_CLICK_MARKER = "SET_CLICK_MARKER";
+export const SET_CREW_DATA = "SET_CREW_DATA";

@@ -8,11 +8,28 @@ import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import "../../assets/css/Home/Home.css"
+import axios from "axios";
+
+var CREW_DATAS;
+async function getCrewData(){
+  const data = await axios.get('http://54.180.98.138:8080/crew/search').then(function(response){
+      return response.data
+    }).catch(function(error){
+      alert(error.message);
+    })
+    CREW_DATAS = data
+  return data;
+}
+
 
 class Home extends React.Component {
-  
-  componentDidMount() {
-    
+  constructor(props){
+    super(props);
+    getCrewData();
+  }
+  componentWillUnmount(){
+     const {setCrewData} = this.props;
+     setCrewData(CREW_DATAS);
   }
 
   render() {
