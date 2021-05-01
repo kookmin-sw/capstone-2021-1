@@ -89,13 +89,27 @@
 
 .swiper-container {
 	height:120px;
-	border:5px solid silver;
-	border-radius:7px;
-	box-shadow:0 0 20px #ccc inset;
+	border-radius:12px;
+    padding:10px;
 }
 .swiper-slide {
-	text-align:center;
 	display:flex; /* 내용을 중앙정렬 하기위해 flex 사용 */
 	align-items:center; /* 위아래 기준 중앙정렬 */
 	justify-content:center; /* 좌우 기준 중앙정렬 */
+}
+
+.crew_text{
+    padding:15px;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    background-image: url("/src/assets/images/crew/default_crew1.jpg");
+}
+.crew_area{
+    font-size:12px;
+}
+
+.crew_name{
+    font-size:16px;
+    font-weight: bold;
 }
