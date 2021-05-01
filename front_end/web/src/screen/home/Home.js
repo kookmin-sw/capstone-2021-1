@@ -5,6 +5,7 @@ import "../../assets/css/Crew/Crew.css";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import DownHeader from "../../components/common/downHeader";
 import Header from "../../components/common/header"
+import {Link} from "react-router-dom"
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
@@ -70,10 +71,12 @@ class Home extends React.Component {
             {
               crewDatas.content.map((data)=>(
                 <SwiperSlide>
-                <div className="crew_text">
-                  <div className="crew_area">{data.activityArea}</div>
-                  <div className="crea_name">{data.name}</div>
-                </div>
+                  <Link to={{ pathname:'/crew/${data.id}', state:{data}}}>
+                    <div className="crew_text">
+                      <div className="crew_area">{data.activityArea}</div>
+                      <div className="crea_name">{data.name}</div>
+                    </div>
+                  </Link>
                 </SwiperSlide>
                 )
               )
