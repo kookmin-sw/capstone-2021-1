@@ -1,49 +1,76 @@
 import React from "react";
-//import axios from "axios";
-import Header from "../../components/common/header";
-import "../../assets/css/Common/common.css"
-import SideContentsContainer from "../../components/common/side_contents_container";
-import LinkForHomeBtn from "../../components/Home/link_for_home_btn";
+import "../../assets/css/Enroll/Enrollment.css";
+import "../../assets/css/Home/Home.css";
+import "../../assets/css/Crew/Crew.css";
+import Swiper from 'react-id-swiper';
+import Header from "../../components/common/header"
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
-import "../../assets/css/Home/Home.css"
-import axios from "axios";
 
-var CREW_DATAS;
-async function getCrewData(){
-  const data = await axios.get('http://54.180.98.138:8080/crew/search').then(function(response){
-      return response.data
-    }).catch(function(error){
-      alert(error.message);
-    })
-    CREW_DATAS = data
-  return data;
+const params = {
+  pagination: {
+    el: '.swiper-pagination.customized-swiper-pagination',
+  }, // Add your class name for pagination container
+  navigation: {
+    nextEl: '.swiper-button-next.customized-swiper-button-next', // Add your class name for next button
+    prevEl: '.swiper-button-prev.customized-swiper-button-prev' // Add your class name for prev button
+  },
+  containerClass: 'customized-swiper-container' // Replace swiper-container with customized-swiper-container
 }
 
-
 class Home extends React.Component {
-  constructor(props){
-    super(props);
-    getCrewData();
-  }
-  componentWillUnmount(){
-     const {setCrewData} = this.props;
-     setCrewData(CREW_DATAS);
-  }
+    constructor(props) {
+        super(props);
+        this.state={
+            uid:'',password:'',name:'',nickname:'',phoneNumber:'',provider:'default',address:'seoul',complete:false}
+    }
 
-  render() {
-    console.log(this.props);
+    render() {
+        console.log(this.props);
+        const {matchingDatas, crewDatas} = this.props.store.state;
     return (
+      
       <section className="container">
         <Header/>
-        <SideContentsContainer>
-        </SideContentsContainer>
-        <div className="home_main">
-          <LinkForHomeBtn link="crew" toLink="크루"></LinkForHomeBtn>
-          <LinkForHomeBtn link="matching" toLink="매칭"></LinkForHomeBtn>
-          <LinkForHomeBtn link="mypage" toLink="마이페이지"></LinkForHomeBtn>
-          <LinkForHomeBtn link="manage" toLink="관리"></LinkForHomeBtn>
+        
+        <div className="home_content">
+          <div className="home_content_matching">
+            <div className="content_text">
+              매칭
+            </div>
+            <div>
+            {
+              matchingDatas.content.map((data)=>(
+                
+                <div className="default_background_chess">
+                  <div className="matching_text">
+                    <div className="matching_text_locate">{data.description}</div>
+                    <div className="matching_text_title">{data.title}</div>
+                  </div>
+                  <div className="person_for_matching">/{data.maxCount}</div>
+                </div>)
+              )
+            }
+            </div>
+          </div>
+          <div className="home_content_crew">
+            <div className="content_text">
+              크루
+            </div>
+            <Swiper {...params}>
+            {
+              crewDatas.content.map((data)=>(
+                <div className="crew_text">
+                  <div className="crew_area">{data.activityArea}</div>
+                  <div className="crea_name">{data.name}</div>
+                </div>
+                )
+              )
+            }
+            
+           </Swiper>
+          </div>
         </div>
       </section>
     );

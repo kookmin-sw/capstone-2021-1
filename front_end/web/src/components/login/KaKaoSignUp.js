@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import KaKaoLogin from 'react-kakao-login';
-
+import "../../assets/css/Login/Login.css"
 
 class KakaoSignUp extends Component {
     constructor(props) {
@@ -27,7 +27,7 @@ class KakaoSignUp extends Component {
             <>
                 <div>
                     <br></br>
-                    <KaKaoBtn
+                    <KaKaoBtn className="kakao_login_btn"
                         buttonText="KaKao"
                         onSuccess={this.responseKaKao}
                         onFailure={this.responseFail}

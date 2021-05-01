@@ -1,16 +1,15 @@
 .header{
-    height:300px;
     position:relative;
     text-align: right;
+    padding-top: 10%;
 }
 
 .header_header{
-    background-color: #000000;
     height: 50px;
     width: 100%;
     margin: auto;
-    float: right;
-    color:#ffffff;
+    text-align: center;
+    color:#000000;
     padding-right: 5%;
     line-height:50px;
 }

@@ -1,17 +1,14 @@
 import React, { Component } from "react";
-import Header from "../../components/common/header";
-import SideContentsContainer from "../../components/common/side_contents_container";
 import KakaoSignUp from "../../components/login/KaKaoSignUp";
 import GoogleSignUp from "../../components/login/GoogleSignUp";
 import EnrollmentButton from "../../components/login/EnrollmentButton";
 import LoginText from "../../components/login/login_text";
-import CommonInput from "../../components/enrollment/enrollInput";
 import "../../assets/css/Login/Login.css"
-import LoginSubmitBtn from "../../components/login/loginSubmitBtn";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import axios from "axios";
+import login_background from '../../assets/images/common/Hamburger_icon.png';
 
 var LOGIN_DATA ;
 
@@ -68,20 +65,25 @@ class Login extends React.Component {
     setInterval(() => {
       if(LOGIN_DATA != null){
         this.setAccessToken(LOGIN_DATA);
-        this.props.history.go(-1);
+        this.props.history.push("/home");
         LOGIN_DATA = null;
       }
     }, 500);
     
     return (
       <section className="container">
-        <Header/>
-        <SideContentsContainer>
-        </SideContentsContainer>
-        <div className="login_contents">
+          <div className="login_header">
+            <div className="login_header_background">
+              <img src={login_background} alt="" className="login_background"/>
+            </div>
+            <div className="exit_btn">
+              X
+            </div>
+          </div>
+      
           <div className="login_input">
-            <div className="login_input_id"><LoginText text="email"/><input onChange={this.uidChange} placeholder="email을 입력해 주세요."></input></div>
-            <div className="login_input_pw"><LoginText text="password"/><input  onChange={this.pwChange} placeholder="비밀번호를 입력해 주세요."></input></div>
+            <div className="login_input_id"><input onChange={this.uidChange} placeholder="EMAIL"></input></div>
+            <div className="login_input_pw"><input  onChange={this.pwChange} placeholder="PASSWORD"></input></div>
           </div>
           <div className="login_submit">
           <div className="login_submit_btn" onClick={()=>handleLogin({
@@ -94,7 +96,7 @@ class Login extends React.Component {
             <div className="sns_kakao_login"><KakaoSignUp></KakaoSignUp></div>
             <div className="sns_google_login"><GoogleSignUp></GoogleSignUp></div>
           </div>
-        </div>
+        
       </section>
     );
   }

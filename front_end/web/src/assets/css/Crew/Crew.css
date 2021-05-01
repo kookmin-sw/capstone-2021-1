@@ -71,3 +71,31 @@
     float: left;
     height: 100%;
 }
+
+.add_btn{
+    border: solid 2px #dcdcdc;
+    color: white;
+    background-color: #000000;
+    text-align: center;
+    float:right;
+    height: 40px;
+    line-height: 40px;
+    width: 200px;
+}
+
+.crew_swiper{
+    height: 120px;
+}
+
+.swiper-container {
+	height:120px;
+	border:5px solid silver;
+	border-radius:7px;
+	box-shadow:0 0 20px #ccc inset;
+}
+.swiper-slide {
+	text-align:center;
+	display:flex; /* 내용을 중앙정렬 하기위해 flex 사용 */
+	align-items:center; /* 위아래 기준 중앙정렬 */
+	justify-content:center; /* 좌우 기준 중앙정렬 */
+}
