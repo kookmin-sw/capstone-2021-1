@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA} from "../types/index";
+import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA} from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -57,6 +57,13 @@ function setCrewData(data){
   }
 }
 
+function setMatchingData(data){
+  return{
+    type: SET_MATCHING_DATA,
+    payload: data
+  }
+}
+
 function setUserCrew(data){
   return{
     type: SET_USER_CREW,
@@ -96,6 +103,11 @@ const InitialState = { isLogin: false };
 
 function reducer(state = InitialState, action){
     switch (action.type) {
+        case SET_MATCHING_DATA:
+          return{
+            ...state,
+            matchingDatas: action.payload,
+          }
         case SET_CREW_DATA:
           return{
             ...state,
@@ -149,7 +161,8 @@ const actionCreators = {
     setUserDetail,
     setUserCrew,
     setClickMarker,
-    setCrewData
+    setCrewData,
+    setMatchingData
   };
 
 export { actionCreators };

@@ -3,14 +3,15 @@ import { BrowserRouter, Route, withRouter} from "react-router-dom";
 import { connect } from 'react-redux';
 import {actionCreators} from "./redux/reducers/index"
 import { bindActionCreators } from 'redux';
-import Home from "./screen/home/Home";
+import FirstPage from "./screen/home/FristPage";
 import Matching from "./screen/matching/Matching";
 import Login from "./screen/login/Login";
 import Enroll from "./screen/Enrollment/Enrollment";
 import Crew from "./screen/Crew/Crew";
 import Manage from "./screen/manage/Manage";
 import Mypage from "./screen/Mypage/Mypage";
-
+import CrewMake from "./screen/Crew/CrewMake";
+import Home from "./screen/home/Home";
 
 class App extends React.Component{
  
@@ -22,9 +23,11 @@ class App extends React.Component{
       <Route path="/login" exact={true} component={Login}/>
       <Route path="/enroll" exact={true} component={Enroll}/>
       <Route path="/crew" exact={true} component={Crew}/>
+      <Route path="/crew/make" exact={true} component={CrewMake}/>
       <Route path="/mypage" exact={true} component={Mypage}/>
       <Route path="/manage" exact={true} component={Manage}/>
-      <Route path="/" exact={true} component={Home}/>
+      <Route path="/" exact={true} component={FirstPage}/>
+      <Route path="/home" exact={true} component={Home}/>
     </BrowserRouter>
     );
   }

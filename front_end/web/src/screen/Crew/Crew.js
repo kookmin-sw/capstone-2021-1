@@ -8,6 +8,7 @@ import reset_icon from '../../assets/images/common/reset.png';
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
+import { Link } from "react-router-dom";
 
 
 
@@ -30,7 +31,7 @@ class Crew extends React.Component {
             <div className="region_filter">
             {
                     
-                }
+            }
             </div>
             <div className="crew_filter">
                 <select>
@@ -43,6 +44,11 @@ class Crew extends React.Component {
                 <div className="reset_btn">
                 <img src={reset_icon} alt="" className="reset_btn"/>
                 </div>
+                <Link to="/crew/make" className="common_link">
+                    <div className="add_btn">
+                        생성하기
+                    </div>
+                </Link>
             </div>
             <div className="crew_info_container">
                 {

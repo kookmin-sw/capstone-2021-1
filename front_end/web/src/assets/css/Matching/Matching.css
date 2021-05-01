@@ -15,3 +15,55 @@
     font-size:32px;
     font-weight: bold;
 }
+
+.default_background_chess{
+    margin-bottom:20px;
+    height: 120px;
+    width:100%;
+    padding:10px;
+    background-image: url("/src/assets/images/matching/default_chess.jpg");
+    background-size : cover;
+}
+.default_background_escape{
+    margin-bottom:20px;
+    height: 100px;
+    width:100%;
+    padding:10px;
+    background-image: url("/src/assets/images/matching/default_escape.jpg");
+    background-size : 100% 120px;
+}
+.default_background_detect{
+    margin-bottom:20px;
+    height: 100px;
+    width:100%;
+    padding:10px;
+    background-image: url("/src/assets/images/matching/default_detect.jpg");
+    background-size : cover;
+}
+.content_text{
+    position:relative;
+    font-size:22px;
+    font-weight: bold;
+    margin-bottom:15px;
+}
+.matching_text{
+    position: absolute;
+    color: white;
+
+}
+
+.matching_text_locate{
+    height: 30px;
+    font-size: 14px;
+}
+
+.matching_text_title{
+    font-size:22px;
+}
+
+.person_for_matching{
+    position:relative;
+    color:white;
+    bottom: 0px;
+    float:right;
+}
