@@ -2,7 +2,8 @@ import React from "react";
 import "../../assets/css/Enroll/Enrollment.css";
 import "../../assets/css/Home/Home.css";
 import "../../assets/css/Crew/Crew.css";
-import Swiper from 'react-id-swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import DownHeader from "../../components/common/downHeader";
 import Header from "../../components/common/header"
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
@@ -42,7 +43,6 @@ class Home extends React.Component {
             <div>
             {
               matchingDatas.content.map((data)=>(
-                
                 <div className="default_background_chess">
                   <div className="matching_text">
                     <div className="matching_text_locate">{data.description}</div>
@@ -53,6 +53,14 @@ class Home extends React.Component {
               )
             }
             </div>
+            
+            <div className="view_all_btn">
+              View all
+              <div className="view_all_img">
+                {'>'}
+              </div>
+            </div>
+            
           </div>
           <div className="home_content_crew">
             <div className="content_text">
@@ -61,17 +69,20 @@ class Home extends React.Component {
             <Swiper {...params}>
             {
               crewDatas.content.map((data)=>(
+                <SwiperSlide>
                 <div className="crew_text">
                   <div className="crew_area">{data.activityArea}</div>
                   <div className="crea_name">{data.name}</div>
                 </div>
+                </SwiperSlide>
                 )
               )
             }
-            
            </Swiper>
           </div>
+          
         </div>
+        <DownHeader />
       </section>
     );
   }

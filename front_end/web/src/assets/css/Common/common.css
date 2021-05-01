@@ -10,3 +10,23 @@
     color:inherit;
     text-decoration: none;
 }
+
+.down_header_content{
+    width:18%;
+    height: 100%;
+    float: left;
+    font-size:12px;
+    font-weight: 100;
+}
+
+.down_header_content_right{
+    float:right;
+}
+
+.down_header{
+    position:absolute;
+    width:100%;
+    height: 76px;
+    bottom:0px;
+    text-align:center;
+}
