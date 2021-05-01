@@ -12,6 +12,7 @@ import Manage from "./screen/manage/Manage";
 import Mypage from "./screen/Mypage/Mypage";
 import CrewMake from "./screen/Crew/CrewMake";
 import Home from "./screen/home/Home";
+import CrewDetail from "./screen/Crew/CrewDetail";
 
 class App extends React.Component{
  
@@ -28,6 +29,7 @@ class App extends React.Component{
       <Route path="/manage" exact={true} component={Manage}/>
       <Route path="/" exact={true} component={FirstPage}/>
       <Route path="/home" exact={true} component={Home}/>
+      <Route path="/crew/:id" component={CrewDetail}/>
     </BrowserRouter>
     );
   }

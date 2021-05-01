@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom"
 import "../../assets/css/Common/common.css"
 import "../../assets/css/Common/header.css";
-import Hamburger_icon from '../../assets/images/common/Hamburger_icon.png';
+
 
 function DownHeader() {
   return (
