@@ -2,6 +2,9 @@
 import React from "react";
 import DownHeader from "../../components/common/downHeader";
 import "../../assets/css/Matching/Matching.css"
+import REFRESH_ICON from "../../assets/images/matching/refresh_icon.png";
+import CURRENT_LOCATE_ICON from "../../assets/images/matching/current_locate_icon.png";
+import FILTER_ICON from "../../assets/images/matching/filter_icon.png";
 import axios from "axios";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
@@ -60,8 +63,14 @@ componentDidMount(){
       
         <div className="matching_container">
           <div className="search_box">
-            <div className="search_input"><input placeholder="매칭 찾아보기"></input></div>
-            <div className="search_filter"></div>
+            <div className="search_input">
+              <input placeholder="매칭 찾아보기"/>
+              
+            </div>
+            <div className="search_filter">
+              <div className="search_input_img">
+                <img src={FILTER_ICON}/>
+              </div>  </div>
           </div>
           <div id='myMap' style={{width:"400px", height:"800px"}}/>
           {
@@ -76,10 +85,10 @@ componentDidMount(){
             +
           </div>
           <div className="refresh_btn">
-            <img src={}></img>
+            <img src={REFRESH_ICON}/>
           </div>
           <div className="location_confirm_btn">
-            <img src={}></img>
+            <img src={CURRENT_LOCATE_ICON}/>
           </div>
           <DownHeader/>
         </div>
