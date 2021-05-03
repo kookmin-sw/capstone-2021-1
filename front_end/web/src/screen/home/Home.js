@@ -54,13 +54,14 @@ class Home extends React.Component {
               )
             }
             </div>
-            
+            <Link to={{ pathname:'/matching'}}>
             <div className="view_all_btn">
               View all
               <div className="view_all_img">
                 {'>'}
               </div>
             </div>
+            </Link>
             
           </div>
           <div className="home_content_crew">
