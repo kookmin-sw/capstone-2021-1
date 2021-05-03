@@ -1,6 +1,6 @@
 /*global kakao*/
 import React from "react";
-import Header from "../../components/common/header";
+import DownHeader from "../../components/common/downHeader";
 import "../../assets/css/Matching/Matching.css"
 import axios from "axios";
 import { bindActionCreators } from 'redux';
@@ -57,18 +57,34 @@ componentDidMount(){
   render() { 
     const is_Click = isClick;
     return (
-      <section className="container">
-        <Header/>
-        <div id='myMap' style={{width:"50%", height:"600px", float:"left", marginLeft:"25%"}}/>
-        {
-          is_Click ? 
-          <div className="map_info">
-            <div className="map_title">{CLICK_MARKER.Fb}</div>
-            <div className="marker_info">{this.state.clicked_marker}</div>
-            <div className="propose_matching_btn" onClick={this.handlePropose}>신청하기</div>
-          </div> : null
-        }
-      </section>
+      
+        <div className="matching_container">
+          <div className="search_box">
+            <div className="search_input"><input placeholder="매칭 찾아보기"></input></div>
+            <div className="search_filter"></div>
+          </div>
+          <div id='myMap' style={{width:"400px", height:"800px"}}/>
+          {
+            is_Click ? 
+            <div className="map_info">
+              <div className="map_title">{CLICK_MARKER.Fb}</div>
+              <div className="marker_info">{this.state.clicked_marker}</div>
+              <div className="propose_matching_btn" onClick={this.handlePropose}>신청하기</div>
+            </div> : null
+          }
+          <div className="matching_add_btn">
+            +
+          </div>
+          <div className="refresh_btn">
+            <img src={}></img>
+          </div>
+          <div className="location_confirm_btn">
+            <img src={}></img>
+          </div>
+          <DownHeader/>
+        </div>
+
+      
     );
   }
 }
