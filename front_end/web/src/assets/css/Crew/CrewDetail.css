@@ -1,0 +1,19 @@
+.crew_detail_container{
+    height:800px;
+    width:100%;
+}
+
+.crew_detail_crew_info{
+    height: 60%;
+    width:100%;
+}
+
+.crew_image{
+    width:100%;
+    height:45%;
+}
+
+.crew_info{
+    height: 55%;
+    width:100%;
+}
