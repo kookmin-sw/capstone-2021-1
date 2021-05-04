@@ -19,21 +19,69 @@
     padding: 5%;
 }
 
-.crewDetail_crewInfo_info_title{
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 9px;
+.crewDetail_crewInfo_info_block1{
+    height:20%;
 }
 
-.crewDetail_crewInfo_info_info{
+.crewDetail_crewInfo_info_block2{
+    height:20%;
+}
+
+.crewDetail_crewInfo_info_title{
+    float:left;
+    font-size: 22px;
+    font-weight: bold;
+    width: 60%;
+    height: 40px;
+}
+
+.crewDetail_crewInfo_info_plusBtn{
+    float: left;
+    font-size: 14px;
+    height: 40px;
+}
+
+.crewDetail_crewInfo_info_adminBtn{
+    display: inline-block;
+    height: 40px;
+    font-size: 14px;
+    color: #487886;
+    margin-bottom: 9px;
+    margin-left: 8px;
+}
+
+.crewDetail_crewInfo_info_activityArea{
+    height: 15px;
+    font-size: 12px;
+    color: #b1b1b1;
+    float:left;
+}
+
+.crewDetail_crewInfo_info_participantsCount{
+    height: 15px;
+    font-size: 12px;
+    color: #b1b1b1;
+    display: inline-block;
+    margin-bottom: 7px;
+    margin-left: 12px;
+}
+
+.crewDetail_crewInfo_info_category{
+    height: 15px;
     font-size: 12px;
     color: #b1b1b1;
     margin-bottom: 16px;
 }
 
-.crewDetail_crewInfo_info_intro{
+.crewDetail_crewInfo_info_description{
+    height: 30%;
     font-size: 14px;
     color: #6d6d6d;
+}
+
+.crewDetail_crewInfo_info_joinBtn{
+    font-size: 14px;
+    text-align: center;
 }
 
 .crewDetail_crewMember{

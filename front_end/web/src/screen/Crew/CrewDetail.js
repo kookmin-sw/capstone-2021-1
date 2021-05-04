@@ -3,6 +3,8 @@ import "../../assets/css/Crew/CrewDetail.css";
 
 class CrewDetail extends React.Component{
 
+    
+
     componentDidMount(){
        
     }
@@ -18,9 +20,17 @@ class CrewDetail extends React.Component{
                         <div className="crewDetail_crewInfo_image_image">이미지</div>
                     </div>
                     <div className="crewDetail_crewInfo_info">
-                        <div className="crewDetail_crewInfo_info_title">크루이름</div>
-                        <div className="crewDetail_crewInfo_info_info">크루세부정보</div>
-                        <div className="crewDetail_crewInfo_info_intro">크루소개</div>
+                        <div className="crewDetail_crewInfo_info_block1">
+                            <div className="crewDetail_crewInfo_info_title">{location.state.data.name}</div>
+                            <div className="crewDetail_crewInfo_info_plusBtn">더하기</div>
+                            <div className="crewDetail_crewInfo_info_adminBtn">크루관리</div>
+                        </div>
+                        <div className="crewDetail_crewInfo_info_block2">
+                            <div className="crewDetail_crewInfo_info_activityArea">지역: {location.state.data.activityArea}</div>
+                            <div className="crewDetail_crewInfo_info_participantsCount">총모집인원: {location.state.data.participantsCount}</div>
+                            <div className="crewDetail_crewInfo_info_category">카테고리: {location.state.data.category}</div>
+                        </div>
+                        <div className="crewDetail_crewInfo_info_description">{location.state.data.description}</div>
                         <div className="crewDetail_crewInfo_info_joinBtn">가입하기</div>
                     </div>
                 </div>
