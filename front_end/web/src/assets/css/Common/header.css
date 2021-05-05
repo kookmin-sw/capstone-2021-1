@@ -49,3 +49,19 @@
     margin:auto;
     font-size:100px;
 }
+
+.back_header{
+    height: 50px;
+    width: 10%;
+    text-align: left;
+    color:#000000;
+    padding-right: 5%;
+    line-height:50px;
+    padding-left:15px;
+}
+
+
+.back_header img{
+    width:24px;
+    height:24px;
+}

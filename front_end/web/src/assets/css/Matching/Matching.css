@@ -167,3 +167,85 @@
     right:10px;
     height: 40px;
 }
+
+.matching_make_text{
+    height:30px;
+    font-size:22px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.make_main_container{
+    padding-left:10px;
+    padding-right:10px;
+}
+.matching_name input::placeholder{
+    font-size:14px;
+    font-weight: 300;
+}
+.matching_make_input{
+    padding-left:10px;
+    width:100%;
+    height:45px;
+    margin-bottom:40px;
+    border: solid 0.3px #487886;
+    border-radius: 6px;
+    line-height: 45px;
+    font-size:14px;
+    font-weight: 300;
+}
+
+.matching_make_input img{
+    width:20px;
+    height:20px;
+    margin-top:13px;
+    margin-right:15px;
+    float: right;
+}
+
+.matching_category{
+    margin-bottom:40px;
+}
+
+.category_checkbox{
+    width:33%;
+    float: left;
+}
+
+.checkbox_container{
+    width:100%;
+    height: 45px;
+}
+
+.matching_desc{
+    margin-bottom:40px;
+}
+
+.matching_desc_input{
+    height:160px;
+}
+
+.desc_input{
+    width:100%;
+    height:100%;
+    border-radius: 6px;
+    border: solid  0.3px #487886;
+    padding-left:10px;
+}
+
+.desc_input::placeholder{
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.make_btn{
+    height:45px;
+    width:50%;
+    margin:auto;
+    text-align:center;
+    background-color: #487886;
+    color:#ffffff;
+    line-height: 45px;
+    font-size:14px;
+    border-radius: 10px;
+}
