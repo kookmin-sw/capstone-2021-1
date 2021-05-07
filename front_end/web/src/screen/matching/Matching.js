@@ -9,6 +9,7 @@ import axios from "axios";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
+import { Link } from "react-router-dom";
 
 var CLICK_MARKER;
 var isClick=false;
@@ -81,9 +82,11 @@ componentDidMount(){
               <div className="propose_matching_btn" onClick={this.handlePropose}>신청하기</div>
             </div> : null
           }
+          <Link to="/matching/make"  className="common_link">
           <div className="matching_add_btn">
             +
           </div>
+          </Link>
           <div className="refresh_btn">
             <img src={REFRESH_ICON}/>
           </div>

@@ -3,12 +3,13 @@ import Header from "../../components/common/header";
 import SideContentsContainer from "../../components/common/side_contents_container";
 import "../../assets/css/Common/main_contents_container.css";
 import "../../assets/css/Crew/Crew.css";
-import search_icon from '../../assets/images/common/search.jpg';
-import reset_icon from '../../assets/images/common/reset.png';
+import hamburger_icon from '../../assets/images/common/Hamburger_icon.png';
+import notice_icon from '../../assets/images/common/noticeBell_icon.png';
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import { Link } from "react-router-dom";
+import DownHeader from "../../components/common/downHeader";
 
 
 
@@ -23,50 +24,42 @@ class Crew extends React.Component {
     render() {
         const {crewDatas} = this.props.store.state;
     return (
-      <section className="container">
+      <div className="crew_main_container">
         <Header/>
-        <SideContentsContainer>
-        </SideContentsContainer>
-        <div className="main_contents_container">
-            <div className="region_filter">
-            {
-                    
-            }
+        <div className="region_filter">
+            <div className="hamburger_filter">
+                <img src={hamburger_icon}/>
             </div>
-            <div className="crew_filter">
-                <select>
-                   
-                </select>
-                <div className="search_bar">
-                    <input id="crew_search" placeholder="크루명을 입력해주세요."/>
-                    <img src={search_icon} alt="" className="search_bar"/>
-                </div>
-                <div className="reset_btn">
-                <img src={reset_icon} alt="" className="reset_btn"/>
-                </div>
-                <Link to="/crew/make" className="common_link">
-                    <div className="add_btn">
-                        생성하기
-                    </div>
-                </Link>
+            <div className="crew_notice">
+                <img src={notice_icon}/>
             </div>
+        </div>
+            
             <div className="crew_info_container">
+            <div className="matching_make_text">크루 모아보기</div>
                 {
-                    crewDatas.content.map((crewData) => (
+                    crewDatas.content.map((data) => (
                         <div>
-                            <div>
-                                {crewData.name}
+                            <div className="crewdata_info_container">
+                                <div className="matching_text">
+                                    <div className="matching_text_locate">{data.activityArea}</div>
+                                    <div className="matching_text_title">{data.name}</div>
+                                </div>
                             </div>
-                            <div>
-                                {crewData.description}
+                            <Link to={{ pathname:'/crew/${data.id}', state:{data}}}>
+                            <div className="crewdata_show_detail">
+                            자세히 보기
+                            <div className="crewdata_show_detail_btn">
+                                >
                             </div>
+                        </div>
+                        </Link>
                         </div>
                     ))
                 }
             </div>
+            <DownHeader/>
         </div>
-
-      </section>
     );
   }
 }

@@ -6,12 +6,13 @@ import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import BackHeader from "../../components/common/header_back";
 import SEARCH_ICON from "../../assets/images/common/search_icon.png";
+import { Link } from "react-router-dom";
 
 class MatchingMake extends React.Component {
   render() { 
     return (
         <div className="matching_make_container">
-            <BackHeader></BackHeader>
+            <BackHeader history="/matching"></BackHeader>
             <div className="make_main_container">
                 <div className="game_room_picture"></div>
                 <div className="matching_name">
