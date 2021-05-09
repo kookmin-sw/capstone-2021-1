@@ -14,6 +14,7 @@ import CrewMake from "./screen/Crew/CrewMake";
 import Home from "./screen/home/Home";
 import CrewDetail from "./screen/Crew/CrewDetail";
 import MatchingMake from "./screen/matching/MatchingMake";
+import MarkerInfo from "./screen/matching/MarkerInfo";
 
 class App extends React.Component{
  
@@ -32,6 +33,7 @@ class App extends React.Component{
       <Route path="/home" exact={true} component={Home}/>
       <Route path="/crew/:id" component={CrewDetail}/>
       <Route path="/matching/make" component={MatchingMake}/>
+      <Route path="/matching/:id" component={MarkerInfo}/>
     </BrowserRouter>
     );
   }

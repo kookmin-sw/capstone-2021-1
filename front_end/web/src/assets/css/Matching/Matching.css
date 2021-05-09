@@ -249,3 +249,95 @@
     font-size:14px;
     border-radius: 10px;
 }
+
+.marker_info{
+    position:absolute;
+    height:300px;
+    z-index: 100;
+    width:90%;
+    margin: auto;
+    bottom:-200px;
+    box-shadow: 0px -3px 6px 0px rgba(147, 147, 147, .5);
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding:15px;
+}
+.marker_info_click{
+    position:absolute;
+    height:300px;
+    z-index: 100;
+    width:90%;
+    margin: auto;
+    bottom:0px;
+    box-shadow: 0px -3px 6px 0px rgba(147, 147, 147, .5);
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding:15px;
+}
+.marker_info_header{
+    height:50px;
+    margin-bottom:30px;
+}
+.marker_content{
+    width:100%;
+}
+.marker_title{
+    font-size:20px;
+    font-weight: bold;
+    float:left;
+    width:75%;
+}
+
+.marker_category{
+    font-size:12px;
+}
+
+.marker_distance{
+    float:right;
+    width:20%;
+    font-size:14px;
+    color:#487886;
+    text-align: center;
+    line-height: 40px;
+}
+
+.marker_loc{
+    margin-bottom:20px;
+    font-size:10px;
+    font-weight: bold;
+}
+
+.marker_time{
+    margin-bottom:20px;
+    font-size:10px;
+    font-weight: bold;
+}
+
+.marker_maxPeople{
+    margin-bottom:20px;
+    font-size:10px;
+    font-weight: bold;
+}
+
+.marker_description{
+    margin-bottom:20px;
+    font-size:10px;
+    font-weight: bold;
+}
+
+.marker_description_detail{
+    margin-top:10px;
+    color:rgba(151, 151, 151)
+}
+
+.marker_request_btn{
+    width:50%;
+    margin:auto;
+    text-align: center;
+    color:#ffffff;
+    background-color: #487886;
+    height:45px;
+    line-height: 45px;
+    font-size:14px;
+    border-radius: 6px;
+}
