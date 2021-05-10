@@ -5,6 +5,7 @@ import EnrollmentButton from "../../components/login/EnrollmentButton";
 import LoginText from "../../components/login/login_text";
 import "../../assets/css/Login/Login.css"
 import { bindActionCreators } from 'redux';
+import main_home_img from "../../assets/images/common/main_screen.jpg"
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import axios from "axios";
@@ -73,8 +74,8 @@ class Login extends React.Component {
     return (
       <section className="container">
           <div className="login_header">
-            <div className="login_header_background">
-              <img src={login_background} alt="" className="login_background"/>
+            <div className="login_background">
+              
             </div>
             <div className="exit_btn">
               X
@@ -87,10 +88,10 @@ class Login extends React.Component {
           </div>
           <div className="login_submit">
           <div className="login_submit_btn" onClick={()=>handleLogin({
-    "uid":"dlwlsrn94@naver.com",
-    "password":"1234"
-})}>로그인</div>
-            <EnrollmentButton/>          
+            "uid": this.state.uid,
+            "password": this.state.password,
+            })}>로그인</div>
+            
           </div>
           <div className="sns_login">
             <div className="sns_kakao_login"><KakaoSignUp></KakaoSignUp></div>

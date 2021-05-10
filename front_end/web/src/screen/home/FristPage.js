@@ -2,7 +2,7 @@ import React from "react";
 //import axios from "axios";
 import Header from "../../components/common/header";
 import "../../assets/css/Common/common.css"
-import SideContentsContainer from "../../components/common/side_contents_container";
+
 import LinkForHomeBtn from "../../components/Home/link_for_home_btn";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
@@ -54,6 +54,7 @@ class FirstPage extends React.Component {
       <section className="container">
         
         <div className="first_page" >
+          <div className="logo">PLAY MAKER</div>
           <div className="linkdiv">
           <div className="link_to_login"><LinkForHomeBtn link="login" toLink="SIGN IN"></LinkForHomeBtn></div>
           <div className="link_to_enroll"><LinkForHomeBtn link="enroll" toLink="CREATE ACCOUNT"></LinkForHomeBtn></div>
