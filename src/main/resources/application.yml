@@ -1,6 +1,7 @@
 spring:
   profiles:
     active: deploy
+    include: aws
 
 mybatis:
   mapper-locations: mapper/**/*.xml
