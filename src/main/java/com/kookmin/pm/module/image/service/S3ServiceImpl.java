@@ -17,8 +17,8 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 public class S3ServiceImpl implements S3Service{
     private final AmazonS3Client amazonS3Client;
-    @Value("${cloud.aws.s3.bucket")
-    private final String bucket;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     @Override
     public void uploadFile(InputStream inputStream, ObjectMetadata objectMetadata, String fileName) {
