@@ -31,6 +31,7 @@ public class MatchingDetails {
     private Integer participantsCount;
     private MemberDetails host;
     private List<MemberDetails> participants;
+    private List<String> imageList;
 
     public MatchingDetails(Matching matching) {
         this.id = matching.getId();

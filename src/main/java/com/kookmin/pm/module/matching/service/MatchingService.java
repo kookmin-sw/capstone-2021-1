@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.image.service.DomainImageService;
+import com.kookmin.pm.module.image.service.DomainType;
 import com.kookmin.pm.module.image.service.FileUploadService;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
@@ -159,12 +160,15 @@ public class MatchingService {
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {
         Matching matching = getMatchingEntity(matchingId);
+        Category category = matching.getCategory();
 
         MatchingDetails matchingDetails = null;
 
         if(lookUpType.equals(MatchingLookUpType.DEFAULT)) {
             matchingDetails = new MatchingDetails(matching);
 
+            List<String> imageList = this.getMatchingImageUrl(matchingId, category);
+            matchingDetails.setImageList(imageList);
         } else if(lookUpType.equals(MatchingLookUpType.WITH_HOST)){
             matchingDetails = new MatchingDetails(matching);
 
@@ -173,8 +177,13 @@ public class MatchingService {
 
             matchingDetails.setHost(memberDetails);
 
+            List<String> imageList = this.getMatchingImageUrl(matchingId, category);
+            matchingDetails.setImageList(imageList);
         } else if(lookUpType.equals(MatchingLookUpType.WITH_PARTICIPANTS)) {
             matchingDetails = new MatchingDetails(matching);
+
+            List<String> imageList = this.getMatchingImageUrl(matchingId, category);
+            matchingDetails.setImageList(imageList);
 
             if(matching.getMember() != null) {
                 MemberDetails memberDetails = memberService
@@ -358,8 +367,8 @@ public class MatchingService {
         return this.domainImageService.uploadImage(matchingId, file);
     }
 
-    private List<String> getMatchingImageUrl(@NonNull Long matchingId) {
-        return this.domainImageService.getImageUrl(matchingId);
+    private List<String> getMatchingImageUrl(@NonNull Long matchingId, Category category) {
+        return this.domainImageService.getImageUrl(matchingId, category.getName());
     }
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
