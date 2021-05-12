@@ -3,6 +3,7 @@ package com.kookmin.pm.module.matching.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
+import com.kookmin.pm.module.image.service.DomainImageService;
 import com.kookmin.pm.module.image.service.FileUploadService;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -43,6 +45,7 @@ public class MatchingService {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final MatchingMapper matchingMapper;
+    private final DomainImageService domainImageService;
 
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
     public Long openMatching(@NonNull Long usn, @NonNull MatchingCreateInfo matchingCreateInfo) {
@@ -349,6 +352,10 @@ public class MatchingService {
         MatchingParticipant matchingParticipant = getMatchingParticipantEntity(participantsId);
 
         return new MatchingParticipantDetails(matchingParticipant);
+    }
+
+    public String uploadMatchingImage(@NonNull Long matchingId, @NonNull MultipartFile file) {
+        return this.domainImageService.uploadImage(matchingId, file);
     }
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
