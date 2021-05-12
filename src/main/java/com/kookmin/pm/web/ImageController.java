@@ -18,14 +18,14 @@ public class ImageController {
     private final MatchingService matchingService;
 
     @PostMapping(value = "/matching/{matchingId}/image")
-    public ResponseEntity uploadImage(Principal principal,
+    public ResponseEntity uploadMatchingImage(Principal principal,
                                       @PathVariable(name = "matchingId") Long matchingId,
                                       @RequestPart MultipartFile file) {
 
-
+        String imageUrl = this.matchingService.uploadMatchingImage(matchingId, file);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body("업로드가 완료되었습니다.");
+                .body(imageUrl);
     }
 }
