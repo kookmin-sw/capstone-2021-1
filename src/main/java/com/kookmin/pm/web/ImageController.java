@@ -1,5 +1,6 @@
 package com.kookmin.pm.web;
 
+import com.kookmin.pm.module.crew.service.CrewService;
 import com.kookmin.pm.module.matching.service.MatchingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.security.Principal;
 @RestController
 public class ImageController {
     private final MatchingService matchingService;
+    private final CrewService crewService;
 
     @PostMapping(value = "/matching/{matchingId}/image")
     public ResponseEntity uploadMatchingImage(Principal principal,
@@ -23,6 +25,17 @@ public class ImageController {
                                       @RequestPart MultipartFile file) {
 
         String imageUrl = this.matchingService.uploadMatchingImage(matchingId, file);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(imageUrl);
+    }
+
+    @PostMapping(value = "/crew/{crewId}/image")
+    public ResponseEntity uploadCrewImages(Principal principal,
+                                           @PathVariable(name = "crewId") Long crewId,
+                                           @RequestPart MultipartFile file) {
+        String imageUrl = this.crewService.uploadCrewImage(crewId, file);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
