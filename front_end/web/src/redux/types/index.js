@@ -9,3 +9,4 @@ export const SET_USER_CREW = "SET_USER_CREW";
 export const SET_CLICK_MARKER = "SET_CLICK_MARKER";
 export const SET_CREW_DATA = "SET_CREW_DATA";
 export const SET_MATCHING_DATA = "SET_MATCHING_DATA";
+export const POST_MATCHING = "POST_MATCHING";

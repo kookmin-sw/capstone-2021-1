@@ -7,9 +7,33 @@ import {actionCreators} from "../../redux/reducers/index"
 import BackHeader from "../../components/common/header_back";
 import SEARCH_ICON from "../../assets/images/common/search_icon.png";
 import { Link } from "react-router-dom";
+import DateInput from "../../components/common/DateInput";
 
 class MatchingMake extends React.Component {
-  render() { 
+
+    state = {start_date:new Date()}
+    
+    handleBtnClick = e =>{
+        console.log(this.props)
+        const {request_header} = this.props.store.state;
+        const {postMatching} = this.props;
+        postMatching({
+            request_header : request_header,
+            title : this.state.title,
+            description: this.state.description,
+            latitude: this.state.latitude,
+            longitude: this.state.longitude,
+            maxCount: this.state.maxCount,
+            category: this.state.category,
+            startTime: this.state.start_date
+        })
+    }
+    changeDate = e => {
+        this.setState({ start_date: e });
+      };
+  render() {
+      const {postMatching} = this.props;
+
     return (
         <div className="matching_make_container">
             <BackHeader history="/matching"></BackHeader>
@@ -27,7 +51,9 @@ class MatchingMake extends React.Component {
                     </div>
                 </div>
                 <div className="matching_time">
-                    <div className="matching_make_text">시간</div>
+                    <div className="matching_make_text">시간
+                        <DateInput changeDate={this.changeDate} value={this.state.start_date}/>
+                    </div>
                     
                 </div>
                 <div className="matching_numOfPeople">
@@ -54,7 +80,7 @@ class MatchingMake extends React.Component {
                         <input className="desc_input" placeholder="매칭과 관련된 내용을 입력하세요."/>
                     </div>
                 </div>
-                <div className="make_btn">매칭 생성하기</div>
+                <div className="make_btn" onClick={this.handleBtnClick}>매칭 생성하기</div>
             </div>
         </div>  
     );

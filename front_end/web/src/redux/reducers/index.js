@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA} from "../types/index";
+import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA, POST_MATCHING} from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -78,6 +78,32 @@ function setUserDetail(data){
   }
 }
 
+function postMatching(dataToSubmit){
+  const data = axios({
+    method:'post',
+    url: USER_URL + "/matching",
+    headers: dataToSubmit.request_header,
+    data:{
+      
+        "title":"체스 초보방",
+        "description":"초보방 홍대 히어로 보드게임 카페",
+        "latitude":  37.55214,
+        "longitude": 126.92184,
+        "maxCount": 5,
+        "category":"BOARD GAME",
+        "startTime":"2021-03-20T12:00:00"
+    
+    }
+  }).then(function(response){
+    alert("매칭을 생성 했습니다.")
+  }).catch(function(error){
+    alert(error.message)
+  })
+  return{
+    type: POST_MATCHING,
+    payload:data
+  }
+}
 function setHeader(data){
   return {
     type : SET_HEADER,
@@ -103,6 +129,10 @@ const InitialState = { isLogin: false };
 
 function reducer(state = InitialState, action){
     switch (action.type) {
+        case POST_MATCHING:
+          return{
+            ...state,
+          }
         case SET_MATCHING_DATA:
           return{
             ...state,
@@ -162,7 +192,8 @@ const actionCreators = {
     setUserCrew,
     setClickMarker,
     setCrewData,
-    setMatchingData
+    setMatchingData,
+    postMatching
   };
 
 export { actionCreators };
