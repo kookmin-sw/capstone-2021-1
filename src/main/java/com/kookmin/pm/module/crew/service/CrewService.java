@@ -8,6 +8,7 @@ import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.*;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
+import com.kookmin.pm.module.image.service.DomainImageService;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
@@ -20,6 +21,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
@@ -38,6 +40,7 @@ public class CrewService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
+    private final DomainImageService domainImageService;
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull Long usn, @NonNull CrewCreateInfo crewCreateInfo) {
@@ -67,16 +70,23 @@ public class CrewService {
     public CrewDetails lookupCrew(@NonNull Long crewId, @NonNull CrewLookupType type) {
         CrewDetails crewDetails = null;
         Crew crew = getCrewEntity(crewId);
+        List<String> imageList = this.domainImageService.getImageUrl(crewId, "CREW");
 
         if(type.equals(CrewLookupType.DEFAULT)) {
             crewDetails = new CrewDetails(crew);
+            crewDetails.setImageList(imageList);
+
         } else if(type.equals(CrewLookupType.WITH_HOST)) {
             crewDetails = new CrewDetails(crew);
+            crewDetails.setImageList(imageList);
+
             MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getId(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
         } else if(type.equals(CrewLookupType.WITH_PARTICIPANTS)){
             crewDetails = new CrewDetails(crew);
+            crewDetails.setImageList(imageList);
+
             MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getId(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
@@ -278,6 +288,10 @@ public class CrewService {
 
     public List<CrewDetails> findParticipatedCrew(@NonNull Long usn) {
         return crewRepository.findParticipatedCrew(usn);
+    }
+
+    public String uploadCrewImage(@NonNull Long crewId, @NonNull MultipartFile file) {
+        return this.domainImageService.uploadImage(crewId, file);
     }
 
     private Crew getCrewEntity(Long id) {
