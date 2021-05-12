@@ -3,6 +3,7 @@ package com.kookmin.pm.module.matching.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
+import com.kookmin.pm.module.image.service.FileUploadService;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
