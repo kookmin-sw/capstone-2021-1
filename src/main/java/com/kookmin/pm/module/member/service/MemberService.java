@@ -1,5 +1,6 @@
 package com.kookmin.pm.module.member.service;
 
+import com.kookmin.pm.module.image.service.DomainImageService;
 import com.kookmin.pm.module.member.domain.MemberImage;
 import com.kookmin.pm.module.member.domain.MemberStats;
 import com.kookmin.pm.module.member.domain.MemberStatus;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @Transactional
@@ -30,6 +32,7 @@ public class MemberService implements UserDetailsService {
     private final MemberStatsRepository memberStatsRepository;
     private final MemberImageRepository memberImageRepository;
     private final PasswordEncoder passwordEncoder;
+    private final DomainImageService domainImageService;
 
     public Long joinMember(@NonNull MemberCreateInfo memberCreateInfo) {
         //TODO::RuntimeException 정의 해야함, 회원 이메일이 중복되었을 경우
@@ -67,18 +70,21 @@ public class MemberService implements UserDetailsService {
 
     public MemberDetails lookUpMemberDetails(@NonNull Long usn, @NonNull LookupType type) {
         Member member = getMemberEntity(usn);
+        List<String> imageList = domainImageService.getImageUrl(usn, "MEMBER");
+
         //TODO::휴면 계정일 경우 조회 불가능, RuntimeException 정의해야
         if(member.getStatus().equals(MemberStatus.EXPIRED)) throw new RuntimeException();
 
         //TODO::더 나은 구조 구상해보기
         if(type==LookupType.DEFAULT) {
+            MemberDetails memberDetails = new MemberDetails(member);
+            memberDetails.setImageList(imageList);
             return new MemberDetails(member);
         } else if(type==LookupType.WITHIMAGE) {
-            return new MemberDetails(member,
-                    getMemberImageEntity(usn));
+            return new MemberDetails(member, imageList);
         } else {
             return new MemberDetails(member,
-                    getMemberImageEntity(usn),
+                    imageList,
                     getMemberStatsEntity(usn));
         }
     }
