@@ -358,6 +358,10 @@ public class MatchingService {
         return this.domainImageService.uploadImage(matchingId, file);
     }
 
+    private List<String> getMatchingImageUrl(@NonNull Long matchingId) {
+        return this.domainImageService.getImageUrl(matchingId);
+    }
+
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {
         return Matching.builder()
                 .title(matchingCreateInfo.getTitle())
