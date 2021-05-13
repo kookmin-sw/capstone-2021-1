@@ -149,13 +149,33 @@ public class MatchingService {
                                                 @NonNull MatchingSearchCondition searchCondition) {
         if(searchCondition.getLongitude() == null || searchCondition.getLatitude() == null
             || searchCondition.getDistance() == null) {
-            return matchingRepository.searchMatching(pageable, searchCondition);
+
+            Page<MatchingDetails> matchingDetailsPage = matchingRepository.searchMatching(pageable, searchCondition);
+            List<MatchingDetails> contents = matchingDetailsPage.getContent();
+
+            for(MatchingDetails matchingDetails : contents) {
+                List<String> imageList = this.domainImageService.getImageUrl(matchingDetails.getId(),
+                        matchingDetails.getCategory());
+
+                matchingDetails.setImageList(imageList);
+            }
+
+            return matchingDetailsPage;
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.convertValue(searchCondition, Map.class);
 
-        return new PageImpl(matchingMapper.searchMatchingWithLocationInfo(map));
+        List<MatchingDetails> matchingDetailsList = matchingMapper.searchMatchingWithLocationInfo(map);
+
+        for(MatchingDetails matchingDetails : matchingDetailsList) {
+            List<String> imageList = this.domainImageService.getImageUrl(matchingDetails.getId(),
+                    matchingDetails.getCategory());
+
+            matchingDetails.setImageList(imageList);
+        }
+
+        return new PageImpl(matchingDetailsList);
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {

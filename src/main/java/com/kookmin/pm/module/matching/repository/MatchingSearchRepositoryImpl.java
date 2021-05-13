@@ -1,6 +1,7 @@
 package com.kookmin.pm.module.matching.repository;
 
 import com.kookmin.pm.module.category.domain.QCategory;
+import com.kookmin.pm.module.image.domain.QImageName;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.domain.ParticipantStatus;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.kookmin.pm.module.category.domain.QCategory.*;
+import static com.kookmin.pm.module.image.domain.QImageName.imageName;
 import static com.kookmin.pm.module.matching.domain.QMatching.*;
 import static com.kookmin.pm.module.matching.domain.QMatchingParticipant.*;
 import static com.kookmin.pm.module.member.domain.QMember.*;
