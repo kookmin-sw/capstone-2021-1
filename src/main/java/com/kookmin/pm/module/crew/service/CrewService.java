@@ -107,7 +107,16 @@ public class CrewService {
     }
 
     public Page<CrewDetails> searchCrew(@NonNull Pageable pageable, @NonNull CrewSearchCondition searchCondition) {
-        return crewRepository.searchCrew(pageable, searchCondition);
+        Page<CrewDetails> crewDetailsPage = crewRepository.searchCrew(pageable, searchCondition);
+        List<CrewDetails> contents = crewDetailsPage.getContent();
+
+        for(CrewDetails crewDetails: contents) {
+            List<String> imageList = this.domainImageService.getImageUrl(crewDetails.getId(), crewDetails.getCategory());
+            crewDetails.setImageList(imageList);
+            crewDetails.setParticipantsCount((int)this.crewRepository.getParticipantsCount(crewDetails.getId()));
+        }
+
+        return crewDetailsPage;
     }
 
     public Map<String, Object> findCrewParticipateRequest(@NonNull Long usn) {

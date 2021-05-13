@@ -13,4 +13,5 @@ public interface CrewSearchRepository {
     public List<Member> findMemberInCrewParticipants(Long crewId, CrewParticipantStatus status);
     public List<CrewDetails> findParticipatedCrew(Long usn);
     public Page<CrewDetails> searchCrew(Pageable pageable, CrewSearchCondition searchCondition);
+    public long getParticipantsCount(Long crewId);
 }
