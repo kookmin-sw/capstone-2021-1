@@ -28,7 +28,7 @@ public class MatchingDetails {
     private String status;
     private String category;
     private Integer maxCount;
-    private Integer participantsCount;
+    private Long participantsCount;
     private MemberDetails host;
     private List<MemberDetails> participants;
     private List<String> imageList;

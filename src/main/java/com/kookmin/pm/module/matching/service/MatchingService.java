@@ -158,6 +158,7 @@ public class MatchingService {
                         matchingDetails.getCategory());
 
                 matchingDetails.setImageList(imageList);
+                matchingDetails.setParticipantsCount(this.matchingRepository.getParticipantsCount(matchingDetails.getId()));
             }
 
             return matchingDetailsPage;
@@ -173,6 +174,7 @@ public class MatchingService {
                     matchingDetails.getCategory());
 
             matchingDetails.setImageList(imageList);
+            matchingDetails.setParticipantsCount(this.matchingRepository.getParticipantsCount(matchingDetails.getId()));
         }
 
         return new PageImpl(matchingDetailsList);
@@ -223,7 +225,7 @@ public class MatchingService {
             }
 
             matchingDetails.setParticipants(participantDetails);
-            matchingDetails.setParticipantsCount(participantDetails.size());
+            matchingDetails.setParticipantsCount((long)participantDetails.size());
         }
 
         return matchingDetails;

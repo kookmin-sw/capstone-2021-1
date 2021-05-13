@@ -71,7 +71,16 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
         .orderBy(matching.startTime.desc()));
     }
 
+    public long getParticipantsCount(Long matchingId) {
+        Long count = getQueryFactory()
+                .select(matchingParticipant.count())
+                .from(matchingParticipant)
+                .groupBy(matchingParticipant.matching)
+                .where(matchingParticipant.matching.id.eq(matchingId))
+                .fetchOne();
 
+        return count==null?1:count;
+    }
 
     private BooleanExpression titleContains(String title) {
         return title==null? null : matching.title.contains(title);
