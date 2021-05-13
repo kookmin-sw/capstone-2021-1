@@ -13,12 +13,11 @@ class DateInput extends React.Component {
   render() { 
       console.log(this.props)
     return(
-        <form className="inputDeliveryDate">
             <DatePicker id="datePicker"
                 placeholderText="게임 시작일을 선택해주세요" 
                 locale={ko}
                 name="day1"
-                selected={this.props.startDate}
+                selected={this.props.value}
                 closeOnScroll={true}
                 minDate={new Date()}
                 popperModifiers={{preventOverflow:{enabled:true}}}
@@ -26,8 +25,8 @@ class DateInput extends React.Component {
                     this.props.changeDate(date, event);
                 }}
                 value={this.props.value}
-                dateFormat = "yyyy.MM.dd(eee)"/>
-                </form>
+                dateFormat="yyyy.MM.dd(eee)"
+                />
     )
   }
 }

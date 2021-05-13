@@ -13,12 +13,10 @@ class MatchingMake extends React.Component {
 
     state = {start_date:new Date()}
     
-    handleBtnClick = e =>{
-        console.log(this.props)
+    handleBtnClick = () =>{
         const {request_header} = this.props.store.state;
         const {postMatching} = this.props;
         postMatching({
-            request_header : request_header,
             title : this.state.title,
             description: this.state.description,
             latitude: this.state.latitude,
@@ -26,13 +24,33 @@ class MatchingMake extends React.Component {
             maxCount: this.state.maxCount,
             category: this.state.category,
             startTime: this.state.start_date
+        },request_header.accessToken)
+        this.props.history.goback();
+    }
+
+    changeDate = e => {
+        this.setState({ 
+            start_date: e 
+        });
+    };
+
+    titleChange = (e) => {
+        this.setState({
+            title:e.target.value,
         })
     }
-    changeDate = e => {
-        this.setState({ start_date: e });
-      };
+    descChange = (e) => {
+        this.setState({
+            description:e.target.value,
+        })
+    }
+    maxCChange = (e) => {
+        this.setState({
+            maxCount:e.target.value,
+        })
+    }
+    
   render() {
-      const {postMatching} = this.props;
 
     return (
         <div className="matching_make_container">
@@ -41,7 +59,7 @@ class MatchingMake extends React.Component {
                 <div className="game_room_picture"></div>
                 <div className="matching_name">
                     <div className="matching_make_text">매칭 이름</div>
-                    <input className="matching_make_input" placeholder="제목을 입력하세요."></input>
+                    <input className="matching_make_input" onChange={this.titleChange} placeholder="제목을 입력하세요."></input>
                 </div>
                 <div className="matching_location">
                     <div className="matching_make_text">위치</div>
@@ -77,7 +95,7 @@ class MatchingMake extends React.Component {
                 <div className="matching_desc">
                     <div className="matching_make_text">매칭내용</div>
                     <div className="matching_desc_input">
-                        <input className="desc_input" placeholder="매칭과 관련된 내용을 입력하세요."/>
+                        <input className="desc_input" onChange={this.descChange} placeholder="매칭과 관련된 내용을 입력하세요."/>
                     </div>
                 </div>
                 <div className="make_btn" onClick={this.handleBtnClick}>매칭 생성하기</div>

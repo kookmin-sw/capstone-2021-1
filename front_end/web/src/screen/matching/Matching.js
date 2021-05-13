@@ -38,11 +38,19 @@ class Matching extends React.Component {
 constructor(props){
   super(props);
   this.SlideUP= this.SlideUP.bind(this)
+  this.RequestBtnClick = this.RequestBtnClick.bind(this)
 }
 state={isClick:false}
 
 componentDidMount(){
 
+}
+
+RequestBtnClick(){
+  console.log(this.props)
+  const {request_header} = this.props.store.state;
+  const {userRequestMatching} = this.props;
+  userRequestMatching(CLICK_MARKER.id,request_header.accessToken);
 }
 
 SlideUP(){
@@ -134,7 +142,7 @@ SlideUP(){
                 <div className="marker_maxPeople">모집인원: {CLICK_MARKER.maxCount}명</div>
                 <div className="marker_description">매칭설명<div className="marker_description_detail">{CLICK_MARKER.description}</div></div>
                 <div className="marker_picture"></div>
-                <div className="marker_request_btn">매칭 요청하기</div>
+                <div className="marker_request_btn" onClick={this.RequestBtnClick} >매칭 요청하기</div>
               </div>
               
             </div> }

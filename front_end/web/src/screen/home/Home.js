@@ -44,13 +44,15 @@ class Home extends React.Component {
             <div>
             {
               matchingDatas.content.map((data)=>(
-                <div className="default_background_chess">
-                  <div className="matching_text">
-                    <div className="matching_text_locate">{data.description}</div>
-                    <div className="matching_text_title">{data.title}</div>
+                <Link to={{ pathname:'/matching/${data.id}', data:{data}}}>
+                  <div className="default_background_chess">
+                    <div className="matching_text">
+                      <div className="matching_text_locate">{data.description}</div>
+                      <div className="matching_text_title">{data.title}</div>
+                    </div>
+                    <div className="person_for_matching">/{data.maxCount}</div>
                   </div>
-                  <div className="person_for_matching">/{data.maxCount}</div>
-                </div>)
+                </Link>)
               )
             }
             </div>

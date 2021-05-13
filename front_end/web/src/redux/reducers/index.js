@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA, POST_MATCHING} from "../types/index";
+import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA, POST_MATCHING, USER_REQUEST_MATCHING} from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -78,21 +78,34 @@ function setUserDetail(data){
   }
 }
 
-function postMatching(dataToSubmit){
+function userRequestMatching(dataToSubmit, token){
+  const data = axios({
+    method:'post',
+    url: USER_URL + "/matching/participate/" + dataToSubmit,
+    headers: {'X-AUTH-TOKEN': token}
+  }).then(function(response){
+    alert("매칭에 요청 했습니다.")
+  }).catch(function(error){
+    alert(error.message)
+  }) 
+  return{
+    type: USER_REQUEST_MATCHING,
+    payload:data
+  }
+}
+function postMatching(dataToSubmit, token){
   const data = axios({
     method:'post',
     url: USER_URL + "/matching",
-    headers: dataToSubmit.request_header,
+    headers: {'X-AUTH-TOKEN': token},
     data:{
-      
-        "title":"체스 초보방",
-        "description":"초보방 홍대 히어로 보드게임 카페",
-        "latitude":  37.55214,
-        "longitude": 126.92184,
-        "maxCount": 5,
-        "category":"BOARD GAME",
-        "startTime":"2021-03-20T12:00:00"
-    
+        "title":dataToSubmit.title,
+        "description":dataToSubmit.description,
+        "latitude":  dataToSubmit.latitude,
+        "longitude": dataToSubmit.longitude,
+        "maxCount":dataToSubmit.maxCount,
+        "category":dataToSubmit.category,
+        "startTime":"2021-09-20T12:00:00"
     }
   }).then(function(response){
     alert("매칭을 생성 했습니다.")
@@ -129,6 +142,10 @@ const InitialState = { isLogin: false };
 
 function reducer(state = InitialState, action){
     switch (action.type) {
+        case USER_REQUEST_MATCHING:
+          return{
+            ...state,
+          }
         case POST_MATCHING:
           return{
             ...state,
@@ -193,7 +210,8 @@ const actionCreators = {
     setClickMarker,
     setCrewData,
     setMatchingData,
-    postMatching
+    postMatching,
+    userRequestMatching
   };
 
 export { actionCreators };

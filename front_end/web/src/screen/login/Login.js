@@ -56,7 +56,7 @@ class Login extends React.Component {
     const header = {
     'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
     'Accept': '*/*',
-    'X-AUTH-TOKEN': data.accessToken,
+    'accessToken': data.accessToken,
     }
     setHeader(header);
   }
