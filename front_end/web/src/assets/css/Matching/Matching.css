@@ -16,12 +16,11 @@
     font-weight: bold;
 }
 
-.default_background_chess{
+.matching_box{
     margin-bottom:20px;
     height: 120px;
     width:100%;
     padding:10px;
-    background-image: url("/src/assets/images/matching/default_chess.jpg");
     background-size : cover;
 }
 .default_background_escape{

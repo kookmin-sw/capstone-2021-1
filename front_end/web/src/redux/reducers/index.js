@@ -2,7 +2,6 @@ import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADE
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
-
 function registerUser(dataToSubmit) {
   const data = axios({
     method: 'post',

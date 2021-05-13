@@ -43,9 +43,10 @@ class Home extends React.Component {
             </div>
             <div>
             {
-              matchingDatas.content.map((data)=>(
-                <Link to={{ pathname:'/matching/${data.id}', data:{data}}}>
-                  <div className="default_background_chess">
+              matchingDatas.content.splice(0,2).map((data)=>
+                  (
+                  <Link to={{ pathname:'/matching/${data.id}', data:{data}}}>
+                  <div className="matching_box">
                     <div className="matching_text">
                       <div className="matching_text_locate">{data.description}</div>
                       <div className="matching_text_title">{data.title}</div>
@@ -94,5 +95,5 @@ class Home extends React.Component {
   }
 }
 
-
+//style={{backgroundImage: `url("${data.imageList[0]}")`}}
 export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(Home);

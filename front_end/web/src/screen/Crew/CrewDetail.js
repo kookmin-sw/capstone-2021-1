@@ -4,17 +4,36 @@ import { Link } from "react-router-dom";
 import BACK_ICON from "../../assets/images/common/backBtn_lmk.png"
 import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
 
+var CREW_DATA_COMPLETE=false;
+async function getCrewDetail(id){
+    const data = await axios({
+      method:'get',
+      url: "http://54.180.98.138:8080"+"/crew/detail/"+id,
+    }).then(function(response){
+      return response.data
+    }).catch(function(error){
+      alert(error.message);
+    })
+    CREW_DATA = data;
+    CREW_DATA_COMPLETE = true;
+}
+
 class CrewDetail extends React.Component{
 
-    
-
     componentDidMount(){
-       
+        const {location} = this.props;
+        CREW_DATA = CREW_DATA;
+        getCrewDetail(this.props.location.data.data.id);
+
     }
 
     render(){
-        const {location} = this.props;
-        console.log(location);
+        var repeat = setInterval(function(){
+            if (CREW_DATA_COMPLETE){
+                clearInterval(repeat);
+            }
+        },500)
+        
         return (
             <div className="crewDetail">
                 <div className="crewDetail_crewInfo">
@@ -26,17 +45,17 @@ class CrewDetail extends React.Component{
                     </div>
                     <div className="crewDetail_crewInfo_info">
                         <div className="crewDetail_crewInfo_info_block1">
-                            <div className="crewDetail_crewInfo_info_title">{location.state.data.name}</div>
+                            <div className="crewDetail_crewInfo_info_title">{CREW_DATA.name}</div>
                             <div className="crewDetail_crewInfo_info_plusBtn">
                                 <img src={PLUS_ICON}/>
                             </div>
                             <div className="crewDetail_crewInfo_info_adminBtn">크루관리</div>
                         </div>
                         <div className="crewDetail_crewInfo_info_block2">
-                            <div className="crewDetail_crewInfo_info_activityArea">지역: {location.state.data.activityArea} 총모집인원: {location.state.data.participantsCount}</div>
-                            <div className="crewDetail_crewInfo_info_category">카테고리: {location.state.data.category}</div>
+                            <div className="crewDetail_crewInfo_info_activityArea">지역: {CREW_DATA.activityArea} 총모집인원: {CREW_DATA.participantsCount}</div>
+                            <div className="crewDetail_crewInfo_info_category">카테고리: {CREW_DATA.category}</div>
                         </div>
-                        <div className="crewDetail_crewInfo_info_description">{location.state.data.description}</div>
+                        <div className="crewDetail_crewInfo_info_description">{CREW_DATA.description}</div>
                         <div className="crewDetail_crewInfo_info_joinBtn">가입하기</div>
                     </div>
                 </div>
