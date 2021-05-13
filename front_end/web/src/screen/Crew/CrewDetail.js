@@ -3,8 +3,10 @@ import "../../assets/css/Crew/CrewDetail.css";
 import { Link } from "react-router-dom";
 import BACK_ICON from "../../assets/images/common/backBtn_lmk.png"
 import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
+import axios from "axios";
 
 var CREW_DATA_COMPLETE=false;
+var CREW_DATA;
 async function getCrewDetail(id){
     const data = await axios({
       method:'get',
@@ -19,22 +21,21 @@ async function getCrewDetail(id){
 }
 
 class CrewDetail extends React.Component{
-
-    componentDidMount(){
-        const {location} = this.props;
-        CREW_DATA = location.state.data.data;
-        getCrewDetail(this.props.location.data.data.id);
-
+    constructor(props){
+        super(props);
+        console.log(props)
+        const {location} = props;
+        CREW_DATA = location.state.data;
+        console.log(CREW_DATA)
+        getCrewDetail(CREW_DATA.id);
     }
 
     render(){
         var repeat = setInterval(function(){
             if (CREW_DATA_COMPLETE){
-                this.setState({data : true})
                 clearInterval(repeat);
             }
         },500)
-        
         return (
             <div className="crewDetail">
                 <div className="crewDetail_crewInfo">
@@ -62,7 +63,7 @@ class CrewDetail extends React.Component{
                 </div>
                 <div className="crewDetail_crewMember">
                     <div className="crewDetail_crewMember_title">모든 크루원</div>
-                    <Link to={{ pathname:'/member/1', data : {
+                    <Link to={{ pathname:'/member/1', state : {
                         "id": 1,
                         "uid": "dlwlsrn94@naver.com",
                         "nickname": "LJG070",

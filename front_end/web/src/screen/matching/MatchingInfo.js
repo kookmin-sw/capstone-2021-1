@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 
-var MATCHING_DATA=null;
+var MATCHING_DATA_COMPLETE=false;
+var MATCHING_DATA;
 async function getMatchingDetail(id){
     const data = await axios({
       method:'get',
@@ -12,19 +13,24 @@ async function getMatchingDetail(id){
       alert(error.message);
     })
     MATCHING_DATA = data;
-  }
+    MATCHING_DATA_COMPLETE = true;
+}
 
 
 class MatchingInfo extends React.Component{
-    
+    constructor(props){
+        super(props);
+        const {location} = props;
+        MATCHING_DATA = location.state.data;
+        getMatchingDetail(MATCHING_DATA.id);
+    }
     componentDidMount(){
-        console.log(this.props)
-        getMatchingDetail(this.props.location.data.data.id);
+        
     }
 
     render(){
         var repeat = setInterval(function(){
-            if (MATCHING_DATA != null){
+            if (MATCHING_DATA_COMPLETE){
                 clearInterval(repeat);
             }
         },500)

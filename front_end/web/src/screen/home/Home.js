@@ -45,9 +45,9 @@ class Home extends React.Component {
             {
               matchingDatas.content.splice(0,2).map((data)=>
                   (
-                  <Link to={{ pathname:'/matching/${data.id}', data:{data}}}>
-                  <div className="matching_box">
-                    <div className="matching_text">
+                  <Link to={{ pathname:'/matching/${data.id}', state:{data}}}>
+                  <div className="matching_box" style={{backgroundImage: `url("${data.imageList[0]}")`}}>
+                    <div className="matching_text" >
                       <div className="matching_text_locate">{data.description}</div>
                       <div className="matching_text_title">{data.title}</div>
                     </div>
@@ -76,7 +76,7 @@ class Home extends React.Component {
               crewDatas.content.map((data)=>(
                 <SwiperSlide>
                   <Link to={{ pathname:'/crew/${data.id}', state:{data}}}>
-                    <div className="crew_text">
+                    <div className="crew_text" style={{backgroundImage: `url("${data.imageList[0]}")`}}>
                       <div className="crew_area">{data.activityArea}</div>
                       <div className="crea_name">{data.name}</div>
                     </div>
