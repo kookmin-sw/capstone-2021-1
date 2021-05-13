@@ -1,5 +1,6 @@
 import React from "react";
 import "../../assets/css/Crew/CrewDetail.css";
+import { Link } from "react-router-dom";
 import BACK_ICON from "../../assets/images/common/backBtn_lmk.png"
 import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
 
@@ -41,6 +42,23 @@ class CrewDetail extends React.Component{
                 </div>
                 <div className="crewDetail_crewMember">
                     <div className="crewDetail_crewMember_title">모든 크루원</div>
+                    <Link to={{ pathname:'/member/1', data : {
+                        "id": 1,
+                        "uid": "dlwlsrn94@naver.com",
+                        "nickname": "LJG070",
+                        "name": "이진구",
+                        "address": null,
+                        "phoneNumber": "010-8784-3827",
+                        "description": "소개글",
+                        "memberStats": {
+                            "manner": 0.0,
+                            "affinity": 0.0,
+                            "physical": 0.0,
+                            "intellect": 0.0,
+                            "comprehension": 0.0
+                        },
+                        "imagePath": null
+                    }}}>
                     <div className="crewDetail_crewMember_list">
                         <div className="crewDetail_crewMember_list_image">
                             <p>얼굴</p>
@@ -53,6 +71,7 @@ class CrewDetail extends React.Component{
                         </div>
                         <hr size="1" color="#bcbcbc"></hr>
                     </div>
+                    </Link>
                 </div>
             </div>
             )
