@@ -30,6 +30,7 @@ class CrewDetail extends React.Component{
     render(){
         var repeat = setInterval(function(){
             if (CREW_DATA_COMPLETE){
+                this.setState({data : true})
                 clearInterval(repeat);
             }
         },500)
