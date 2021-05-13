@@ -22,7 +22,7 @@ class CrewDetail extends React.Component{
 
     componentDidMount(){
         const {location} = this.props;
-        CREW_DATA = CREW_DATA;
+        CREW_DATA = location.state.data.data;
         getCrewDetail(this.props.location.data.data.id);
 
     }
