@@ -39,11 +39,12 @@ class CrewDetail extends React.Component{
         return (
             <div className="crewDetail">
                 <div className="crewDetail_crewInfo">
+                    
                     <div className="crewDetail_crewInfo_image">
                         <div className="crewDetail_crewInfo_image_backBtn">
                             <img src={BACK_ICON}/>
                         </div>
-                        <p>이미지</p>
+                        <img src="https://sports-phinf.pstatic.net/player/kbo/default/64805.png?type=h202"/>
                     </div>
                     <div className="crewDetail_crewInfo_info">
                         <div className="crewDetail_crewInfo_info_block1">

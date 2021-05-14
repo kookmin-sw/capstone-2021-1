@@ -8,9 +8,17 @@
     width:100%;
 }
 
+.crewDetail_crewInfo_image_backBtn{
+    padding: 5%;
+    position: absolute;
+    z-index: 2;
+}
+
 .crewDetail_crewInfo_image{
+    position: relative;
     width:100%;
     height:45%;
+    z-index: 1;
 }
 
 .crewDetail_crewInfo_info{
