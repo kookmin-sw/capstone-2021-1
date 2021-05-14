@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import { Link } from "react-router-dom";
+import DownHeaderPosition from "../../components/common/downHeaderPosition";
 
 
 var marker_info_css="marker_info";
@@ -126,7 +127,7 @@ SlideUP(){
               <div className="location_confirm_btn">
                 <img src={CURRENT_LOCATE_ICON}/>
               </div>
-              <DownHeader/>
+              <DownHeaderPosition/>
               </div>
             : <div className={marker_info_css} onClick={this.SlideUP}>
               <div className="marker_info_header">

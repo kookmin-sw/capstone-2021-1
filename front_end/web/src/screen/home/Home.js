@@ -51,7 +51,7 @@ class Home extends React.Component {
                       <div className="matching_text_locate">{data.description}</div>
                       <div className="matching_text_title">{data.title}</div>
                     </div>
-                    <div className="person_for_matching">/{data.maxCount}</div>
+                    <div className="person_for_matching">{data.participantsCount}/{data.maxCount}</div>
                   </div>
                 </Link>)
               )
