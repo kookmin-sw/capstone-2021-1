@@ -95,5 +95,4 @@ class Home extends React.Component {
   }
 }
 
-//style={{backgroundImage: `url("${data.imageList[0]}")`}}
 export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(Home);
