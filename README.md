@@ -1,77 +1,93 @@
-[![Work in Repl.it](https://classroom.github.com/assets/work-in-replit-14baed9a392b3a25080506f3b7b6d57f295ec2978f6f33ec97e36a161684cbe9.svg)](https://classroom.github.com/online_ide?assignment_repo_id=349931&assignment_repo_type=GroupAssignmentRepo)
-# Welcome to GitHub
+# 플레이 메이커 (Playmaker)
 
-캡스톤 팀 생성을 축하합니다.
+팀페이지 주소: https://github.com/kookmin-sw/capstone-2021-1/
 
-## 팀소개 및 페이지를 꾸며주세요.
+![pm mp4_20210404_215124 270 (1)](https://user-images.githubusercontent.com/28519975/113509620-96ef6500-9591-11eb-9232-84860fafe30f.png)
+![pm mp4_20210404_220449 432](https://user-images.githubusercontent.com/28519975/113509709-15e49d80-9592-11eb-9ffd-246f39e4edba.png)
+![pm mp4_20210404_220500 631](https://user-images.githubusercontent.com/28519975/113509713-18df8e00-9592-11eb-8148-6fd026bef244.png)
 
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
-
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
-
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2020년 0조  https://kookmin-sw.github.io/capstone-2020-0/
+![pm mp4_20210404_220516 786](https://user-images.githubusercontent.com/28519975/113509715-1b41e800-9592-11eb-98f2-7ef8fe243b37.png)
+![pm mp4_20210404_220536 942](https://user-images.githubusercontent.com/28519975/113509719-1d0bab80-9592-11eb-8ca1-9099cda94152.png)
+![pm mp4_20210404_220549 942](https://user-images.githubusercontent.com/28519975/113509725-1ed56f00-9592-11eb-83c2-bf72e1d9e561.png)
 
 
-## 내용에 아래와 같은 내용들을 추가하세요.
 
-### 1. 프로잭트 소개
+## 1. 프로잭트 소개
 
-프로젝트
+### 프로젝트 의미
 
-### 2. 소개 영상
+* 사용자 간의 Play를 Making 해주는 서비스
+* 사용자가 직접 Game 내의 Playmaker가 되어 활동
+            
+### 주요 기능
+
+* 놀이 관련 활동에서 인원이 필요할 경우, 매칭 진행
+* 매칭 종료 후, 상호 간 평가를 통해 유저에 대한 정보 축적 (매너, 게임이해도 등)
+* 특정 놀이에 대한 대회(리그/토너먼트)를 개최하거나 참여
+* 같은 취미를 공유하는 사람들끼리 크루(그룹)을 형성
+
+### 플랫폼
+
+* Android
+* iOS
+* Web
+
+### 타겟
+
+* 여러 명이서 하는 활동을 하고 싶지만 인원이 부족한 사람
+* 같은 취미를 공유하는 사람들끼리 지속적으로 연락을 취하고 싶은 사람
+* 자신의 취미를 바탕으로 지역 내 대회를 열고 싶거나 참여하고 싶은 사람
+
+
+
+## 2. 소개 영상
 
 프로젝트 소개하는 영상을 추가하세요
 
-### 3. 팀 소개
 
-팀을 소개하세요.
 
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
+## 3. 팀 소개
+~~~~~~~~~~
+이름:   이민규
+학번:   20163136
+역할:   팀장, Back-end(DB), App/Web Design
+이메일: bomblmk97@naver.com
+~~~~~~~~~~
+~~~~~~~~~~
+이름:   고동훈
+학번:   20143027
+역할:   Front-end(iOS), App Design
+이메일: kdhkdh0101@gmail.com
+~~~~~~~~~~
+~~~~~~~~~~
+이름:   김낙원
+학번:   20113254
+역할:   Front-end(Android), App Design
+이메일: nwkim3254@gmail.com
+~~~~~~~~~~
+~~~~~~~~~~
+이름:   음승호
+학번:   20181652
+역할:   Front-end(Web), App/Web Design
+이메일: dmatmdgh49@gmail.com
+~~~~~~~~~~
+~~~~~~~~~~
+이름:   이진구
+학번:   20143095
+역할:   Back-end(Server), App Design
+이메일: dlwlsrn9411@kookmin.ac.kr
+~~~~~~~~~~
 
-### 4. 사용법
+
+
+## 4. 사용법
 
 소스코드제출시 설치법이나 사용법을 작성하세요.
 
-### 5. 기타
+
+
+## 5. 기타
 
 추가적인 내용은 자유롭게 작성하세요.
 
 
-## Markdown을 사용하여 내용꾸미기
-
-Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-자세한 내용은 [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Support or Contact
-
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.
