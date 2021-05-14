@@ -20,7 +20,7 @@
 .matchingInfo_block1_image{
     height: 212px;
     width: 100%;
-    object-fit: cover;
+    border-radius: 4%;
 }
 
 .matchingInfo_block1_info{
@@ -74,4 +74,59 @@
     font-size: 20px;
     font-weight: bold;
     letter-spacing: 0.57px;
+    margin-bottom: 27px;
+}
+
+.matchingInfo_block2_row_nickname{
+    font-size: 12px;
+    letter-spacing: 0.34px;
+    color: #898989;
+    float:left;
+    width: 50%;
+    text-align: right;
+}
+
+.matchingInfo_block2_row_info{
+    font-size: 12px;
+    letter-spacing: 0.34px;
+    color: #898989;
+    float:left;
+    width: 50%;
+    text-align: center;
+    margin-bottom: 9px;
+}
+
+.matchingInfo_block2_list{
+    height: 109px;
+    clear:both;
+    border-radius: 6px;
+    border: 0.5px #e8e8e8 solid;
+}
+
+.matchingInfo_block2_list_image{
+    float: left;
+    width: 30%;
+    height:100%;
+}
+
+.matchingInfo_block2_list_nickname{
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    color: #474747;
+    text-align: center;
+    float: left;
+    width: 28%;
+    height:100%;
+    line-height: 109px;
+}
+
+.matchingInfo_block2_list_info{
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    color: #474747;
+    text-align: center;
+    float: left;
+    width: 35%;
+    height:100%;
+    line-height: 109px;
 }

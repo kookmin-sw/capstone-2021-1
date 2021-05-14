@@ -31,6 +31,7 @@ class MatchingInfo extends React.Component{
     }
 
     render(){
+      console.log(MATCHING_DATA);
         var repeat = setInterval(function(){
             if (MATCHING_DATA_COMPLETE){
                 clearInterval(repeat);
@@ -44,18 +45,28 @@ class MatchingInfo extends React.Component{
                 <div className="matchingInfo_block1_backBtn">
                   <img src={BACK_ICON}/>
                 </div>
-                <div className="matchingInfo_block1_image">
-                  <img src="https://sports-phinf.pstatic.net/player/kbo/default/64805.png?type=h202"/>
+                <div className="matchingInfo_block1_image" style={{backgroundImage: `url("${MATCHING_DATA.imageList[0]}")`}}>
                 </div>
                 <div className="matchingInfo_block1_info">
-                  <div className="matchingInfo_block1_info_title">제목</div>
-                  <div className="matchingInfo_block1_info_description">설명</div>
-                  <div className="matchingInfo_block1_info_participation">7/10</div>
+                  <div className="matchingInfo_block1_info_title">{MATCHING_DATA.title}</div>
+                  <div className="matchingInfo_block1_info_description">{MATCHING_DATA.description}</div>
+                  <div className="matchingInfo_block1_info_participation">{MATCHING_DATA.participantsCount}/{MATCHING_DATA.maxCount}</div>
                 </div>
                 <div className="matchingInfo_block1_joinBtn">리그 참여하기</div>
               </div>
               <div className="matchingInfo_block2">
                 <div className="matchingInfo_block2_title">매칭 참가자 살펴보기</div>
+                <div className="matchingInfo_block2_row">
+                  <div className="matchingInfo_block2_row_nickname">닉네임</div>
+                  <div className="matchingInfo_block2_row_info">기본정보</div>
+                </div>
+                
+                <div className="matchingInfo_block2_list">
+                  <div className="matchingInfo_block2_list_image">이미지</div>
+                  <div className="matchingInfo_block2_list_nickname">이름</div>
+                  <div className="matchingInfo_block2_list_info">27세/남</div>
+                </div>
+                
                 <div className="matchingInfo_block2_participants"></div>
               </div>
             </div>
