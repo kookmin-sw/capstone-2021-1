@@ -7,7 +7,8 @@ class MemberInfo extends React.Component{
     
     
     render(){
-        const MEMBER_DATA = this.props.location.data;
+        const MEMBER_DATA = this.props.location.state;
+        console.log(MEMBER_DATA);
         // 전역변수 MEMBER_DATA에 필요한 데이터가 전부 들어있습니다.
         return (
             <div className="memberInfo">
@@ -25,17 +26,17 @@ class MemberInfo extends React.Component{
                 <div className="memberInfo_block2">
                     <div className="memberInfo_block2_info">
                         <div className="memberInfo_block2_info_image">
-                            <p>얼굴</p>
+                            이미지
                         </div>
                         <div className="memberInfo_block2_info_name">
-                            <p>이름</p>
+                            {MEMBER_DATA.name}
                         </div>
                         <div className="memberInfo_block2_info_ageAndGender">
                             <p>나이/성별</p>
                         </div>
                     </div>
                     <div className="memberInfo_block2_description">
-                        <p>소개글</p>
+                        {MEMBER_DATA.description}
                     </div>
                 </div>
                 <div className="memberInfo_block3">
