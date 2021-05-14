@@ -1,0 +1,100 @@
+.memberInfo{
+    height: 800px;
+    width: 100%;
+}
+
+.memberInfo_block1{
+    padding: 5%;
+    height: 5%;
+}
+
+.memberInfo_block2{
+    padding: 5%;
+    height: 25%;
+}
+
+.memberInfo_block2_info{
+    padding: 5%;
+    height: 20%;
+}
+
+.memberInfo_block2_description{
+    padding:5%;
+}
+
+.memberInfo_block3{
+    padding: 5%;
+    height: 55%;
+}
+
+.memberInfo_block1_BackBtn{
+    float: left;
+    width: 65%;
+}
+
+.memberInfo_block1_PlusBtn{
+    float: left;
+    margin-right: 13px;
+}
+
+.memberInfo_block1_AdminBtn{
+    display: inline-block;
+    height: 40px;
+    font-size: 14px;
+    color: #487886;
+    margin-bottom: 9px;
+    margin-left: 8px;
+    letter-spacing: 0.4px;
+}
+
+.memberInfo_block2_info_image{
+    width: 85px;
+    height: 85px;
+    float: left;
+    margin-right: 32px;
+}
+
+.memberInfo_block2_info_name{
+    font-size: 16px;
+    font-weight: bold;
+    height: 19px;
+    margin-bottom: 8px;
+    letter-spacing: 0.46px;
+}
+
+.memberInfo_block2_info_ageAndGender{
+    font-size: 12px;
+    color: #b1b1b1;
+    letter-spacing: 0.4px;
+}
+
+.memberInfo_block2_info_description{
+    font-size: 14px;
+    color: #6d6d6d;
+    letter-spacing: 0.4px;
+}
+
+.memberInfo_block3_detail{
+    height: 10%;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+}
+
+.memberInfo_block3_graph{
+    height: 70%;
+}
+
+.memberInfo_block3_release{
+    text-align: center;
+    background-color: #487886;
+    border-radius: 6px;
+    width:50%;
+    margin:auto;
+    color:#ffffff;
+    font-size:14px;
+    height:44px;
+    width: 205px;
+    line-height: 45px;
+    letter-spacing: 0.4px;
+}
