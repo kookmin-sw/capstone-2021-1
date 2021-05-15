@@ -41,7 +41,7 @@ class MatchingCollect extends React.Component {
                 {
                     matchingDatas.content.map((data) => (
                         <div>
-                            <div className="crewdata_info_container">
+                            <div className="crewdata_info_container"  style={{backgroundImage: `url("${data.imageList[0]}")`}}>
                                 <div className="matching_text">
                                     <div className="matching_text_locate">{data.category}</div>
                                     <div className="matching_text_title">{data.title}</div>
