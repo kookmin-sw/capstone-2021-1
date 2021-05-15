@@ -26,6 +26,10 @@ class MatchingInfo extends React.Component{
         MATCHING_DATA = location.state.data;
         getMatchingDetail(MATCHING_DATA.id);
     }
+
+    goBackBtn = () =>{
+      this.props.history.goBack();
+  }
     componentDidMount(){
         
     }
@@ -42,7 +46,7 @@ class MatchingInfo extends React.Component{
         return (
             <div className="matchingInfo">
               <div className="matchingInfo_block1">
-                <div className="matchingInfo_block1_backBtn">
+                <div className="matchingInfo_block1_backBtn" onClick={this.goBackBtn}>
                   <img src={BACK_ICON}/>
                 </div>
                 <div className="matchingInfo_block1_image" style={{backgroundImage: `url("${MATCHING_DATA.imageList[0]}")`}}>

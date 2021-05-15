@@ -28,6 +28,11 @@ class CrewDetail extends React.Component{
         CREW_DATA = location.state.data;
         console.log(CREW_DATA)
         getCrewDetail(CREW_DATA.id);
+       
+    }
+
+    goBackBtn = () =>{
+        this.props.history.goBack();
     }
 
     render(){
@@ -41,7 +46,7 @@ class CrewDetail extends React.Component{
                 <div className="crewDetail_crewInfo">
                     
                     <div className="crewDetail_crewInfo_image" style={{backgroundImage: `url("${CREW_DATA.imageList[0]}")`}}>
-                        <div className="crewDetail_crewInfo_image_backBtn">
+                        <div className="crewDetail_crewInfo_image_backBtn" onClick={this.goBackBtn}>
                             <img src={BACK_ICON}/>
                         </div>
                     </div>

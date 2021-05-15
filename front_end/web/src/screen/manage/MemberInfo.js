@@ -5,7 +5,9 @@ import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
 
 class MemberInfo extends React.Component{
     
-    
+    goBackBtn = () =>{
+        this.props.history.goBack();
+    }
     render(){
         const MEMBER_DATA = this.props.location.state;
         console.log(MEMBER_DATA);
@@ -13,7 +15,7 @@ class MemberInfo extends React.Component{
         return (
             <div className="memberInfo">
                 <div className="memberInfo_block1">
-                    <div className="memberInfo_block1_BackBtn">
+                    <div className="memberInfo_block1_BackBtn" onClick={this.goBackBtn}>
                         <img src={BACK_ICON}/>
                     </div>
                     <div className="memberInfo_block1_PlusBtn">
