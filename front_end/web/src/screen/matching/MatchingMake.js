@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
 import BackHeader from "../../components/common/header_back";
 import SEARCH_ICON from "../../assets/images/common/search_icon.png";
-import { Link } from "react-router-dom";
 import DateInput from "../../components/common/DateInput";
 
 class MatchingMake extends React.Component {

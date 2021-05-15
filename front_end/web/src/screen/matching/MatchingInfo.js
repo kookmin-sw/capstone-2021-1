@@ -23,7 +23,11 @@ class MatchingInfo extends React.Component{
     constructor(props){
         super(props);
         const {location} = props;
-        MATCHING_DATA = location.state.data;
+        console.log(this.props)
+        if (location.state!=undefined){
+          MATCHING_DATA = location.state.data;
+        }
+        MATCHING_DATA = {id : 19, imageList:["https://play-maker.s3.ap-northeast-2.amazonaws.com/1bd02b15-b228-4626-9d67-cefb69cbfd89.jpg"]}
         getMatchingDetail(MATCHING_DATA.id);
     }
 

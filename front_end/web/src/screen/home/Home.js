@@ -45,7 +45,7 @@ class Home extends React.Component {
             {
               matchingDatas.content.splice(0,2).map((data)=>
                   (
-                  <Link to={{ pathname:'/matching/${data.id}', state:{data}}}>
+                  <Link to={{ pathname:'/matching/detail/${data.id}', state:{data}}}>
                   <div className="matching_box" style={{backgroundImage: `url("${data.imageList[0]}")`}}>
                     <div className="matching_text" >
                       <div className="matching_text_locate">{data.description}</div>

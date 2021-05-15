@@ -16,7 +16,7 @@ import CrewDetail from "./screen/Crew/CrewDetail";
 import MatchingMake from "./screen/matching/MatchingMake";
 import MatchingInfo from "./screen/matching/MatchingInfo";
 import MemberInfo from "./screen/manage/MemberInfo";
-import MatchingCollect from "./screen/matching/MatchingCollect";
+import MatchingCollect from "./screen/matching/MatchingCollect"
 class App extends React.Component{
  
   render(){
@@ -34,9 +34,9 @@ class App extends React.Component{
       <Route path="/home" exact={true} component={Home}/>
       <Route path="/crew/:id" component={CrewDetail}/>
       <Route path="/matching/make" component={MatchingMake}/>
-      <Route path="/matching/:id" component={MatchingInfo}/>
+      <Route path="/matching/detail/:id" component={MatchingInfo}/>
       <Route path="/member/:id" component={MemberInfo}/>
-      <Route path="/AllMatching" exact={true} component={MatchingCollect}/>
+      <Route path="/AllMatching" component={MatchingCollect}/>
     </BrowserRouter>
     );
   }
