@@ -165,3 +165,82 @@
     font-weight:bold;
     margin-bottom:20px;
 }
+
+.request_box{
+    font-size:20px;
+    font-weight: bolder;
+    margin-top: 50px;
+    margin-bottom:40px;
+}
+
+.dataOftitle{
+    font-size:18px;
+    font-weight: bold;
+    line-height: 40px;
+    margin-bottom:30px;
+}
+
+.dataOfNumber{
+    float:right;
+    font-size:12px;
+    font-weight: bold;
+    color:#b7b7b7;
+}
+
+
+
+.member_profile{
+    width:48px;
+    height:48px;
+    float:left;
+    border-radius: 200px;
+}
+
+.member_nickname{
+    text-align: center;
+    width:30%;
+    height:50px;
+    font-size:14px;
+    font-weight: bold;
+    float: left;
+}
+
+.member_info{
+    float:left;
+    width:20%;
+    font-size:14px;
+}
+
+.response_btn{
+    float:left;
+    text-align: center;
+    width:35%;
+}
+
+.refuse_btn{
+    width:53px;
+    float:right;
+    color:#000000;
+    font-size:14px;
+    background-color: #f3f3f3;
+    border-radius: 7px;
+    box-shadow: 0px 2px 4px 0px rgba(212, 212, 212, .5);
+}
+
+.confirm_btn{
+    margin-right:5px;
+    font-size:14px;
+    width:53px;
+    float:right;
+    color:#ffffff;
+    background-color:#2d4f5b;
+    border-radius: 7px;
+    box-shadow: 0px 1px 4px 0px #8aa5ae;
+}
+
+.request_member{
+    margin-top:15px;
+    height:60px;
+    width:100%;
+    border-bottom:solid 1px #dcdcdc;
+}

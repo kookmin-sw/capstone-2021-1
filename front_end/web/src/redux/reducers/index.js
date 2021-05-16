@@ -100,8 +100,8 @@ function postMatching(dataToSubmit, token){
     data:{
         "title":dataToSubmit.title,
         "description":dataToSubmit.description,
-        "latitude":  dataToSubmit.latitude,
-        "longitude": dataToSubmit.longitude,
+        "latitude":  37.5135762,
+        "longitude": 126.940837,
         "maxCount":dataToSubmit.maxCount,
         "category":dataToSubmit.category,
         "startTime":"2021-09-20T12:00:00"

@@ -2,17 +2,12 @@ import React from "react";
 import Header from "../../components/common/header";
 import "../../assets/css/Common/main_contents_container.css";
 import "../../assets/css/Crew/Crew.css";
-import hamburger_icon from '../../assets/images/common/Hamburger_icon.png';
-import notice_icon from '../../assets/images/common/noticeBell_icon.png';
-import SLIDERDATA from "../../components/common/SliderData";
-import { Link } from "react-router-dom";
-import { bindActionCreators } from 'redux';
-import { connect } from "react-redux";
-import {actionCreators} from "../../redux/reducers/index"
-import axios from "axios";
+import "../../assets/css/Matching/Matching.css";
+import "../../assets/css/Common/common.css";
 import DownHeader from "../../components/common/downHeader";
-import { isThisSecond } from "date-fns";
-import Mymatching from "./Mymatching";
+import NONEDATA from "../../assets/images/common/noneData.png";
+import BackHeader from "../../components/common/header_back";
+
 
 
 class sendCrewRequest extends React.Component {
@@ -20,22 +15,54 @@ class sendCrewRequest extends React.Component {
     
     constructor(props){
         super(props);
-        console.log(this.props)
     }
 
     
     render() {
-    
-    return (
-      <div className="crew_main_container">
-        <Header/>
-        <div>
-            
-        </div>
-        <DownHeader/>
-        </div>
+    const datas = this.props.location.state.MY_CREW_SEND_REQUEST;
+    if (datas.length==0){
+        return (
+            <div className="crew_main_container">
+              <BackHeader history="/MyCrew"/>
+              <div className="request_box">
+                  받은 크루 요청
+              </div>
+              <div className="none_data">
+                <img src={NONEDATA}></img>
+                <div>
+                    No results
+                </div>
+                </div>
+              <DownHeader/>
+              </div>
+              
+          );
+    }else{
+        return (
+            <div className="crew_main_container">
+              <BackHeader history="/MyCrew"/>
+              <div className="request_box">
+                  받은 크루 요청
+              </div>
+              {
+                  datas.map((data)=>{
+                      return(
+                      <div className="dataOftitle">
+                          {data.crew.name}
+                          <div className="dataOfNumber">
+                              총 {data.request.length}명
+                          </div>
+                      </div>
+                      )
+                  })
+              }
+              <DownHeader/>
+              </div>
+        )
+}
+   
         
-    );
+
   }
 }
 
