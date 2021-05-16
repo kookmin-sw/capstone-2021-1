@@ -3,6 +3,7 @@ package com.kookmin.pm.web;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
 import com.kookmin.pm.module.crew.dto.CrewCreateInfo;
 import com.kookmin.pm.module.crew.dto.CrewDetails;
+import com.kookmin.pm.module.crew.dto.CrewParticipantsDetails;
 import com.kookmin.pm.module.crew.dto.CrewSearchCondition;
 import com.kookmin.pm.module.crew.service.CrewLookupType;
 import com.kookmin.pm.module.crew.service.CrewService;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -124,11 +126,11 @@ public class CrewController {
     @GetMapping(value = "/member/crew/participate/request")
     public ResponseEntity findCrewParticipationRequest(Principal principal) {
         Long usn = Long.parseLong(principal.getName());
-        Map<String, Object> request = crewService.findCrewParticipateRequest(usn);
+        List<CrewParticipantsDetails> result = crewService.findCrewParticipateRequest(usn);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(request);
+                .body(result);
     }
 
     @GetMapping(value = "/member/crew/participate")

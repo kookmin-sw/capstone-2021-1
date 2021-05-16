@@ -348,7 +348,7 @@ class CrewServiceTest {
 
         crewService.participateCrew(participant.getId(), crew.getId());
 
-        Map<String , Object> request = crewService.findCrewParticipateRequest(host.getId());
+        List<CrewParticipantsDetails> request = crewService.findCrewParticipateRequest(host.getId());
 
         System.out.println(request);
     }
