@@ -348,7 +348,7 @@ class CrewServiceTest {
 
         crewService.participateCrew(participant.getId(), crew.getId());
 
-        List<CrewParticipantsDetails> request = crewService.findCrewParticipateRequest(host.getId());
+        List<ResponseCrewParticipants> request = crewService.findCrewParticipateRequest(host.getId());
 
         System.out.println(request);
     }
@@ -365,10 +365,5 @@ class CrewServiceTest {
         Crew crew = crewRepository.findByMember(host).get(0);
 
         crewService.participateCrew(participant.getId(), crew.getId());
-
-        List<CrewParticipantsDetails> result = crewService.findMyParticiPateRequest(participant.getId());
-
-        for(CrewParticipantsDetails detail : result)
-            System.out.println(detail);
     }
 }
