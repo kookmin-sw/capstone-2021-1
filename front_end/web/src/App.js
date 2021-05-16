@@ -18,6 +18,9 @@ import MatchingInfo from "./screen/matching/MatchingInfo";
 import MemberInfo from "./screen/manage/MemberInfo";
 import MatchingCollect from "./screen/matching/MatchingCollect";
 import Mymatching from "./screen/Mypage/Mymatching";
+import MyCrew from "./screen/Mypage/MyCrew";
+import sendMatchingRequest from "./screen/Mypage/sendMatchingRequest";
+import sendCrewRequest from "./screen/Mypage/receiveCrewRequest";
 class App extends React.Component{
  
   render(){
@@ -39,6 +42,9 @@ class App extends React.Component{
       <Route path="/member/:id" component={MemberInfo}/>
       <Route path="/AllMatching" component={MatchingCollect}/>
       <Route path="/MyMatching" component={Mymatching}/>
+      <Route path="/MyCrew" component={MyCrew}/>
+      <Route path="/mypage/sendMatchingRequest" component={sendMatchingRequest}/>
+      <Route path="/mypage/sendCrewRequest" component={sendCrewRequest}/>
     </BrowserRouter>
     );
   }

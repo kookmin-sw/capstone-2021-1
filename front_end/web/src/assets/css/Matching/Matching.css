@@ -340,3 +340,39 @@
     font-size:14px;
     border-radius: 6px;
 }
+
+.slider_my_info{
+    background-size: cover;
+    width:220px;
+    height: 144px;
+    border-radius: 12px;
+    text-align: center;
+    color:#ffffff;
+    line-height: 144px;
+}
+
+.round_slider{
+    width:102px;
+    height:102px;
+    border-radius: 200px;
+    background-size: cover;
+    
+}
+
+.round_slider_text{
+    width:102px;
+    font-size: 16px;
+    color:#949494;
+    text-align: center;
+}
+
+.go_request_page{
+    width:80%;
+    height:44px;
+    color:#ffffff;
+    background-color:#487886;
+    text-align: center;
+    line-height: 44px;
+    margin: auto;
+    border-radius: 12px;;
+}

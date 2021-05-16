@@ -23,7 +23,7 @@ function DownHeader() {
           <div className="down_header_content_text">매칭 및 대회</div>
         </div>  
       </Link>
-      <Link to="/MyMatching" className="common_link">
+      <Link to="/MyCrew" className="common_link">
         <div className="down_header_content_right down_header_content">
           <div className="down_header_content_img"><img src={SETTING_ICON}/></div>
           <div className="down_header_content_text">관리</div>

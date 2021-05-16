@@ -37,11 +37,15 @@ class MatchingInfo extends React.Component{
     componentDidMount(){
         
     }
+    rerender = () =>{
+      this.setState({MATCHING_DATA_COMPLETE})
+    }
 
     render(){
       console.log(MATCHING_DATA);
         var repeat = setInterval(function(){
             if (MATCHING_DATA_COMPLETE){
+                this.rerender();
                 clearInterval(repeat);
             }
         },500)

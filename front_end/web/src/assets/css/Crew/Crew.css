@@ -158,3 +158,10 @@
     float:right;
     text-align: center;
 }
+
+.matching_title{
+    height:30px;
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
