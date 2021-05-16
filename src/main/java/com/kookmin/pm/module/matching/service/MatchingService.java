@@ -330,53 +330,76 @@ public class MatchingService {
         matching.endMatching();
     }
 
-    public List<MatchingParticipantDetails> findMyParticipationRequest(@NonNull Long usn) {
+    public List<ResponseMatchingParticipant> findMyParticipationRequest(@NonNull Long usn) {
         Member member = getMemberEntity(usn);
 
         List<MatchingParticipant> participants = matchingParticipantRepository
                 .findByMemberAndStatus(member, ParticipantStatus.PENDING_ACCEPTANCE);
 
-        List<MatchingParticipantDetails> request = new ArrayList<>();
+        List<ResponseMatchingParticipant> result = new ArrayList<>();
 
-        for(MatchingParticipant matchingParticipant : participants)
-            request.add(new MatchingParticipantDetails(matchingParticipant));
+        for(MatchingParticipant matchingParticipant : participants) {
+            Matching matching = matchingParticipant.getMatching();
 
-        return request;
+            MatchingDetails matchingDetails = new MatchingDetails(matching);
+            List<String> matchingImageList = domainImageService.getImageUrl(matching.getId(), "MATCHING");
+            matchingDetails.setImageList(matchingImageList);
+
+            MatchingParticipantDetails matchingParticipantDetails = new MatchingParticipantDetails(matchingParticipant);
+            List<String> memberImage = domainImageService.getImageUrl(matchingParticipant.getMember().getId(),
+                    "MEMBER");
+            matchingParticipantDetails.getMember().setImageList(memberImage);
+
+            List<MatchingParticipantDetails> participantDetailsList = new ArrayList<>();
+            participantDetailsList.add(matchingParticipantDetails);
+
+            ResponseMatchingParticipant response = new ResponseMatchingParticipant();
+            response.setMatching(matchingDetails);
+            response.setRequest(participantDetailsList);
+        }
+
+        return result;
     }
 
-    public Map<String, Object> findMatchingParticipationRequest(@NonNull Long usn) {
-        Map<String, Object> request = new HashMap<>();
+    public List<ResponseMatchingParticipant> findMatchingParticipationRequest(@NonNull Long usn) {
+       List<ResponseMatchingParticipant> result = new ArrayList<>();
 
         Member member = getMemberEntity(usn);
 
-        List<Matching> scheduledMatchingList = matchingRepository.findByMemberAndStatus(member,
-                MatchingStatus.SCHEDULED);
+        List<Matching> scheduledMatchingList = matchingRepository
+                .findByMemberAndStatus(member, MatchingStatus.SCHEDULED);
 
         List<String> matchingTitles = new ArrayList<>();
 
-        for(Matching matching : scheduledMatchingList)
-            matchingTitles.add(matching.getTitle());
-
-        request.put("matching", matchingTitles);
-
-        int index = 0;
-
         for(Matching matching : scheduledMatchingList) {
+            MatchingDetails matchingDetails = new MatchingDetails(matching);
+
+            List<String> matchingImage = domainImageService
+                    .getImageUrl(matching.getId(), matching.getCategory().getName());
+
+            matchingDetails.setImageList(matchingImage);
+
             List<MatchingParticipant> participants = matchingParticipantRepository
                     .findByMatchingAndStatus(matching, ParticipantStatus.PENDING_ACCEPTANCE);
 
             List<MatchingParticipantDetails> details = new ArrayList<>();
 
-
             for(MatchingParticipant participant : participants) {
-                details.add(new MatchingParticipantDetails(participant));
+                MatchingParticipantDetails participantDetails = new MatchingParticipantDetails(participant);
+                List<String> memberImage = domainImageService
+                        .getImageUrl(participant.getMember().getId(), "MEMBER");
+                        participantDetails.getMember().setImageList(memberImage);
+                details.add(participantDetails);
             }
 
-            request.put(String.valueOf(index), details);
-            index++;
+            ResponseMatchingParticipant response = new ResponseMatchingParticipant();
+            response.setMatching(matchingDetails);
+            response.setRequest(details);
+
+            result.add(response);
         }
 
-        return request;
+        return result;
     }
 
     public MatchingParticipantDetails lookupMatchingParticipants(@NonNull Long participantsId) {
