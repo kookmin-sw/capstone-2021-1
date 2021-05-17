@@ -356,6 +356,8 @@ public class MatchingService {
             ResponseMatchingParticipant response = new ResponseMatchingParticipant();
             response.setMatching(matchingDetails);
             response.setRequest(participantDetailsList);
+
+            result.add(response);
         }
 
         return result;
