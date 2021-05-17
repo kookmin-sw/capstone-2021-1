@@ -71,8 +71,10 @@ async function sendMatchingRequest(token){
     }).catch(function(error){
       alert(error.message);
     })
+    console.log(data);
     MY_MATCHING_SEND_REQUEST = data;
     COUNT = COUNT+1;
+    
     return data;
 }
 

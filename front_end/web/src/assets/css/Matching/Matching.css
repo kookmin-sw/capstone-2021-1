@@ -376,3 +376,17 @@
     margin: auto;
     border-radius: 12px;;
 }
+
+.map_confirm_btn{
+    position:absolute;
+    z-index:100;
+    bottom:0px;
+    width:100%;
+    margin: auto;
+    text-align: center;
+    font-size:20px;
+    color:#ffffff;
+    background-color: #487886;
+    border-radius:12px;
+    line-height: 50px;
+}

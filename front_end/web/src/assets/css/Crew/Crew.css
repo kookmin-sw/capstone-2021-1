@@ -194,6 +194,7 @@
     height:48px;
     float:left;
     border-radius: 200px;
+    background-size: cover;
 }
 
 .member_nickname{

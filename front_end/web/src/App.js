@@ -21,6 +21,7 @@ import Mymatching from "./screen/Mypage/Mymatching";
 import MyCrew from "./screen/Mypage/MyCrew";
 import sendMatchingRequest from "./screen/Mypage/sendMatchingRequest";
 import sendCrewRequest from "./screen/Mypage/receiveCrewRequest";
+import addr from "./screen/matching/addr";
 class App extends React.Component{
  
   render(){
@@ -45,6 +46,7 @@ class App extends React.Component{
       <Route path="/MyCrew" component={MyCrew}/>
       <Route path="/mypage/sendMatchingRequest" component={sendMatchingRequest}/>
       <Route path="/mypage/sendCrewRequest" component={sendCrewRequest}/>
+      <Route path="/findaddr" component={addr}/>
     </BrowserRouter>
     );
   }

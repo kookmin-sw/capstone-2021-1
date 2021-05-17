@@ -7,24 +7,30 @@ import {actionCreators} from "../../redux/reducers/index"
 import BackHeader from "../../components/common/header_back";
 import SEARCH_ICON from "../../assets/images/common/search_icon.png";
 import DateInput from "../../components/common/DateInput";
+import {Link} from "react-router-dom";
+
+
 
 class MatchingMake extends React.Component {
 
     state = {start_date:new Date()}
-    
+
     handleBtnClick = () =>{
-        const {request_header} = this.props.store.state;
+        console.log(this.state)
+        const {request_header, makeLocation} = this.props.store.state;
         const {postMatching} = this.props;
+
         postMatching({
             title : this.state.title,
             description: this.state.description,
-            latitude: this.state.latitude,
-            longitude: this.state.longitude,
-            maxCount: this.state.maxCount,
-            category: this.state.category,
-            startTime: this.state.start_date
+            latitude: makeLocation.lat,
+            longitude: makeLocation.lng,
+            maxCount: 5,
+            category: "BOARD_GAME",
+            startTime: "2021-05-20T12:00:00"
         },request_header.accessToken)
-        this.props.history.goback();
+        
+        this.props.history.push("/matching");
     }
 
     changeDate = e => {
@@ -62,10 +68,13 @@ class MatchingMake extends React.Component {
                 </div>
                 <div className="matching_location">
                     <div className="matching_make_text">위치</div>
-                    <div className="matching_make_input">
-                        <text>주소를 검색하세요.</text>
-                        <img src={SEARCH_ICON}/>
-                    </div>
+                    <Link to="/findaddr">
+                        <div className="matching_make_input">
+                            <text>주소를 검색하세요.</text>
+                            
+                            <img src={SEARCH_ICON}/>
+                        </div>
+                    </Link>
                 </div>
                 <div className="matching_time">
                     <div className="matching_make_text">시간
@@ -106,3 +115,12 @@ class MatchingMake extends React.Component {
 
 
 export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(MatchingMake);
+
+const postCodeStyle = {
+    display: "none",
+    position: "absolute",
+    top: "50%",
+    width: "400px",
+    height: "500px",
+    padding: "7px",
+  };
