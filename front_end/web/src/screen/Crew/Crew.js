@@ -37,7 +37,14 @@ class Crew extends React.Component {
         </div>
             
             <div className="crew_info_container">
-            <div className="matching_make_text">크루 모아보기</div>
+            <div className="matching_make_text">
+                <div className="matching_make_text_text">
+                크루 모아보기
+                </div>
+            <Link to="/crew/make">
+                <div className="crew_make_btn">+</div>
+            </Link>
+            </div>
                 {
                     crewDatas.content.map((data) => (
                         <div>

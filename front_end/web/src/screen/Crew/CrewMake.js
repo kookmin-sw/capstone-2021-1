@@ -66,8 +66,7 @@ class CrewMake extends React.Component {
     return (
       <section className="container">
         <Header/>
-        <SideContentsContainer>
-        </SideContentsContainer>
+        
         <div className="main_contents_container">
         <div className="enroll_id">
                         <EnrollText text="id"/>

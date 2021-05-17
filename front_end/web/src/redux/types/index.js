@@ -15,3 +15,6 @@ export const SET_LOC = "SET_LOC";
 
 export const MATCHING_CONFIRM = "MATCHING_CONFIRM";
 export const MATCHING_REFUSE = "MATCHING_REFUSE";
+
+export const CREW_CONFIRM = "CREW_CONFIRM";
+export const CREW_REFUSE = "CREW_REFUSE";

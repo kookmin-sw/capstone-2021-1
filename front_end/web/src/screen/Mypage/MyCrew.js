@@ -43,7 +43,21 @@ async function getMyCrew(token){
     COUNT = COUNT+1;
     return data;
   }
-
+  
+  async function receiveCrewRequest(token){
+    var data = await axios({
+        method:'get',
+        url: "http://54.180.98.138:8080"+"/member/crew/participate/request",
+        headers: {'X-AUTH-TOKEN': token}
+      }).then(function(response){
+        return response.data
+      }).catch(function(error){
+        alert(error.message);
+      })
+      MY_CREW_RECEIVE_REQUEST = data;
+      COUNT = COUNT+1;
+      return data;
+}
 
 async function sendCrewRequest(token){
     var data = await axios({
@@ -66,7 +80,7 @@ class MyCrew extends React.Component {
         super(props);
         getMyCrew(this.props.store.state.request_header.accessToken);
         sendCrewRequest(this.props.store.state.request_header.accessToken);
-        
+        receiveCrewRequest(this.props.store.state.request_header.accessToken);
     }
     
     componentDidMount(){
@@ -74,7 +88,7 @@ class MyCrew extends React.Component {
       }
       
       dataCheck = () =>{
-        if (COUNT == 2){      
+        if (COUNT == 3){      
           this.setState({dataCheck:true});
           clearInterval(this.interval);
         }
@@ -106,11 +120,11 @@ class MyCrew extends React.Component {
             </div>
             <div className="crew_info_container">
                 <div className="matching_make_text">보낸 크루요청</div>
-                <SLIDERDATA data={MY_CREW_RECEIVE_REQUEST}></SLIDERDATA>
+                <SLIDERDATA data={MY_CREW_SEND_REQUEST}></SLIDERDATA>
             </div>
             <div className="crew_info_container">
                 <div className="matching_make_text">받은 크루요청</div>
-                <Link to={{ pathname:'/mypage/sendCrewRequest', state:{MY_CREW_SEND_REQUEST}}}>
+                <Link to={{ pathname:'/mypage/sendCrewRequest', state:{MY_CREW_RECEIVE_REQUEST}}}>
                 <div className="go_request_page">크루 요청 관리하러 가기</div>
                 </Link>
             </div>

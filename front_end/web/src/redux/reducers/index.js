@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA, POST_MATCHING, USER_REQUEST_MATCHING, SET_LOC, MATCHING_CONFIRM, MATCHING_REFUSE} from "../types/index";
+import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA, POST_MATCHING, USER_REQUEST_MATCHING, SET_LOC, MATCHING_CONFIRM, MATCHING_REFUSE, CREW_CONFIRM, CREW_REFUSE} from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -93,6 +93,37 @@ function userRequestMatching(dataToSubmit, token){
   }
 }
 
+function crewConfirm(token, id){
+  const data = axios({
+    method:'put',
+    url: USER_URL + "/crew/participate/approve/" + id,
+    headers: {'X-AUTH-TOKEN': token},
+  }).then(function(response){
+    alert("요청을 수락 했습니다.")
+  }).catch(function(error){
+    alert(error.message)
+  })
+  return{
+    type: CREW_CONFIRM,
+    payload:data
+  }
+}
+function crewRefuse(token, id){
+  const data = axios({
+    method:'delete',
+    url: USER_URL + "/matching/participate/reject/" + id,
+    headers: {'X-AUTH-TOKEN': token},
+  }).then(function(response){
+    alert("요청을 거정 했습니다.")
+  }).catch(function(error){
+    alert(error.message)
+  })
+  return{
+    type: CREW_REFUSE,
+    payload:data
+  }
+}
+
 function matchingConfirm(token, id){
   const data = axios({
     method:'put',
@@ -115,7 +146,7 @@ function matchingConfirm(token, id){
       url: USER_URL + "/matching/participate/reject/" + id,
       headers: {'X-AUTH-TOKEN': token},
     }).then(function(response){
-      alert("요청을 수락 했습니다.")
+      alert("요청을 거정 했습니다.")
     }).catch(function(error){
       alert(error.message)
     })
@@ -182,6 +213,14 @@ const InitialState = { isLogin: false };
 
 function reducer(state = InitialState, action){
     switch (action.type) {
+        case CREW_CONFIRM:
+          return{
+            ...state,
+          }
+        case CREW_REFUSE:
+          return{
+            ...state,
+          }
         case MATCHING_CONFIRM:
           return{
             ...state,
@@ -267,7 +306,9 @@ const actionCreators = {
     userRequestMatching,
     setLoc,
     matchingRefuse,
-    matchingConfirm
+    matchingConfirm,
+    crewConfirm,
+    crewRefuse,
   };
 
 export { actionCreators };

@@ -11,6 +11,7 @@ import DownHeader from "../../components/common/downHeader";
 import NONEDATA from "../../assets/images/common/noneData.png";
 import BackHeader from "../../components/common/header_back";
 
+var datas=[];
 
 class sendMatchingRequest extends React.Component {
     
@@ -18,24 +19,33 @@ class sendMatchingRequest extends React.Component {
     constructor(props){
         super(props);
         this.state={dsa : 0}
+        datas = this.props.location.state.MY_MATCHING_RECEIVE_REQUEST;
     }
 
 
-    onClickConfirm = (data) => {
+    onClickConfirm = (data,index,indexcol,request) => {
         const {matchingConfirm} = this.props;
         const {request_header} = this.props.store.state;
         matchingConfirm(request_header.accessToken, data);
+        var requestData = request;
+        requestData.request.splice(index,1);
+        datas[indexcol] = requestData;
         this.setState({dsa : this.state.dsa + 1})
     }
-    onClickRefuse = (data) => {
+
+    onClickRefuse = (data,index,indexcol,request) => {
         console.log(this.props)
         const {matchingRefuse} = this.props;
         const {request_header} = this.props.store.state;
         matchingRefuse(request_header.accessToken, data);
+        var requestData = request;
+        requestData.request.splice(index,1);
+        datas[indexcol] = requestData;
+        this.setState({dsa : this.state.dsa + 1})
     }
     
     render() {
-    const datas = this.props.location.state.MY_MATCHING_RECEIVE_REQUEST;
+    
     if (datas.length==0){
         return (
             <div className="crew_main_container">
@@ -62,7 +72,7 @@ class sendMatchingRequest extends React.Component {
                   받은 매칭 요청
               </div>
               {
-                  datas.map((data)=>{
+                  datas.map((data,indexcol)=>{
                       return(
                       <div className="dataOftitle">
                           {data.matching.title}
@@ -70,15 +80,15 @@ class sendMatchingRequest extends React.Component {
                               총 {data.request.length}명
                           </div>
                           {
-                              data.request.map((member)=>{
+                              data.request.map((member,index)=>{
                                   return(
                                         <div className="request_member">
                                             <div className="member_profile"  style={{backgroundImage: `url("${member.member.imageList[0]}")`}}/>
                                             <div className="member_nickname">{member.member.nickname}</div>
                                             <div className="member_info">여/20살</div>
                                             <div className="response_btn">
-                                                <div className="refuse_btn" onClick={ () => { this.onClickRefuse(member.id); } }>거절</div>
-                                                <div className="confirm_btn" onClick={()=>{this.onClickConfirm(member.id)}}>수락</div>
+                                                <div className="refuse_btn" onClick={ () => { this.onClickRefuse(member.id,index,indexcol,data); } }>거절</div>
+                                                <div className="confirm_btn" onClick={ ()=>{this.onClickConfirm(member.id,index,indexcol,data);}}>수락</div>
                                             </div>
                                         </div>
                                   )

@@ -245,3 +245,15 @@
     width:100%;
     border-bottom:solid 1px #dcdcdc;
 }
+
+.matching_make_text_text{
+    float:left;
+    width:50%;
+}
+
+.crew_make_btn{
+    width:30px;
+    height:30px;
+    text-align: center;
+    float:right;
+}
