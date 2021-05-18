@@ -44,6 +44,16 @@ class sendMatchingRequest extends React.Component {
         this.setState({dsa : this.state.dsa + 1})
     }
     
+    delMyMatching = (id,indexcol) =>{
+        console.log(datas);
+        console.log(id)
+        const {delMatching} = this.props;
+        const {request_header} = this.props.store.state;
+        delMatching(request_header.accessToken, id);
+        datas.splice(indexcol,1);
+        this.setState({dsa : this.state.dsa + 1})
+    }
+
     render() {
     
     if (datas.length==0){
@@ -76,6 +86,9 @@ class sendMatchingRequest extends React.Component {
                       return(
                       <div className="dataOftitle">
                           {data.matching.title}
+                          <div className="del_matching" onClick={ () => { this.delMyMatching(data.matching.id,indexcol); } }>
+                            삭제
+                            </div>
                           <div className="dataOfNumber">
                               총 {data.request.length}명
                           </div>

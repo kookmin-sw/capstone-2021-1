@@ -18,3 +18,7 @@ export const MATCHING_REFUSE = "MATCHING_REFUSE";
 
 export const CREW_CONFIRM = "CREW_CONFIRM";
 export const CREW_REFUSE = "CREW_REFUSE";
+export const DEL_MATCHING = "DEL_MATCHING";
+export const DEL_CREWW = "DEL_CREW";
+
+export const REGISTER_CREW = "REGISTER_CREW";

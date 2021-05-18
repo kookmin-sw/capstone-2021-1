@@ -9,6 +9,7 @@ import {Link} from "react-router-dom"
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
+import axios from "axios"
 
 const params = {
   pagination: {
@@ -21,6 +22,31 @@ const params = {
   containerClass: 'customized-swiper-container' // Replace swiper-container with customized-swiper-container
 }
 
+var CREW_DATAS;
+var MATCHING_DATAS;
+async function getCrewData(){
+  const data = await axios.get('http://54.180.98.138:8080/crew/search').then(function(response){
+      return response.data
+    }).catch(function(error){
+      alert(error.message);
+    })
+    CREW_DATAS = data
+  return data;
+}
+
+async function getMatchingData(){
+  const data = await axios({
+    method:'get',
+    url: "http://54.180.98.138:8080"+"/matching/search",
+  }).then(function(response){
+    return response.data
+  }).catch(function(error){
+    alert(error.message);
+  })
+  MATCHING_DATAS = data
+  return data;
+}
+
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -28,8 +54,17 @@ class Home extends React.Component {
             uid:'',password:'',name:'',nickname:'',phoneNumber:'',provider:'default',address:'seoul',complete:false}
     }
 
+    componentDidMount(){
+      getMatchingData();
+      getCrewData();
+    }
+    componentWillUnmount(){
+      const {setCrewData, setMatchingData} = this.props;
+      setCrewData(CREW_DATAS);
+      setMatchingData(MATCHING_DATAS);
+   }
+
     render() {
-        console.log(this.props);
         const {matchingDatas, crewDatas} = this.props.store.state;
     return (
       

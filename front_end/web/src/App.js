@@ -32,7 +32,7 @@ class App extends React.Component{
       <Route path="/login" exact={true} component={Login}/>
       <Route path="/enroll" exact={true} component={Enroll}/>
       <Route path="/crew" exact={true} component={Crew}/>
-      <Route path="/crew/make" component={CrewMake}/>
+      <Route path="/crewMake" exact={true} component={CrewMake}/>
       <Route path="/mypage" exact={true} component={Mypage}/>
       <Route path="/manage" exact={true} component={Manage}/>
       <Route path="/" exact={true} component={FirstPage}/>

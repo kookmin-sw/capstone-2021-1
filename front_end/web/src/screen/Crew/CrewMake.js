@@ -13,13 +13,19 @@ import "../../assets/css/Enroll/Enrollment.css";
 
 
 class CrewMake extends React.Component {
-    state = {data:{
-        name:"크루5",
-        description:"잉여 인간 모임5",
-        maxCount:10,
-        activityArea:"서울",
-        category:"BOARD GAME"
-    }}
+    handleSubmit = () =>  {
+        const { registerCrew } = this.props;
+        const { request_header } = this.props.store.state;
+        registerCrew(this.state, request_header.accessToken);
+        this.props.history.push("/crew");
+    }
+    state = {
+        "name":"크루1",
+        "description":"잉여 인간 모임",
+        "maxCount":10,
+        "activityArea":"서울",
+        "category":"BOARD GAME"
+    }
     
     constructor(props){
         super(props);
@@ -27,36 +33,36 @@ class CrewMake extends React.Component {
     
     handleDoubleckecked = () => {
         const { doubleChecked_ID } = this.props;
-        doubleChecked_ID(this.state.uid);
+        doubleChecked_ID(this.state.name);
     }
     
     uidChange = (e) => {
-        this.setState({
-            uid:e.target.value,
-        })
-    }
-
-    pwChange = (e) => {
-        this.setState({
-            password:e.target.value,
-        })
-    }
-
-    nameChange = (e) => {
         this.setState({
             name:e.target.value,
         })
     }
 
+    pwChange = (e) => {
+        this.setState({
+            description:e.target.value,
+        })
+    }
+
+    nameChange = (e) => {
+        this.setState({
+            activityArea:e.target.value,
+        })
+    }
+
     nicknameChange = (e) => {
         this.setState({
-            nickname:e.target.value,
+            maxCount:e.target.value,
         })
     }
     
     phoneNumChange = (e) => {
         this.setState({
-            phoneNumber:e.target.value,
+            category:e.target.value,
         })
     }
 
@@ -67,26 +73,26 @@ class CrewMake extends React.Component {
       <section className="container">
         <Header/>
         
-        <div className="main_contents_container">
+        <div>
         <div className="enroll_id">
-                        <EnrollText text="id"/>
+                        <EnrollText text="크루 명"/>
                         <input className="doubleckecked_input" onChange={this.uidChange} placeholder="크루명을 입력해주세요."></input>
                         <div className="id_double_check" onClick={this.handleDoubleckecked}>중복확인</div>
                     </div>
                     <div className="enroll_pw">
-                        <EnrollText text="pw"/>
+                        <EnrollText text="크루 설명"/>
                         <input className="nondoubleckecked_input" onChange={this.pwChange} placeholder="크루 설명을 입력해주세요."></input>
                     </div>
                     <div className="enroll_nickname">
-                        <EnrollText text="nickname"/>
+                        <EnrollText text="maxCount"/>
                         <input className="nondoubleckecked_input" onChange={this.nicknameChange} placeholder="최대인원을 입력해주세요."></input>
                     </div>
                     <div className="enroll_name">
-                        <EnrollText text="name"/>
+                        <EnrollText text="region"/>
                         <input className="nondoubleckecked_input" onChange={this.nameChange} placeholder="지역을 입력해주세요."></input>
                     </div>
                     <div className="enroll_phoneNumber">
-                        <EnrollText text="phoneNumber"/>
+                        <EnrollText text="category"/>
                         <input className="nondoubleckecked_input" onChange={this.phoneNumChange} placeholder="카테고리를 입력해주세요."></input>
                     </div>
                     <div className="submit_btn" onClick={this.handleSubmit}>제출하기</div>

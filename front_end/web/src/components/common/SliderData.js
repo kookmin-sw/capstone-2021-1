@@ -45,7 +45,22 @@ class SliderData extends React.Component {
           }
          </Swiper>
         )
-      }else{
+      }else if(this.props.type=='MY_CREW'){
+        return(
+          <Swiper {...params} slidesPerView={1.2}>
+          {
+            DATAS.map((data) => (
+              <SwiperSlide  style={{width:"240px"}}>
+                  <div className="slider_my_info" style={{backgroundImage: `url("${data.imageList[0]}")`}}>
+                    {data.name}
+                  </div>
+              </SwiperSlide>
+            ))
+          }
+         </Swiper>
+        )
+      }
+      else{
         console.log(DATAS)
         return(
           <Swiper {...params}>

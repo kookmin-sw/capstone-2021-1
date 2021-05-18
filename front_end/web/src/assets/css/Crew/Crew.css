@@ -257,3 +257,14 @@
     text-align: center;
     float:right;
 }
+
+.del_matching{
+    float:right;
+    width:50px;
+    text-align: center;
+    border-radius: 12px;
+    margin-left:10px;
+    color:#ffffff;
+    font-size:12px;
+    background-color: #487886;
+}

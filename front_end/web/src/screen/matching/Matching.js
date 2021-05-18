@@ -12,7 +12,7 @@ import {actionCreators} from "../../redux/reducers/index"
 import { Link } from "react-router-dom";
 import DownHeaderPosition from "../../components/common/downHeaderPosition";
 
-
+var COUNT = 0;
 var marker_info_css="marker_info";
 var CLICK_MARKER;
 var isClick = false;
@@ -44,7 +44,7 @@ constructor(props){
 state={isClick:false}
 
 componentDidMount(){
-
+  
 }
 
 RequestBtnClick(){
@@ -63,6 +63,12 @@ SlideUP(){
   this.setState({marker_info_css})
 }
 
+
+
+onCLickRefresh=()=>{
+  this.setState({dsa : 1})
+  console.log("dsadsa")
+}
 
   render() { 
     
@@ -121,7 +127,7 @@ SlideUP(){
                 +
               </div>
               </Link>
-              <div className="refresh_btn">
+              <div className="refresh_btn" onClick={this.onCLickRefresh}>
                 <img src={REFRESH_ICON}/>
               </div>
               <div className="location_confirm_btn">

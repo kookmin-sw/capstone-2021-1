@@ -42,7 +42,7 @@ class sendCrewRequest extends React.Component {
 
     
     render() {
-    const datas = this.props.location.state.MY_CREW_SEND_REQUEST;
+    const datas = this.props.location.state.MY_CREW_RECEIVE_REQUEST;
     if (datas.length==0){
         return (
             <div className="crew_main_container">

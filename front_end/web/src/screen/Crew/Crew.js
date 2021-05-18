@@ -41,7 +41,7 @@ class Crew extends React.Component {
                 <div className="matching_make_text_text">
                 크루 모아보기
                 </div>
-            <Link to="/crew/make">
+            <Link to="/crewMake">
                 <div className="crew_make_btn">+</div>
             </Link>
             </div>
