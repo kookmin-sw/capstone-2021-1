@@ -52,6 +52,7 @@
     height: 85px;
     float: left;
     margin-right: 32px;
+    background-size: cover;
 }
 
 .memberInfo_block2_info_name{

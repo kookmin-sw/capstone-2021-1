@@ -5,9 +5,6 @@ import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
 
 class MemberInfo extends React.Component{
     
-    goBackBtn = () =>{
-        this.props.history.goBack();
-    }
     render(){
         const MEMBER_DATA = this.props.location.state;
         console.log(MEMBER_DATA);
@@ -27,8 +24,8 @@ class MemberInfo extends React.Component{
                 </div>
                 <div className="memberInfo_block2">
                     <div className="memberInfo_block2_info">
-                        <div className="memberInfo_block2_info_image">
-                            이미지
+                        <div className="memberInfo_block2_info_image" style={{backgroundImage: `url("${MEMBER_DATA.imageList[0]}")`}}>
+                            
                         </div>
                         <div className="memberInfo_block2_info_name">
                             {MEMBER_DATA.name}
@@ -43,7 +40,7 @@ class MemberInfo extends React.Component{
                 </div>
                 <div className="memberInfo_block3">
                     <div className="memberInfo_block3_detail">
-                        상세정보
+                        {MEMBER_DATA.description}
                     </div>
                     <div className="memberInfo_block3_graph"></div>
                     <div className="memberInfo_block3_release">방출하기</div>

@@ -5,6 +5,7 @@ import BACK_ICON from "../../assets/images/common/backBtn_lmk.png"
 
 var MATCHING_DATA_COMPLETE=false;
 var MATCHING_DATA;
+var COUNT=0;
 async function getMatchingDetail(id){
     const data = await axios({
       method:'get',
@@ -15,6 +16,7 @@ async function getMatchingDetail(id){
       alert(error.message);
     })
     MATCHING_DATA = data;
+    COUNT = 1;
     MATCHING_DATA_COMPLETE = true;
 }
 
@@ -27,34 +29,31 @@ class MatchingInfo extends React.Component{
         if (location.state!=undefined){
           MATCHING_DATA = location.state.data;
         }
-        MATCHING_DATA = {id : 19, imageList:["https://play-maker.s3.ap-northeast-2.amazonaws.com/1bd02b15-b228-4626-9d67-cefb69cbfd89.jpg"]}
+        
         getMatchingDetail(MATCHING_DATA.id);
     }
 
-    goBackBtn = () =>{
-      this.props.history.goBack();
-  }
+    
     componentDidMount(){
-        
+      this.interval = setInterval(this.dataCheck, 500)
     }
-    rerender = () =>{
-      this.setState({MATCHING_DATA_COMPLETE})
+    dataCheck = () =>{
+      if (COUNT == 1){      
+        this.setState({dataCheck:true});
+        clearInterval(this.interval);
+      }
     }
+    
 
     render(){
-      console.log(MATCHING_DATA);
-        var repeat = setInterval(function(){
-            if (MATCHING_DATA_COMPLETE){
-                this.rerender();
-                clearInterval(repeat);
-            }
-        },500)
-
+        console.log(MATCHING_DATA);
+        const MEMBERS = MATCHING_DATA.participants;
+        console.log(MEMBERS)
         // 전역변수 MATCHING_DATA에 필요한 데이터가 전부 들어있습니다.
         return (
             <div className="matchingInfo">
               <div className="matchingInfo_block1">
-                <div className="matchingInfo_block1_backBtn" onClick={this.goBackBtn}>
+                <div className="matchingInfo_block1_backBtn" >
                   <img src={BACK_ICON}/>
                 </div>
                 <div className="matchingInfo_block1_image" style={{backgroundImage: `url("${MATCHING_DATA.imageList[0]}")`}}>
@@ -72,12 +71,18 @@ class MatchingInfo extends React.Component{
                   <div className="matchingInfo_block2_row_nickname">닉네임</div>
                   <div className="matchingInfo_block2_row_info">기본정보</div>
                 </div>
+                {
+                  MEMBERS.map((member) =>{
+                    return(
+                      <div className="matchingInfo_block2_list">
+                        <div className="matchingInfo_block2_list_image" style={{backgroundImage: `url("${member.imageList[0]}")`}}></div>
+                        <div className="matchingInfo_block2_list_nickname">{member.nickname}</div>
+                        <div className="matchingInfo_block2_list_info">27세/남</div>
+                      </div>
+                    )
+                  })
+                }
                 
-                <div className="matchingInfo_block2_list">
-                  <div className="matchingInfo_block2_list_image">이미지</div>
-                  <div className="matchingInfo_block2_list_nickname">이름</div>
-                  <div className="matchingInfo_block2_list_info">27세/남</div>
-                </div>
                 
                 <div className="matchingInfo_block2_participants"></div>
               </div>

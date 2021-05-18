@@ -7,6 +7,7 @@ import axios from "axios";
 
 var CREW_DATA_COMPLETE=false;
 var CREW_DATA;
+var COUNT =0;
 async function getCrewDetail(id){
     const data = await axios({
       method:'get',
@@ -17,6 +18,7 @@ async function getCrewDetail(id){
       alert(error.message);
     })
     CREW_DATA = data;
+    COUNT = 1
     CREW_DATA_COMPLETE = true;
 }
 
@@ -30,17 +32,19 @@ class CrewDetail extends React.Component{
         getCrewDetail(CREW_DATA.id);
        
     }
-
-    goBackBtn = () =>{
-        this.props.history.goBack();
-    }
+    componentDidMount(){
+        this.interval = setInterval(this.dataCheck, 500)
+      }
+      dataCheck = () =>{
+        if (COUNT == 1){      
+          this.setState({dataCheck:true});
+          clearInterval(this.interval);
+        }
+      }
 
     render(){
-        var repeat = setInterval(function(){
-            if (CREW_DATA_COMPLETE){
-                clearInterval(repeat);
-            }
-        },500)
+        
+        const MEMBERS = CREW_DATA.participants;
         return (
             <div className="crewDetail">
                 <div className="crewDetail_crewInfo">
@@ -68,36 +72,29 @@ class CrewDetail extends React.Component{
                 </div>
                 <div className="crewDetail_crewMember">
                     <div className="crewDetail_crewMember_title">모든 크루원</div>
-                    <Link to={{ pathname:'/member/1', state : {
-                        "id": 1,
-                        "uid": "dlwlsrn94@naver.com",
-                        "nickname": "LJG070",
-                        "name": "이진구",
-                        "address": null,
-                        "phoneNumber": "010-8784-3827",
-                        "description": "소개글",
-                        "memberStats": {
-                            "manner": 0.0,
-                            "affinity": 0.0,
-                            "physical": 0.0,
-                            "intellect": 0.0,
-                            "comprehension": 0.0
-                        },
-                        "imagePath": null
+                    {
+                        MEMBERS.map((member)=>{
+                            return(
+                    <Link to={{ pathname:'/member/'+ member.id, state : {
+                        member
                     }}}>
-                    <div className="crewDetail_crewMember_list">
-                        <div className="crewDetail_crewMember_list_image">
-                            <p>얼굴</p>
+                        <div className="crewDetail_crewMember_list">
+                            <div className="crewDetail_crewMember_list_image" style={{backgroundImage: `url("${member.imageList[0]}")`}}>
+                                
+                            </div>
+                            <div className="crewDetail_crewMember_list_name">
+                                <p>{member.nickname}</p>
+                            </div>
+                            <div className="crewDetail_crewMember_list_intro">
+                                <p>{member.description}</p>
+                            </div>
+                            <hr size="1" color="#bcbcbc"></hr>
                         </div>
-                        <div className="crewDetail_crewMember_list_name">
-                            <p>크루원 이름</p>
-                        </div>
-                        <div className="crewDetail_crewMember_list_intro">
-                            <p>크루원 소개</p>
-                        </div>
-                        <hr size="1" color="#bcbcbc"></hr>
-                    </div>
                     </Link>
+                            )
+                        })
+                    }
+                    
                 </div>
             </div>
             )
