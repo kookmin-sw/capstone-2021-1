@@ -23,7 +23,7 @@ class Crew extends React.Component {
 
     render() {
         const {crewDatas} = this.props.store.state;
-        
+        const token = this.props.store.state.request_header.accessToken;
     return (
       <div className="crew_main_container">
         <Header/>
@@ -54,7 +54,7 @@ class Crew extends React.Component {
                                     <div className="matching_text_title">{data.name}</div>
                                 </div>
                             </div>
-                            <Link to={{ pathname:'/crew/${data.id}', state:{data}}}>
+                            <Link to={{ pathname:'/crew/${data.id}', state:{data} }}>
                             <div className="crewdata_show_detail">
                             자세히 보기
                             <div className="crewdata_show_detail_btn">

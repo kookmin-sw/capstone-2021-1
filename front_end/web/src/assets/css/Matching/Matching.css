@@ -56,8 +56,25 @@
     font-size: 14px;
 }
 
+.matching_text_locate text{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    width: 200px;
+    float: left;
+}
+
 .matching_text_title{
     font-size:22px;
+}
+
+.matching_text_title text{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    width: 300px;
 }
 
 .person_for_matching{

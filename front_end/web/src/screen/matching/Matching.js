@@ -29,6 +29,21 @@ async function getMatchingData(){
   return data;
 }
 
+async function searchData(markertitle){
+  const data = await axios({
+    method:'get',
+    url: "http://54.180.98.138:8080"+"/matching/search",
+    data:{
+      title: markertitle
+    }
+  }).then(function(response){
+    return response.data
+  }).catch(function(error){
+    alert(error.message);
+  })
+  return data;
+}
+
 
 var geocoder = new kakao.maps.services.Geocoder();
 function searchDetailAddrFromCoords(coords, callback) {
@@ -40,8 +55,9 @@ constructor(props){
   super(props);
   this.SlideUP= this.SlideUP.bind(this)
   this.RequestBtnClick = this.RequestBtnClick.bind(this)
+  this.onSearchBtn = this.onSearchBtn.bind(this)
 }
-state={isClick:false}
+state={isClick:false, curlat:37.55214, curlng:126.92184}
 
 componentDidMount(){
   
@@ -64,18 +80,29 @@ SlideUP(){
 }
 
 
+onSearchBtn=()=>{
+  const {title} = this.state;
+  var search_data = searchData(title).then(res => res.content[0]).then((data)=>{
+    this.setState({curlat:data.latitude, curlng:data.longitude});
+  })
+  this.setState({search_data});
+}
 
 onCLickRefresh=()=>{
   this.setState({dsa : 1})
   console.log("dsadsa")
 }
-
+titleChange = (e) => {
+  this.setState({
+      title:e.target.value,
+  })
+}
   render() { 
-    
+    const {curlat,curlng} = this.state;
     getMatchingData().then(function(response){
       var container = document.getElementById('myMap'); //지도를 담을 영역의 DOM 레퍼런스
       var options = { //지도를 생성할 때 필요한 기본 옵션
-          center: new kakao.maps.LatLng(37.55214, 126.92184), //지도의 중심좌표.
+          center: new kakao.maps.LatLng(curlat,curlng), //지도의 중심좌표.
           level: 4 //지도의 레벨(확대, 축소 정도)
       };
       var map = new kakao.maps.Map(container, options);
@@ -99,7 +126,9 @@ onCLickRefresh=()=>{
         marker.setMap(map);
       });    
     })
+
     
+
     setInterval(() => {
       if(this.state.isClick!=isClick){
         this.setState({isClick : !this.state.isClick})
@@ -110,9 +139,9 @@ onCLickRefresh=()=>{
       <div className="matching_container">
         <div className="search_box">
           <div className="search_input">
-            <input placeholder="매칭 찾아보기"/>
+            <input placeholder="매칭 찾아보기" onChange={this.titleChange}/>
           </div>
-          <div className="search_filter">
+          <div className="search_filter" onClick={this.onSearchBtn}>
             <div className="search_input_img">
               <img src={FILTER_ICON}/>
             </div>  

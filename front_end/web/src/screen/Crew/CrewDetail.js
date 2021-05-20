@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import BACK_ICON from "../../assets/images/common/backBtn_lmk.png"
 import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
 import axios from "axios";
+import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import {actionCreators} from "../../redux/reducers/index"
 
 var CREW_DATA_COMPLETE=false;
 var CREW_DATA;
@@ -22,6 +25,8 @@ async function getCrewDetail(id){
     CREW_DATA_COMPLETE = true;
 }
 
+
+
 class CrewDetail extends React.Component{
     constructor(props){
         super(props);
@@ -30,7 +35,7 @@ class CrewDetail extends React.Component{
         CREW_DATA = location.state.data;
         console.log(CREW_DATA)
         getCrewDetail(CREW_DATA.id);
-       
+
     }
     componentDidMount(){
         this.interval = setInterval(this.dataCheck, 500)
@@ -42,9 +47,22 @@ class CrewDetail extends React.Component{
         }
       }
 
+    requestOnClick = () =>{
+        const token = this.props.store.state.request_header.accessToken;
+        const {requestCrew} = this.props;
+        console.log(this.props.location.state.data.id, token)
+        requestCrew(token,this.props.location.state.data.id);
+    }
+    goBackBtn = () =>{
+        this.props.history.go(-1);
+    }
+
     render(){
         
-        const MEMBERS = CREW_DATA.participants;
+        var MEMBERS = CREW_DATA.participants;
+        if (MEMBERS == null){
+            MEMBERS= [];
+        }
         return (
             <div className="crewDetail">
                 <div className="crewDetail_crewInfo">
@@ -67,7 +85,7 @@ class CrewDetail extends React.Component{
                             <div className="crewDetail_crewInfo_info_category">카테고리: {CREW_DATA.category}</div>
                         </div>
                         <div className="crewDetail_crewInfo_info_description">{CREW_DATA.description}</div>
-                        <div className="crewDetail_crewInfo_info_joinBtn">가입하기</div>
+                        <div className="crewDetail_crewInfo_info_joinBtn" onClick={this.requestOnClick}>가입하기</div>
                     </div>
                 </div>
                 <div className="crewDetail_crewMember">
@@ -101,4 +119,4 @@ class CrewDetail extends React.Component{
     }
 }
 
-export default CrewDetail;
+export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(CrewDetail);

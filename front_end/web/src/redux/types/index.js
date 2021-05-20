@@ -22,3 +22,5 @@ export const DEL_MATCHING = "DEL_MATCHING";
 export const DEL_CREWW = "DEL_CREW";
 
 export const REGISTER_CREW = "REGISTER_CREW";
+export const REQUEST_CREW = "REQUEST_CREW";
+export const DEPORT_CREW_MEMBER = "DEPORT_CREW_MEMBER";

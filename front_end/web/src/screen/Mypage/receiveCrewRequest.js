@@ -72,7 +72,9 @@ class sendCrewRequest extends React.Component {
                   datas.map((data,indexcol)=>{
                       return(
                       <div className="dataOftitle">
+                          <text>
                           {data.crew.name}
+                          </text>
                           <div className="dataOfNumber">
                               총 {data.request.length}명
                           </div>

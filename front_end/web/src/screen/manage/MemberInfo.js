@@ -2,11 +2,27 @@ import React from "react";
 import "../../assets/css/Manage/MemberInfo.css";
 import BACK_ICON from "../../assets/images/common/backBtn_lmk.png"
 import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
+import { bindActionCreators } from 'redux';
+import { connect } from "react-redux";
+import {actionCreators} from "../../redux/reducers/index"
+
+
+
 
 class MemberInfo extends React.Component{
     
+    outOnClick = () =>{
+        const token = this.props.store.state.request_header.accessToken;
+        const {deportCrewMember} = this.props;
+        deportCrewMember(token,this.props.location.state.member.id);
+        this.goBackBtn();
+    }
+
+    goBackBtn = () =>{
+        this.props.history.go(-1);
+    }
     render(){
-        const MEMBER_DATA = this.props.location.state;
+        const MEMBER_DATA = this.props.location.state.member;
         console.log(MEMBER_DATA);
         // 전역변수 MEMBER_DATA에 필요한 데이터가 전부 들어있습니다.
         return (
@@ -43,7 +59,7 @@ class MemberInfo extends React.Component{
                         {MEMBER_DATA.description}
                     </div>
                     <div className="memberInfo_block3_graph"></div>
-                    <div className="memberInfo_block3_release">방출하기</div>
+                    <div className="memberInfo_block3_release" onClick={this.outOnClick}>방출하기</div>
                     
                 </div>
             </div>
@@ -51,5 +67,4 @@ class MemberInfo extends React.Component{
     }
 }
 
-
-export default MemberInfo;
+export default connect(store => ({ store }),dispatch => bindActionCreators(actionCreators, dispatch))(MemberInfo);

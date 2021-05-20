@@ -85,7 +85,9 @@ class sendMatchingRequest extends React.Component {
                   datas.map((data,indexcol)=>{
                       return(
                       <div className="dataOftitle">
+                          <text>
                           {data.matching.title}
+                          </text>
                           <div className="del_matching" onClick={ () => { this.delMyMatching(data.matching.id,indexcol); } }>
                             삭제
                             </div>

@@ -43,8 +43,8 @@ class MatchingCollect extends React.Component {
                         <div>
                             <div className="crewdata_info_container"  style={{backgroundImage: `url("${data.imageList[0]}")`}}>
                                 <div className="matching_text">
-                                    <div className="matching_text_locate">{data.category}</div>
-                                    <div className="matching_text_title">{data.title}</div>
+                                    <div className="matching_text_locate"><text>{data.category}</text></div>
+                                    <div className="matching_text_title"><text>{data.title}</text></div>
                                 </div>
                             </div>
                             <Link to={{ pathname:'/matching/detail/${data.id}', state:{data}}}>

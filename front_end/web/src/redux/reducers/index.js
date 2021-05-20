@@ -1,4 +1,4 @@
-import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA, POST_MATCHING, USER_REQUEST_MATCHING, SET_LOC, MATCHING_CONFIRM, MATCHING_REFUSE, CREW_CONFIRM, CREW_REFUSE, DEL_MATCHING, REGISTER_CREW} from "../types/index";
+import { REGISTER_USER, LOGIN_USER, DOUBLECHECKED_ID, SET_USER_DETAIL, SET_HEADER ,SET_USER_CREW, SET_CLICK_MARKER, SET_CREW_DATA, SET_MATCHING_DATA, POST_MATCHING, USER_REQUEST_MATCHING, SET_LOC, MATCHING_CONFIRM, MATCHING_REFUSE, CREW_CONFIRM, CREW_REFUSE, DEL_MATCHING, REGISTER_CREW, REQUEST_CREW, DEPORT_CREW_MEMBER} from "../types/index";
 import axios from 'axios';
 
 const USER_URL = "http://54.180.98.138:8080";
@@ -90,6 +90,37 @@ function delMatching(token, id){
   })
   return{
     type: DEL_MATCHING,
+    payload:data
+  }
+}
+function deportCrewMember(token, id){
+  const data = axios({
+    method:'delete',
+    url: "http://54.180.98.138:8080"+"/crew/deport/"+id,
+    headers: {'X-AUTH-TOKEN': token}
+  }).then(function(response){
+      alert("방출 했습니다.")
+    return response.data
+  }).catch(function(error){
+    alert(error.message);
+  })
+  return{
+    type: DEPORT_CREW_MEMBER,
+    payload: data
+  }
+}
+function requestCrew(token, id){
+  const data = axios({
+    method:'post',
+    url: USER_URL + "/crew/participate/" + id,
+    headers: {'X-AUTH-TOKEN': token}
+  }).then(function(response){
+    alert("크루에 가입 요청을 보냈습니다.")
+  }).catch(function(error){
+    alert(error.message)
+  }) 
+  return{
+    type: USER_REQUEST_MATCHING,
     payload:data
   }
 }
@@ -251,6 +282,14 @@ const InitialState = { isLogin: false };
 
 function reducer(state = InitialState, action){
     switch (action.type) {
+        case DEPORT_CREW_MEMBER:
+          return{
+            ...state,
+          }
+        case REQUEST_CREW:
+          return{
+            ...state,
+          }
         case REGISTER_CREW:
           return{
             ...state,
@@ -356,7 +395,9 @@ const actionCreators = {
     crewConfirm,
     crewRefuse,
     delMatching,
-    registerCrew
+    registerCrew,
+    requestCrew,
+    deportCrewMember
   };
 
 export { actionCreators };
