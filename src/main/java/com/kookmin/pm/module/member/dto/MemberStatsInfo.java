@@ -17,7 +17,7 @@ public class MemberStatsInfo {
             this.affinity = memberStats.getAffinity() / (double) memberStats.getEvaluateCount();
             this.physical = memberStats.getPhysical() / (double) memberStats.getEvaluateCount();
             this.intellect = memberStats.getIntellect() / (double) memberStats.getEvaluateCount();
-            this.comprehension = memberStats.getComprehension() / (double) memberStats.getComprehension();
+            this.comprehension = memberStats.getComprehension() / (double) memberStats.getEvaluateCount();
         }
     }
 }
