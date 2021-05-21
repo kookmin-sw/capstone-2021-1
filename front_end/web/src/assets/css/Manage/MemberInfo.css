@@ -18,6 +18,10 @@
     height: 20%;
 }
 
+.memberInfo_block2_stat{
+    text-align: center;
+}
+
 .memberInfo_block2_description{
     padding:5%;
 }

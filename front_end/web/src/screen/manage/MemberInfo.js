@@ -5,7 +5,7 @@ import PLUS_ICON from "../../assets/images/common/plus_lmk.png"
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import {actionCreators} from "../../redux/reducers/index"
-
+import Stat from "../../components/Mypage/stat"
 
 
 
@@ -54,6 +54,9 @@ class MemberInfo extends React.Component{
                     </div>
                     <div className="memberInfo_block2_description">
                         {MEMBER_DATA.description}
+                    </div>
+                    <div className="memberInfo_block2_stat">
+                        <Stat data={MEMBER_DATA.memberStats}/>
                     </div>
                 </div>
                 <div className="memberInfo_block3">
