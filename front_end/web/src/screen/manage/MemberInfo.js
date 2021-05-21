@@ -56,14 +56,16 @@ class MemberInfo extends React.Component{
                         {MEMBER_DATA.description}
                     </div>
                     <div className="memberInfo_block2_stat">
-                        <Stat data={MEMBER_DATA.memberStats}/>
+                        
                     </div>
                 </div>
                 <div className="memberInfo_block3">
                     <div className="memberInfo_block3_detail">
                         {MEMBER_DATA.description}
                     </div>
-                    <div className="memberInfo_block3_graph"></div>
+                    <div className="memberInfo_block3_graph">
+                        <Stat data={MEMBER_DATA.memberStats}/>
+                    </div>
                     <div className="memberInfo_block3_release" onClick={this.outOnClick}>방출하기</div>
                     
                 </div>
