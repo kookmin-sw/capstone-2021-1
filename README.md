@@ -28,9 +28,7 @@
 
 ### 플랫폼
 
-* Android
-* iOS
-* Web
+* Web App
 
 ### 타겟
 
@@ -52,18 +50,6 @@
 학번:   20163136
 역할:   팀장, Back-end(DB), App/Web Design
 이메일: bomblmk97@naver.com
-~~~~~~~~~~
-~~~~~~~~~~
-이름:   고동훈
-학번:   20143027
-역할:   Front-end(iOS), App Design
-이메일: kdhkdh0101@gmail.com
-~~~~~~~~~~
-~~~~~~~~~~
-이름:   김낙원
-학번:   20113254
-역할:   Front-end(Android), App Design
-이메일: nwkim3254@gmail.com
 ~~~~~~~~~~
 ~~~~~~~~~~
 이름:   음승호
