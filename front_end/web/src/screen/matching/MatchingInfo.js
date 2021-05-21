@@ -69,7 +69,7 @@ class MatchingInfo extends React.Component{
                   <div className="matchingInfo_block1_info_description">{MATCHING_DATA.description}</div>
                   <div className="matchingInfo_block1_info_participation">{MATCHING_DATA.participantsCount}/{MATCHING_DATA.maxCount}</div>
                 </div>
-                <div className="matchingInfo_block1_joinBtn">리그 참여하기</div>
+                <div className="matchingInfo_block1_joinBtn">매칭 참여하기</div>
               </div>
               <div className="matchingInfo_block2">
                 <div className="matchingInfo_block2_title">매칭 참가자 살펴보기</div>
