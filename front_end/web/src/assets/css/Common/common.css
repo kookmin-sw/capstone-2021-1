@@ -36,6 +36,7 @@
     bottom:0px;
     text-align:center;
     position:absolute;
+    border: 0.5px #487886 solid;
 }
 
 .down_header{
@@ -50,6 +51,7 @@
     height: 90px;
     bottom:0px;
     text-align:center;
+    border: 0.5px #487886 solid;
 }
 
 .down_header_content_img{

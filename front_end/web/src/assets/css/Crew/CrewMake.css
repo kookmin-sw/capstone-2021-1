@@ -1,0 +1,19 @@
+.submit_btn{
+    text-align: center;
+    background-color: #487886;
+    border-radius: 6px;
+    width:50%;
+    margin:auto;
+    color:#ffffff;
+    font-size:14px;
+    height:44px;
+    width: 205px;
+    line-height: 45px;
+    letter-spacing: 0.4px;
+}
+
+.id_double_check{
+    background-color: #487886;
+    color:#ffffff;
+    border-radius: 6px;
+}

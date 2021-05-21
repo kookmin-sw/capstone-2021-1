@@ -60,6 +60,7 @@
     font-size:22px;
     font-weight: bold;
     margin-bottom:15px;
+    border-radius: 4%;
 }
 
 .view_all_btn{
@@ -101,4 +102,8 @@
 
 .home_content_crew{
     margin-bottom:100px;
+}
+
+.matching_box{
+    border-radius: 4%;
 }

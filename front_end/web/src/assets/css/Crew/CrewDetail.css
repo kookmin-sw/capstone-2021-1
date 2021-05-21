@@ -20,6 +20,7 @@
     height:45%;
     z-index: 1;
     background-size:cover;
+    border-radius: 4%;
 }
 
 .crewDetail_crewInfo_info{

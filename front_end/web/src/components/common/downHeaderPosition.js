@@ -2,10 +2,10 @@ import React from "react";
 import {Link} from "react-router-dom"
 import "../../assets/css/Common/common.css"
 import "../../assets/css/Common/header.css";
-import HOME_ICON from "../../assets/images/common/home_icon.png";
-import MEDAL_ICON from "../../assets/images/common/medal_icon.png";
-import SETTING_ICON from "../../assets/images/common/setting_icon.png";
-import CREW_ICON from "../../assets/images/common/crew_icon.png";
+import HOME_ICON from "../../assets/images/common/house.png";
+import CREW_ICON from "../../assets/images/common/community.png";
+import MEDAL_ICON from "../../assets/images/common/match.png";
+import SETTING_ICON from "../../assets/images/common/settings.png";
 
 
 function DownHeaderPosition() {
@@ -20,7 +20,7 @@ function DownHeaderPosition() {
       <Link to="/matching" className="common_link">
         <div className="down_header_content">
           <div className="down_header_content_img"><img src={MEDAL_ICON}/></div>
-          <div className="down_header_content_text">매칭 및 대회</div>
+          <div className="down_header_content_text">매칭</div>
         </div>  
       </Link>
       <Link to="/MyCrew" className="common_link">

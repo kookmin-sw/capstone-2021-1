@@ -2,9 +2,9 @@
 import React from "react";
 import DownHeader from "../../components/common/downHeader";
 import "../../assets/css/Matching/Matching.css"
-import REFRESH_ICON from "../../assets/images/matching/refresh_icon.png";
-import CURRENT_LOCATE_ICON from "../../assets/images/matching/current_locate_icon.png";
-import FILTER_ICON from "../../assets/images/matching/filter_icon.png";
+import REFRESH_ICON from "../../assets/images/matching/refresh.png";
+import CURRENT_LOCATE_ICON from "../../assets/images/matching/location.png";
+import FILTER_ICON from "../../assets/images/matching/filter.png";
 import axios from "axios";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";

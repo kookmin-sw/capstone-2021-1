@@ -2,6 +2,7 @@ import React from "react";
 import Header from "../../components/common/header";
 import SideContentsContainer from "../../components/common/side_contents_container";
 import "../../assets/css/Common/main_contents_container.css";
+import "../../assets/css/Crew/CrewMake.css"
 import "../../assets/css/Crew/Crew.css";
 import search_icon from '../../assets/images/common/search.jpg';
 import reset_icon from '../../assets/images/common/reset.png';
@@ -75,7 +76,7 @@ class CrewMake extends React.Component {
         
         <div>
         <div className="enroll_id">
-                        <EnrollText text="크루 명"/>
+                        <EnrollText text="크루 이름"/>
                         <input className="doubleckecked_input" onChange={this.uidChange} placeholder="크루명을 입력해주세요."></input>
                         <div className="id_double_check" onClick={this.handleDoubleckecked}>중복확인</div>
                     </div>
@@ -84,15 +85,15 @@ class CrewMake extends React.Component {
                         <input className="nondoubleckecked_input" onChange={this.pwChange} placeholder="크루 설명을 입력해주세요."></input>
                     </div>
                     <div className="enroll_nickname">
-                        <EnrollText text="maxCount"/>
+                        <EnrollText text="최대 인원"/>
                         <input className="nondoubleckecked_input" onChange={this.nicknameChange} placeholder="최대인원을 입력해주세요."></input>
                     </div>
                     <div className="enroll_name">
-                        <EnrollText text="region"/>
+                        <EnrollText text="지역"/>
                         <input className="nondoubleckecked_input" onChange={this.nameChange} placeholder="지역을 입력해주세요."></input>
                     </div>
                     <div className="enroll_phoneNumber">
-                        <EnrollText text="category"/>
+                        <EnrollText text="카테고리"/>
                         <input className="nondoubleckecked_input" onChange={this.phoneNumChange} placeholder="카테고리를 입력해주세요."></input>
                     </div>
                     <div className="submit_btn" onClick={this.handleSubmit}>제출하기</div>
