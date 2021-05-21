@@ -122,7 +122,7 @@ class MyCrew extends React.Component {
                 <div className="matching_make_text">보낸 크루요청</div>
                 <SLIDERDATA data={MY_CREW_SEND_REQUEST}></SLIDERDATA>
             </div>
-            <div className="crew_info_container">
+            <div className="crew_info_container last_content">
                 <div className="matching_make_text">받은 크루요청</div>
                 <Link to={{ pathname:'/mypage/sendCrewRequest', state:{MY_CREW_RECEIVE_REQUEST}}}>
                 <div className="go_request_page">크루 요청 관리하러 가기</div>

@@ -82,12 +82,14 @@ class sendCrewRequest extends React.Component {
                               data.request.map((member,index)=>{
                                   return(
                                         <div className="request_member">
+                                            <div>
                                             <div className="member_profile"  style={{backgroundImage: `url("${member.member.imageList[0]}")`}}/>
                                             <div className="member_nickname">{member.member.nickname}</div>
                                             <div className="member_info">여/20살</div>
                                             <div className="response_btn">
                                                 <div className="refuse_btn" onClick={ () => { this.onClickRefuse(member.id,index,indexcol,data); } }>거절</div>
                                                 <div className="confirm_btn" onClick={ ()=>{this.onClickConfirm(member.id,index,indexcol,data);}}>수락</div>
+                                            </div>
                                             </div>
                                         </div>
                                   )

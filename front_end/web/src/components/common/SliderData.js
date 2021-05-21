@@ -68,7 +68,7 @@ class SliderData extends React.Component {
             DATAS.map((data) => (
               <SwiperSlide slidesPerView={3.2}>
                 <div>
-                  <div className="round_slider" style={{backgroundImage: `url("https://play-maker.s3.ap-northeast-2.amazonaws.com/1bd02b15-b228-4626-9d67-cefb69cbfd89.jpg")`}}></div>
+                  <div className="round_slider" style={{backgroundImage: `url("${data.imageList[0]}")`}}></div>
                   <div className="round_slider_text">{data.matching.title}</div>
                   </div>
               </SwiperSlide>
