@@ -93,11 +93,16 @@ function delMatching(token, id){
     payload:data
   }
 }
-function deportCrewMember(token, id){
+function deportCrewMember(token, id, crewId){
   const data = axios({
     method:'delete',
-    url: "http://54.180.98.138:8080"+"/crew/deport/"+id,
-    headers: {'X-AUTH-TOKEN': token}
+    url: "http://54.180.98.138:8080"+"/crew/deport/"+crewId,
+    headers: {'X-AUTH-TOKEN': token},
+    
+    params:{
+      participantId : id
+    }
+    
   }).then(function(response){
       alert("방출 했습니다.")
     return response.data

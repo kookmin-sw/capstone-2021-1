@@ -58,7 +58,7 @@ class CrewDetail extends React.Component{
     }
 
     render(){
-        
+        const CREW_ID = CREW_DATA.id;
         var MEMBERS = CREW_DATA.participants;
         if (MEMBERS == null){
             MEMBERS= [];
@@ -94,7 +94,7 @@ class CrewDetail extends React.Component{
                         MEMBERS.map((member)=>{
                             return(
                     <Link to={{ pathname:'/member/'+ member.id, state : {
-                        member
+                        member, CREW_ID
                     }}}>
                         <div className="crewDetail_crewMember_list">
                             <div className="crewDetail_crewMember_list_image" style={{backgroundImage: `url("${member.imageList[0]}")`}}>

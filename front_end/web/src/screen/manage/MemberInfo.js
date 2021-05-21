@@ -12,9 +12,10 @@ import {actionCreators} from "../../redux/reducers/index"
 class MemberInfo extends React.Component{
     
     outOnClick = () =>{
+        console.log(this.props.location)
         const token = this.props.store.state.request_header.accessToken;
         const {deportCrewMember} = this.props;
-        deportCrewMember(token,this.props.location.state.member.id);
+        deportCrewMember(token,this.props.location.state.member.id,this.props.location.state.CREW_ID);
         this.goBackBtn();
     }
 
@@ -24,6 +25,7 @@ class MemberInfo extends React.Component{
     render(){
         const MEMBER_DATA = this.props.location.state.member;
         console.log(MEMBER_DATA);
+        console.log(this.props)
         // 전역변수 MEMBER_DATA에 필요한 데이터가 전부 들어있습니다.
         return (
             <div className="memberInfo">

@@ -43,11 +43,17 @@ class MatchingInfo extends React.Component{
         clearInterval(this.interval);
       }
     }
+    goBackBtn = () =>{
+      this.props.history.go(-1);
+  }
     
 
     render(){
         console.log(MATCHING_DATA);
-        const MEMBERS = MATCHING_DATA.participants;
+        var MEMBERS = MATCHING_DATA.participants;
+        if(MEMBERS == null){
+          MEMBERS = [];
+        }
         console.log(MEMBERS)
         // 전역변수 MATCHING_DATA에 필요한 데이터가 전부 들어있습니다.
         return (

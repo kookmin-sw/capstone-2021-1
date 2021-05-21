@@ -58,6 +58,7 @@ class Home extends React.Component {
       getMatchingData();
       getCrewData();
     }
+    
     componentWillUnmount(){
       const {setCrewData, setMatchingData} = this.props;
       setCrewData(CREW_DATAS);
