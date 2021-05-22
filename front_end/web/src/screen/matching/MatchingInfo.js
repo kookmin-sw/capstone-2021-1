@@ -55,6 +55,7 @@ class MatchingInfo extends React.Component{
           MEMBERS = [];
         }
         console.log(MEMBERS)
+        var participantsCount = MATCHING_DATA.participantsCount+1;
         // 전역변수 MATCHING_DATA에 필요한 데이터가 전부 들어있습니다.
         return (
             <div className="matchingInfo">
@@ -67,7 +68,7 @@ class MatchingInfo extends React.Component{
                 <div className="matchingInfo_block1_info">
                   <div className="matchingInfo_block1_info_title">{MATCHING_DATA.title}</div>
                   <div className="matchingInfo_block1_info_description">{MATCHING_DATA.description}</div>
-                  <div className="matchingInfo_block1_info_participation">{MATCHING_DATA.participantsCount}/{MATCHING_DATA.maxCount}</div>
+                  <div className="matchingInfo_block1_info_participation">{participantsCount}/{MATCHING_DATA.maxCount}</div>
                 </div>
                 <div className="matchingInfo_block1_joinBtn">매칭 참여하기</div>
               </div>

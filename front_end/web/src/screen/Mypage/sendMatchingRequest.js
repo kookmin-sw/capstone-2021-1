@@ -85,7 +85,7 @@ class sendMatchingRequest extends React.Component {
                   datas.map((data,indexcol)=>{
                       return(
                       <div className="dataOftitle">
-                          <text>
+                          <text className="matchingRequestSize">
                           {data.matching.title}
                           </text>
                           <div className="del_matching" onClick={ () => { this.delMyMatching(data.matching.id,indexcol); } }>
