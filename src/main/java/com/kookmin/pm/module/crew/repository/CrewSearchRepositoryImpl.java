@@ -69,6 +69,18 @@ public class CrewSearchRepositoryImpl extends PmQuerydslRepositorySupport implem
         );
     }
 
+    @Override
+    public long getParticipantsCount(Long crewId) {
+        Long count = getQueryFactory()
+                .select(crewParticipants.count())
+                .from(crewParticipants)
+                .groupBy(crewParticipants.crew)
+                .where(crewParticipants.crew.id.eq(crewId))
+                .fetchOne();
+
+        return count==null?1:count;
+    }
+
     public BooleanExpression nameContains(String name) {
         return name==null? null : crew.name.contains(name);
     }

@@ -13,4 +13,5 @@ public interface MatchingSearchRepository {
     public List<Member> searchMemberInMatchingParticipant(Long matchingId, ParticipantStatus status);
     public List<MatchingDetails> findParticipatedMatching(MatchingSearchCondition searchCondition);
     public Page<MatchingDetails> searchMatching(Pageable pageable, MatchingSearchCondition searchCondition);
+    public long getParticipantsCount(Long matchingId);
 }

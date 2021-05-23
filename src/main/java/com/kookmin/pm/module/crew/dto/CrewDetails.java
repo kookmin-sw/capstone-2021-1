@@ -26,6 +26,7 @@ public class CrewDetails {
     private MemberDetails host;
     private Integer participantsCount;
     private List<MemberDetails> participants;
+    private List<String> imageList;
 
     public CrewDetails(Crew crew) {
         this.id = crew.getId();

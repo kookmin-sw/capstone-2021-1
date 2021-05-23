@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class MemberDetails {
@@ -18,7 +20,7 @@ public class MemberDetails {
     private String phoneNumber;
     private String description;
     private MemberStatsInfo memberStats;
-    private String imagePath;
+    private List<String> imageList;
 
     public MemberDetails(Member member) {
         this.id = member.getId();
@@ -30,17 +32,13 @@ public class MemberDetails {
         this.description = member.getDescription();
     }
 
-    public MemberDetails(Member member, MemberImage memberImage) {
+    public MemberDetails(Member member, List<String> imageList) {
         this(member);
-        if(memberImage == null) {
-            this.imagePath = null;
-        } else {
-            this.imagePath = memberImage.getImagePath();
-        }
+        this.imageList = imageList;
     }
 
-    public MemberDetails(Member member, MemberImage memberImage, MemberStats memberStats) {
-        this(member, memberImage);
+    public MemberDetails(Member member, List<String> imageList, MemberStats memberStats) {
+        this(member, imageList);
         this.memberStats = new MemberStatsInfo(memberStats);
     }
 }

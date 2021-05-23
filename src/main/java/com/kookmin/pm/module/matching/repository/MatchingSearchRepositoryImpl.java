@@ -1,6 +1,7 @@
 package com.kookmin.pm.module.matching.repository;
 
 import com.kookmin.pm.module.category.domain.QCategory;
+import com.kookmin.pm.module.image.domain.QImageName;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
 import com.kookmin.pm.module.matching.domain.ParticipantStatus;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.kookmin.pm.module.category.domain.QCategory.*;
+import static com.kookmin.pm.module.image.domain.QImageName.imageName;
 import static com.kookmin.pm.module.matching.domain.QMatching.*;
 import static com.kookmin.pm.module.matching.domain.QMatchingParticipant.*;
 import static com.kookmin.pm.module.member.domain.QMember.*;
@@ -69,7 +71,16 @@ public class MatchingSearchRepositoryImpl extends PmQuerydslRepositorySupport im
         .orderBy(matching.startTime.desc()));
     }
 
+    public long getParticipantsCount(Long matchingId) {
+        Long count = getQueryFactory()
+                .select(matchingParticipant.count())
+                .from(matchingParticipant)
+                .groupBy(matchingParticipant.matching)
+                .where(matchingParticipant.matching.id.eq(matchingId))
+                .fetchOne();
 
+        return count==null?1:count;
+    }
 
     private BooleanExpression titleContains(String title) {
         return title==null? null : matching.title.contains(title);

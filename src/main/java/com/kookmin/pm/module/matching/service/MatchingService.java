@@ -3,6 +3,9 @@ package com.kookmin.pm.module.matching.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kookmin.pm.module.category.domain.Category;
 import com.kookmin.pm.module.category.repository.CategoryRepository;
+import com.kookmin.pm.module.image.service.DomainImageService;
+import com.kookmin.pm.module.image.service.DomainType;
+import com.kookmin.pm.module.image.service.FileUploadService;
 import com.kookmin.pm.module.matching.domain.Matching;
 import com.kookmin.pm.module.matching.domain.MatchingParticipant;
 import com.kookmin.pm.module.matching.domain.MatchingStatus;
@@ -24,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -42,6 +46,7 @@ public class MatchingService {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final MatchingMapper matchingMapper;
+    private final DomainImageService domainImageService;
 
     //TODO::회원이 생성할 수 있는 매칭에 개수제한
     public Long openMatching(@NonNull Long usn, @NonNull MatchingCreateInfo matchingCreateInfo) {
@@ -144,23 +149,48 @@ public class MatchingService {
                                                 @NonNull MatchingSearchCondition searchCondition) {
         if(searchCondition.getLongitude() == null || searchCondition.getLatitude() == null
             || searchCondition.getDistance() == null) {
-            return matchingRepository.searchMatching(pageable, searchCondition);
+
+            Page<MatchingDetails> matchingDetailsPage = matchingRepository.searchMatching(pageable, searchCondition);
+            List<MatchingDetails> contents = matchingDetailsPage.getContent();
+
+            for(MatchingDetails matchingDetails : contents) {
+                List<String> imageList = this.domainImageService.getImageUrl(matchingDetails.getId(),
+                        matchingDetails.getCategory());
+
+                matchingDetails.setImageList(imageList);
+                matchingDetails.setParticipantsCount(this.matchingRepository.getParticipantsCount(matchingDetails.getId()));
+            }
+
+            return matchingDetailsPage;
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map map = objectMapper.convertValue(searchCondition, Map.class);
 
-        return new PageImpl(matchingMapper.searchMatchingWithLocationInfo(map));
+        List<MatchingDetails> matchingDetailsList = matchingMapper.searchMatchingWithLocationInfo(map);
+
+        for(MatchingDetails matchingDetails : matchingDetailsList) {
+            List<String> imageList = this.domainImageService.getImageUrl(matchingDetails.getId(),
+                    matchingDetails.getCategory());
+
+            matchingDetails.setImageList(imageList);
+            matchingDetails.setParticipantsCount(this.matchingRepository.getParticipantsCount(matchingDetails.getId()));
+        }
+
+        return new PageImpl(matchingDetailsList);
     }
 
     public MatchingDetails lookupMatching(@NonNull Long matchingId, @NonNull MatchingLookUpType lookUpType) {
         Matching matching = getMatchingEntity(matchingId);
+        Category category = matching.getCategory();
 
         MatchingDetails matchingDetails = null;
 
         if(lookUpType.equals(MatchingLookUpType.DEFAULT)) {
             matchingDetails = new MatchingDetails(matching);
 
+            List<String> imageList = this.getMatchingImageUrl(matchingId, category);
+            matchingDetails.setImageList(imageList);
         } else if(lookUpType.equals(MatchingLookUpType.WITH_HOST)){
             matchingDetails = new MatchingDetails(matching);
 
@@ -169,8 +199,13 @@ public class MatchingService {
 
             matchingDetails.setHost(memberDetails);
 
+            List<String> imageList = this.getMatchingImageUrl(matchingId, category);
+            matchingDetails.setImageList(imageList);
         } else if(lookUpType.equals(MatchingLookUpType.WITH_PARTICIPANTS)) {
             matchingDetails = new MatchingDetails(matching);
+
+            List<String> imageList = this.getMatchingImageUrl(matchingId, category);
+            matchingDetails.setImageList(imageList);
 
             if(matching.getMember() != null) {
                 MemberDetails memberDetails = memberService
@@ -190,7 +225,7 @@ public class MatchingService {
             }
 
             matchingDetails.setParticipants(participantDetails);
-            matchingDetails.setParticipantsCount(participantDetails.size());
+            matchingDetails.setParticipantsCount((long)participantDetails.size());
         }
 
         return matchingDetails;
@@ -295,59 +330,92 @@ public class MatchingService {
         matching.endMatching();
     }
 
-    public List<MatchingParticipantDetails> findMyParticipationRequest(@NonNull Long usn) {
+    public List<ResponseMatchingParticipant> findMyParticipationRequest(@NonNull Long usn) {
         Member member = getMemberEntity(usn);
 
         List<MatchingParticipant> participants = matchingParticipantRepository
                 .findByMemberAndStatus(member, ParticipantStatus.PENDING_ACCEPTANCE);
 
-        List<MatchingParticipantDetails> request = new ArrayList<>();
+        List<ResponseMatchingParticipant> result = new ArrayList<>();
 
-        for(MatchingParticipant matchingParticipant : participants)
-            request.add(new MatchingParticipantDetails(matchingParticipant));
+        for(MatchingParticipant matchingParticipant : participants) {
+            Matching matching = matchingParticipant.getMatching();
 
-        return request;
+            MatchingDetails matchingDetails = new MatchingDetails(matching);
+            List<String> matchingImageList = domainImageService.getImageUrl(matching.getId(), "MATCHING");
+            matchingDetails.setImageList(matchingImageList);
+
+            MatchingParticipantDetails matchingParticipantDetails = new MatchingParticipantDetails(matchingParticipant);
+            List<String> memberImage = domainImageService.getImageUrl(matchingParticipant.getMember().getId(),
+                    "MEMBER");
+            matchingParticipantDetails.getMember().setImageList(memberImage);
+
+            List<MatchingParticipantDetails> participantDetailsList = new ArrayList<>();
+            participantDetailsList.add(matchingParticipantDetails);
+
+            ResponseMatchingParticipant response = new ResponseMatchingParticipant();
+            response.setMatching(matchingDetails);
+            response.setRequest(participantDetailsList);
+
+            result.add(response);
+        }
+
+        return result;
     }
 
-    public Map<String, Object> findMatchingParticipationRequest(@NonNull Long usn) {
-        Map<String, Object> request = new HashMap<>();
+    public List<ResponseMatchingParticipant> findMatchingParticipationRequest(@NonNull Long usn) {
+       List<ResponseMatchingParticipant> result = new ArrayList<>();
 
         Member member = getMemberEntity(usn);
 
-        List<Matching> scheduledMatchingList = matchingRepository.findByMemberAndStatus(member,
-                MatchingStatus.SCHEDULED);
+        List<Matching> scheduledMatchingList = matchingRepository
+                .findByMemberAndStatus(member, MatchingStatus.SCHEDULED);
 
         List<String> matchingTitles = new ArrayList<>();
 
-        for(Matching matching : scheduledMatchingList)
-            matchingTitles.add(matching.getTitle());
-
-        request.put("matching", matchingTitles);
-
-        int index = 0;
-
         for(Matching matching : scheduledMatchingList) {
+            MatchingDetails matchingDetails = new MatchingDetails(matching);
+
+            List<String> matchingImage = domainImageService
+                    .getImageUrl(matching.getId(), matching.getCategory().getName());
+
+            matchingDetails.setImageList(matchingImage);
+
             List<MatchingParticipant> participants = matchingParticipantRepository
                     .findByMatchingAndStatus(matching, ParticipantStatus.PENDING_ACCEPTANCE);
 
             List<MatchingParticipantDetails> details = new ArrayList<>();
 
-
             for(MatchingParticipant participant : participants) {
-                details.add(new MatchingParticipantDetails(participant));
+                MatchingParticipantDetails participantDetails = new MatchingParticipantDetails(participant);
+                List<String> memberImage = domainImageService
+                        .getImageUrl(participant.getMember().getId(), "MEMBER");
+                        participantDetails.getMember().setImageList(memberImage);
+                details.add(participantDetails);
             }
 
-            request.put(String.valueOf(index), details);
-            index++;
+            ResponseMatchingParticipant response = new ResponseMatchingParticipant();
+            response.setMatching(matchingDetails);
+            response.setRequest(details);
+
+            result.add(response);
         }
 
-        return request;
+        return result;
     }
 
     public MatchingParticipantDetails lookupMatchingParticipants(@NonNull Long participantsId) {
         MatchingParticipant matchingParticipant = getMatchingParticipantEntity(participantsId);
 
         return new MatchingParticipantDetails(matchingParticipant);
+    }
+
+    public String uploadMatchingImage(@NonNull Long matchingId, @NonNull MultipartFile file) {
+        return this.domainImageService.uploadImage(matchingId, file);
+    }
+
+    private List<String> getMatchingImageUrl(@NonNull Long matchingId, Category category) {
+        return this.domainImageService.getImageUrl(matchingId, category.getName());
     }
 
     private Matching buildMatchingEntity(MatchingCreateInfo matchingCreateInfo, Member member, Category category) {

@@ -14,18 +14,14 @@ import java.time.LocalDateTime;
 public class MatchingParticipantDetails {
     private Long id;
     private String status;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
-
     private MemberDetails member;
-    private MatchingDetails matching;
 
     public MatchingParticipantDetails(MatchingParticipant matchingParticipant) {
         this.id = matchingParticipant.getId();
         this.status = matchingParticipant.getStatus().toString();
         this.createdAt = matchingParticipant.getCreatedAt();
         this.member = new MemberDetails(matchingParticipant.getMember());
-        this.matching = new MatchingDetails(matchingParticipant.getMatching());
     }
 }

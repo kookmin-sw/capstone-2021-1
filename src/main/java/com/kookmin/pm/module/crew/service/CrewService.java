@@ -8,6 +8,7 @@ import com.kookmin.pm.module.crew.domain.CrewParticipants;
 import com.kookmin.pm.module.crew.dto.*;
 import com.kookmin.pm.module.crew.repository.CrewParticipantsRepository;
 import com.kookmin.pm.module.crew.repository.CrewRepository;
+import com.kookmin.pm.module.image.service.DomainImageService;
 import com.kookmin.pm.module.member.domain.Member;
 import com.kookmin.pm.module.member.dto.MemberDetails;
 import com.kookmin.pm.module.member.repository.MemberRepository;
@@ -20,6 +21,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
@@ -38,6 +40,7 @@ public class CrewService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final MemberService memberService;
+    private final DomainImageService domainImageService;
 
     //TODO::크루명이 유일할 필요가 있는지
     public Long establishCrew(@NonNull Long usn, @NonNull CrewCreateInfo crewCreateInfo) {
@@ -67,16 +70,23 @@ public class CrewService {
     public CrewDetails lookupCrew(@NonNull Long crewId, @NonNull CrewLookupType type) {
         CrewDetails crewDetails = null;
         Crew crew = getCrewEntity(crewId);
+        List<String> imageList = this.domainImageService.getImageUrl(crewId, "CREW");
 
         if(type.equals(CrewLookupType.DEFAULT)) {
             crewDetails = new CrewDetails(crew);
+            crewDetails.setImageList(imageList);
+
         } else if(type.equals(CrewLookupType.WITH_HOST)) {
             crewDetails = new CrewDetails(crew);
+            crewDetails.setImageList(imageList);
+
             MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getId(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
         } else if(type.equals(CrewLookupType.WITH_PARTICIPANTS)){
             crewDetails = new CrewDetails(crew);
+            crewDetails.setImageList(imageList);
+
             MemberDetails host = memberService.lookUpMemberDetails(crew.getMember().getId(),
                     LookupType.WITHALLINFOS);
             crewDetails.setHost(host);
@@ -97,50 +107,81 @@ public class CrewService {
     }
 
     public Page<CrewDetails> searchCrew(@NonNull Pageable pageable, @NonNull CrewSearchCondition searchCondition) {
-        return crewRepository.searchCrew(pageable, searchCondition);
+        Page<CrewDetails> crewDetailsPage = crewRepository.searchCrew(pageable, searchCondition);
+        List<CrewDetails> contents = crewDetailsPage.getContent();
+
+        for(CrewDetails crewDetails: contents) {
+            List<String> imageList = this.domainImageService.getImageUrl(crewDetails.getId(), crewDetails.getCategory());
+            crewDetails.setImageList(imageList);
+            crewDetails.setParticipantsCount((int)this.crewRepository.getParticipantsCount(crewDetails.getId()));
+        }
+
+        return crewDetailsPage;
     }
 
-    public Map<String, Object> findCrewParticipateRequest(@NonNull Long usn) {
-        Map<String, Object> request = new HashMap<>();
+    public List<ResponseCrewParticipants> findCrewParticipateRequest(@NonNull Long usn) {
+        List<ResponseCrewParticipants> result = new ArrayList<>();
 
         Member member = getMemberEntity(usn);
         List<Crew> crewList = crewRepository.findByMember(member);
-        List<String> crewNameList = new ArrayList<>();
-
-        for(Crew crew : crewList)
-            crewNameList.add(crew.getName());
-
-        request.put("crew", crewNameList);
-
-        int index = 0;
 
         for(Crew crew : crewList) {
+            CrewDetails crewDetails = new CrewDetails(crew);
+            List<String> crewImageList = domainImageService.getImageUrl(crew.getId(),"CREW");
+            crewDetails.setImageList(crewImageList);
+
             List<CrewParticipants> participantsList = crewParticipantsRepository
                     .findByCrewAndStatus(crew, CrewParticipantStatus.PENDING);
 
-            List<CrewParticipantsDetails> participantDetailsList = new ArrayList<>();
+            List<CrewParticipantsDetails> crewParticipantsDetailsList = new ArrayList<>();
 
             for(CrewParticipants participants : participantsList) {
-                participantDetailsList.add(new CrewParticipantsDetails(participants));
+                CrewParticipantsDetails crewParticipant = new CrewParticipantsDetails(participants);
+                Member participantsMember = participants.getMember();
+
+                List<String> memberImageList = domainImageService.getImageUrl(participantsMember.getId() ,"MEMBER");
+                crewParticipant.getMember().setImageList(memberImageList);
+                crewParticipant.getCrew().setImageList(crewImageList);
+
+                crewParticipantsDetailsList.add(crewParticipant);
             }
 
-            request.put(String.valueOf(index), participantDetailsList);
-            index++;
+            ResponseCrewParticipants response = new ResponseCrewParticipants();
+            response.setCrew(crewDetails);
+            response.setRequest(crewParticipantsDetailsList);
+
+            result.add(response);
         }
 
-        return request;
+        return result;
     }
 
-    public List<CrewParticipantsDetails> findMyParticiPateRequest(@NonNull Long usn) {
-        Member member = getMemberEntity(usn);
+    public List<ResponseCrewParticipants> findMyParticiPateRequest(@NonNull Long usn) {
+        List<ResponseCrewParticipants> participantsDetailsList = new ArrayList<>();
 
+        Member member = getMemberEntity(usn);
         List<CrewParticipants> participantsList = crewParticipantsRepository
                 .findByMemberAndStatus(member, CrewParticipantStatus.PENDING);
 
-        List<CrewParticipantsDetails> participantsDetailsList = new ArrayList<>();
-
         for(CrewParticipants participants : participantsList) {
-                participantsDetailsList.add(new CrewParticipantsDetails(participants));
+                Crew crew = participants.getCrew();
+                CrewDetails crewDetails = new CrewDetails(crew);
+                List<String> crewImages = this.domainImageService.getImageUrl(crew.getId(), "CREW");
+                crewDetails.setImageList(crewImages);
+
+                CrewParticipantsDetails crewParticipantsDetails = new CrewParticipantsDetails(participants);
+                List<String> memberImages = this.domainImageService.getImageUrl(crewParticipantsDetails.getMember().getId(),
+                    "MEMBER");
+                crewParticipantsDetails.getMember().setImageList(memberImages);
+
+                List<CrewParticipantsDetails> crewParticipantsDetailsList = new ArrayList<>();
+                crewParticipantsDetailsList.add(crewParticipantsDetails);
+
+                ResponseCrewParticipants response = new ResponseCrewParticipants();
+                response.setCrew(crewDetails);
+                response.setRequest(crewParticipantsDetailsList);
+
+                participantsDetailsList.add(response);
         }
 
         return participantsDetailsList;
@@ -278,6 +319,10 @@ public class CrewService {
 
     public List<CrewDetails> findParticipatedCrew(@NonNull Long usn) {
         return crewRepository.findParticipatedCrew(usn);
+    }
+
+    public String uploadCrewImage(@NonNull Long crewId, @NonNull MultipartFile file) {
+        return this.domainImageService.uploadImage(crewId, file);
     }
 
     private Crew getCrewEntity(Long id) {
