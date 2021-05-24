@@ -84,7 +84,7 @@ class Login extends React.Component {
       
           <div className="login_input">
             <div className="login_input_id"><input onChange={this.uidChange} placeholder="EMAIL"></input></div>
-            <div className="login_input_pw"><input  onChange={this.pwChange} placeholder="PASSWORD"></input></div>
+            <div className="login_input_pw"><input  onChange={this.pwChange} placeholder="PASSWORD" type='password'></input></div>
           </div>
           <div className="login_submit">
           <div className="login_submit_btn" onClick={()=>handleLogin({

@@ -59,6 +59,7 @@ class MatchingCollect extends React.Component {
                     ))
                 }
             </div>
+            <div className="last_content"></div>
             <DownHeader/>
         </div>
     );

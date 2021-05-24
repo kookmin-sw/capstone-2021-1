@@ -72,7 +72,7 @@ class sendCrewRequest extends React.Component {
                   datas.map((data,indexcol)=>{
                       return(
                       <div className="dataOftitle">
-                          <text>
+                          <text className="crewRequestSize">
                           {data.crew.name}
                           </text>
                           <div className="dataOfNumber">
