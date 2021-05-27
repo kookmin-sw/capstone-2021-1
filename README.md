@@ -38,8 +38,6 @@
 
 ## 2. 소개 영상
 
-프로젝트 소개하는 영상을 추가하세요
-
 
 
 ## 3. 팀 소개
@@ -66,12 +64,34 @@
 
 ## 4. 사용법
 
-소스코드제출시 설치법이나 사용법을 작성하세요.
+### 4.1. 도커를 사용할 경우
+
+ docker pull jingu9/playmaker:0.1.5 
+ docker run -d -p 8080:8080 jingu9/playmaker:0.1.5 httpd
 
 
+### 4.2. 직접 사용할 경우 (Java11, maven 필요)
 
-## 5. 기타
+현재 백엔드 코드는 develop 브랜치에 존재합니다.
 
-추가적인 내용은 자유롭게 작성하세요.
+src/main/resources의 application.yml에는 include: aws를 삭제해주셔야 합니다.
 
+src/main/resources에 application-deploy.yml파일 생성
 
+application-deploy.yml 내용
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+mvn clean install (-DskipTests 테스트 케이스를 스킵하실 경우)
+mvn spring-boot:run
