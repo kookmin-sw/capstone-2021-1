@@ -66,7 +66,7 @@
 
 ### 4.1. 도커를 사용할 경우
 
- docker pull jingu9/playmaker:0.1.5 
+ docker pull jingu9/playmaker:0.1.5   
  docker run -d -p 8080:8080 jingu9/playmaker:0.1.5 httpd
 
 
