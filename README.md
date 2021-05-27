@@ -79,6 +79,9 @@ src/main/resources의 application.yml에는 include: aws를 삭제해주셔야 �
 src/main/resources에 application-deploy.yml파일 생성
 
 application-deploy.yml 내용
+
+<pre>
+<code>
 spring:
   h2:
     console:
@@ -92,6 +95,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+</code>
+</pre>
 
 mvn clean install (-DskipTests 테스트 케이스를 스킵하실 경우)
 mvn spring-boot:run
